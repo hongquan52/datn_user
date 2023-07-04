@@ -1,0 +1,95 @@
+.orderDetail__image {
+    width: 120px;
+    height: 120px;
+}
+.orderDetail__heading-title {
+    background: #df2020;
+    font-weight: 600;
+    color: #fff;
+    text-align: center;
+    justify-content: center;
+    padding: 30px;
+    margin-bottom: 40px;
+}
+.orderDetail__heading-content {
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 40px;
+    width: 500px;
+}
+
+.status__completed {
+    padding: 10px;
+    color: white;
+    background: green;
+    border-radius: 20px;
+}
+.status__wait_confirm {
+    padding: 10px;
+    color: black;
+    background: yellow;
+    border-radius: 20px;
+}
+.total__amount {
+    font-weight: 600;
+    color: #df2020;
+}
+.orderDetail__heading-content h5 {
+    font-size: 1.1rem;
+}
+.orderDetail__heading-content p {
+    width: 300px;
+}
+.status__readyToShip {
+    padding: 10px;
+    color: white;
+    background: #2020df;
+    border-radius: 20px;
+}
+.status__canceled {
+    padding: 10px;
+    color: white;
+    background: red;
+    border-radius: 20px;
+}
+
+.data__grid {
+    margin-left: 30px;
+}
+
+/* ORDER LIST */
+.filter__order-item {
+    background-color: #fff;
+    height: 300px;
+    width: 100%;
+    padding: 0 10px;
+    border: #F9813A solid 0.5px;
+    border-radius: 10px;
+    background-color: #fedac5;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    
+}
+.filter__order-item p {
+    text-align: center;
+    margin: auto;
+    margin: 10px 0px;
+    border-bottom-left-radius: 15px;
+    border-bottom-right-radius: 15px;
+}
+.filter__order-item p:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}
+.filter__order-item-active {
+    color: #F9813A;
+    border-bottom:#F9813A  solid 1px;
+    font-weight: 500;
+    transform: scale(1.1);
+}
+.order__status-view {
+    padding: 10px;
+    margin: auto 0px;
+    border-radius: 5px;
+}

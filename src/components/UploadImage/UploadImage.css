@@ -1,0 +1,33 @@
+.inputfile {
+	width: inherit;
+	height: inherit;
+	opacity:0;
+	overflow: hidden;
+	position: absolute;
+	z-index: 10;
+}
+.buttonRemove {
+    background-color: #f2edea;
+    color: #df2020;
+    height: 3rem;
+    width: 6rem;
+    margin: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+.buttonUpload {
+    background-color: #F9813A;
+    color: white;
+    height: 3rem;
+    width: 6rem;
+    margin: 0.5rem;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+}
+.buttonImage:hover {
+    opacity: 0.9;
+    cursor: pointer;
+}

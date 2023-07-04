@@ -1,0 +1,245 @@
+.checkout__bill {
+    background: #fde4e4;
+    padding: 20px 20px;
+}
+
+.checkout__total {
+    border-top: 1px solid #ddd;
+    padding-top: 30px;
+}
+.checkout__total span {
+    color: #df2020;
+}
+.checkout__address-container {
+  background-color: #fde4e4;
+  margin-bottom: 10px;
+  width: 100%;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+.address__title {
+  display: flex;
+  height: 60px;
+  margin-left: 10px;
+}
+.address__btn {
+  display: flex;
+  height: 150px;
+  margin-right: 20px;
+  
+}
+.address__btn button:hover {
+  background-color: #df2020;
+}
+.address__btn button {
+  margin: auto;
+  width: 100px;
+  height :40px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: #F9813A;
+  color: #fff;
+}
+.address__title p {
+  font-weight: bold;
+  font-size: 18px;
+  margin: auto 0;
+  color: #F9813A;
+  
+}
+.address__title i {
+  color: #F9813A;
+  font-size: 20px;
+  margin: auto 0;
+}
+.address__detail {
+  margin-left: 10px;
+
+}
+.address__detail-select {
+  margin-left: 10px;
+  border-bottom: #F9813A solid 0.5px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  height: 50px;
+}
+.product__table-title {
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
+}
+.product__table-title p {
+  font-weight: bold;
+}
+.borderBottom {
+  margin-top: 20px;
+  margin-right: 20px;
+  margin-left: 20px;
+  padding-bottom: 15px;
+}
+.center_text {
+  background-color: white;
+  text-align: center;
+  line-height: 30px;
+  
+}
+.orderList__footer {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  
+}
+.orderList__footer p {
+  font-size: 18px;
+  font-weight: bold;
+  color: #df2020;
+}
+.orderList__title {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-direction: row;
+  height: 50px;
+}
+.orderList__title {
+  margin: auto 0;
+}
+.orderList__title span:hover {
+  transform: scale(1.4);
+  cursor: pointer;
+}
+.orderProductCard__container {
+  width: 100%;
+  height: 100px;
+  border-bottom: #F9813A solid 1px;
+  border-radius: 20px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  margin-top: 10px;
+}
+.orderProductCard__container p {
+  font-size: 15px;
+
+}
+.orderProductCard__name {
+  width: 400px;
+  margin-left: 10px;
+}
+.orderProductCard__amount {
+  margin-left: 320px;
+}
+.orderProductCard__amount1 {
+  margin-left: 30px;
+  font-weight: bold;
+}
+.note__input {
+  width: 400px;
+  border: none;
+  outline: none;
+  border-radius: 10px;
+  
+}
+.voucher__title {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  padding: 10px;
+  background-color: #fde4e4 ;
+  height: 50px;
+}
+.voucher__item-title {
+
+}
+.voucher__item-title p {
+  font-size: 16px;
+}
+.voucher__btn button:hover {
+  background-color: #df2020;
+}
+.voucher__btn{
+  margin: auto 0;
+  width: 100px;
+  padding: 5px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: #F9813A;
+  color: #fff;
+}
+.voucher__item {
+  background-color: #fff;
+  height: 100%;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+  border-bottom: #F9813A solid 2px;
+  border-bottom-left-radius: 20px;
+  border-bottom-right-radius: 20px;
+}
+.voucher__item p {
+  font-size: 16px;
+}
+.payment__container p {
+  margin: auto 0;
+  margin-left: 10px;
+  margin-right: 50px;
+}
+.finalPrice__container {
+  background-color: #fde4e4;
+  width: 100%;
+  height: 250px;
+  margin-top: 30px;
+  border-radius: 10px;
+}
+.finalPrice__item {
+  display: flex;
+  justify-content: space-between;
+}
+.finalPrice__item h5 {
+  margin: 10px;
+  font-weight: bold;
+}
+.finalPrice__item1 {
+  display: flex;
+  justify-content: space-between;
+  border-top: #df2020 solid 1px;
+}
+.finalPrice__item1 h5 {
+  margin: 10px;
+  font-weight: bold;
+  color: #df2020;
+  font-size: 25px;
+  margin-top: 20px;
+}
+.checkout__btn {
+  /* margin: auto;*/
+  font-weight: 500;
+  outline: none;
+  color: #fff; 
+  border: none;
+  border-radius: 10px;
+  height :40px;
+  background-color: #F9813A;
+  width: 150px;
+  padding: 5px 0px;
+}
+.checkout__btn:hover {
+  opacity: 0.9;
+  transform: scale(1.05);
+}
+/* responsive mobile + tablet */
+@media only screen and (max-width: 768px) {
+    .checkout__bill h6 {
+      font-size: 0.9rem;
+    }
+    .checkout__bill {
+      margin-top: 40px;
+    }
+}

@@ -1,0 +1,73 @@
+.response {
+    margin : 5px;
+    background-color: tomato;
+    color: white;
+}
+
+.login__container {
+    background: linear-gradient(#212245b2, #212245b2),
+      url('https://3dcomputer.vn/uploads/images/bai-viet-3d/sale-chao-he/sale-cuoi-thang-6-banner-900x603.png');
+}
+.login__form {
+    flex-direction: column;
+    align-items: center;
+}
+
+.newsletter {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    width: 300px;
+    margin-bottom: 20px;
+
+}
+.newsletter input:focus {
+    outline: none;
+  }
+  
+.newsletter span {
+    background: #fedac5;
+    padding: 5px 20px;
+    border-radius: 5px;
+  }
+  
+.newsletter span i {
+    color: #F9813A;
+  }
+  
+.newsletter input::placeholder {
+    color: #df2020;
+}
+.login__btn:hover {
+    background-color: #df2020;
+}
+.login__btn {
+    background-color: #F9813A;
+    padding: 10px;
+    width: 280px;
+    border-radius: 10px;
+    outline: none;
+    border: none;
+    margin-bottom: 10px;
+    color: white;
+}
+.login__bt1-container {
+    display: flex;
+    margin-top: 0;
+    justify-content: space-around;
+    width: 400px;
+    margin-bottom: 10px;
+}
+.login__btn1 {
+    background-color: white;
+    padding: 10px;
+    width: 100px;
+    border-radius: 10px;
+    outline: #F9813A;
+    border: rgb(131, 128, 128) solid 0.5px;
+}

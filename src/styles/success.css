@@ -1,0 +1,17 @@
+.success__icon img {
+    width: 300px;
+    height: 200px;
+}
+.success__wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    
+}
+.success__title {
+    margin-bottom: 30px;
+}
+.success__wrapper button {
+    margin-top: 30px;
+}

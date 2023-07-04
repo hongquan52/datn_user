@@ -1,0 +1,66 @@
+.avatar {
+    display: flex;
+    background: #fde4e4;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+.avatar__image {
+    margin: 15px;
+    border-radius: 20px;
+    border: 1px solid black;
+    width: 60px;
+    height: 250px;
+}
+
+.gender__radio-btn {
+    display: flex;
+    justify-content: center;
+    margin-bottom: 20px;
+}
+
+/* user information */
+.userShowImg {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+.userUpdateForm {
+    margin-top: 30px;
+    column-gap: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+
+.userUpdateItem {
+    display: flex;
+    flex-direction: column;
+    row-gap: 1rem;
+    margin-bottom: 16px;
+}
+.userFormRight {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+.userUpdateUpload {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    column-gap: 1.2rem;
+}
+.userFormImg {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: .3rem;
+}
+
+.userUpdateIcon {
+    font-size: 32px !important;
+    cursor: pointer;
+}

@@ -1,0 +1,10 @@
+.common__section {
+    background: linear-gradient(#212245b2, #212245b2),
+      /* url("../assets/images/product_04.jpg"); */
+      url('https://marketplace.canva.com/EAE8OcQE8xs/1/0/1600w/canva-modern-gaming-cover-youtube-channel-art-RdH0ndaf7eo.jpg');
+  
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center;
+    padding: 80px 0px;
+  }

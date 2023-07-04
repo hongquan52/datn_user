@@ -1,0 +1,154 @@
+.userAvatar {  
+    width: 400px;
+    height: 300px;
+    border-radius: 50%;
+}
+
+.userUpdateIcon {
+    font-size: 32px !important;
+    cursor: pointer;
+}
+
+.defaultAddress_select {
+    height: 50px;
+    width: 190px;
+    background-color: aliceblue;
+    border-radius: 10px;
+    color: black;
+    border: none;
+}
+.defaultAddress__flag {
+    border: #df2020 solid 1px;
+    color: #df2020;
+    text-align: center;
+}
+.profile__userInfo-title {
+    flex-direction: row;
+    display: flex;
+    align-items: center;
+    margin-top: 20px;
+    padding-bottom: 10px;
+    border-bottom: grey solid 0.3px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+}
+.profile__userInfo-title p {
+    font-weight: bold;
+     font-Size: 18px;
+     margin: 0;
+     text-align: center;
+    margin-left: 5px;
+}
+.address__item-text p {
+    font-size: 16px;
+}
+.profile__container {
+    background-color: #E5E5E5;
+    border-radius: 20px;
+    margin-bottom: 20px;
+    padding-bottom: 10px;
+}
+.profile__header {
+    padding: 10px;
+    background-color: #F9813A;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+}
+.profile__content {
+   border-left: 1px solid white;
+}
+.profile__item {
+    flex-direction: row;
+    display: flex;
+    justify-content: center;
+    margin: 20px 0px;
+    align-items: center;
+}
+.profile__label {
+    margin-right: 100px;
+    width: 100px;
+    color: black;
+    font-weight: 300;
+    font-size: 16px;
+    border-bottom: #bfb5b5 solid 0.5px;
+}
+.newsletter {
+    padding: 5px;
+    border: 1px solid black;
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: white;
+    width: 300px;
+}
+.newsletter1 {
+    padding: 5px;
+    /* border: 1px solid black; */
+    border-radius: 5px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    cursor: pointer;
+    background-color: rgb(255, 255, 255);
+    width: 300px;
+}
+.profile__img {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    
+}
+.editpassword__btn-container {
+    display: flex;
+    justify-content: flex-start;
+    margin-left: 470px;
+}
+.newAddress_btn {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 120px;
+    margin: 10px 10px;
+    border: none;
+    outline: none;
+    background-color: #F9813A;
+    color: white;
+    font-weight: 500;
+    border-radius: 10px;
+}
+.addressItem__btn {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 60px;
+    margin: 10px 10px;
+    border: none;
+    outline: none;
+    background-color: #F9813A;
+    color: white;
+    font-weight: 500;
+    border-radius: 10px;
+}
+.addressItem__btn:hover {
+    opacity: 0.8;
+}
+.newAddress_btn:hover {
+    background-color: #df2020;
+}
+.editpassword__btn-container button {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 150px;
+    margin: 10px 10px;
+    border: none;
+    outline: none;
+    background-color: #F9813A;
+    color: white;
+    font-weight: 500;
+    border-radius: 10px;
+}
+.editpassword__btn-container button:hover {
+    background-color: #df2020;
+
+}

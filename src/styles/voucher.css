@@ -1,0 +1,101 @@
+/* .filter__price-container {
+    
+  }
+  .filter__price-container1 {
+    border-bottom: #fde4e4 solid 1px;
+    padding-bottom: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-bottom: 20px;
+  }
+  .filter__price-container > p {
+    font-size: 20px;
+    font-weight: bold;
+  }
+
+  .filter__price-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    margin-left: 10px;
+  }
+  .filter__price-item1 {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    margin-left: 10px;
+  }
+  .filter__price-item button {
+    
+
+  }
+  .filter__price-item button:hover{
+    background-color: #df2020;
+    color: white;
+  } */
+.voucher__filter-container {
+    border-bottom: #fde4e4 solid 1px;
+    padding-bottom: 10px;
+    border-bottom-left-radius: 10px;
+    border-bottom-right-radius: 10px;
+    margin-bottom: 20px;
+}
+.voucher__filter-item button {
+    padding: 10px 0px;
+    margin-bottom: 10px;
+    width: 50px;
+    margin: 10px 10px;
+    border: none;
+    outline: none;
+    color: #F9813A;
+    background-color: white;
+    font-weight: 500;
+    border-radius: 10px;
+}
+.voucher__filter-item1 {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content:flex-start;
+    margin-left: 0px;
+    margin-top: 10px;
+    padding: 0 5px;
+}
+.voucher__filter-item {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content:space-around;
+  margin-left: 0px;
+  margin-top: 10px;
+  padding: 0 5px;
+}
+.voucher__btn-inactive {
+    padding: 10px;
+    margin-bottom: 10px;
+    width: 60px;
+    margin: 10px 10px;
+    border: none;
+    outline: none;
+    background-color: grey;
+    color: white;
+    font-weight: 500;
+    border-radius: 10px;
+}
+.voucher__filter-item button:hover {
+  opacity: 0.9;
+}
+.voucher__filter-item button{
+  border: none;
+  outline: none;
+}
+
+.voucher__filter-item1 input {
+    width: 100px;
+    height: 20px
+}
+.voucher__filter-item1 p {
+    margin: auto;
+  color: aliceblue;
+  width: 150px;
+}

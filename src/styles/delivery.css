@@ -1,0 +1,13 @@
+.delivery__container {
+    background-color: #fde4e4;
+    width: 100%;
+    height: 300px;
+}
+.delivery__item-info {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+}
+.delivery__item-info p {
+    margin: auto 0px;
+}

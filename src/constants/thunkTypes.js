@@ -1,0 +1,51 @@
+export const API_URL = "http://localhost:8080";
+// export const APII_URL = "https://fakestoreapi.com";
+
+export const thunkOrderTypes = {
+    PAYPAL : "PAYPAL",
+    CREATE_ORDER: "CREATE_ORDER",
+    GET_ALLORDER: "GET_ALLORDER",
+    GET_ORDER: "GET_ORDER",
+    GET_DELIVERY: "GET_DELIVERY"
+}
+export const thunkProductTypes = {
+    GETALL_PRODUCT: "GETALL_PRODUCT",
+    GET_PRODUCT: "GET_PRODUCT",
+    CREATE_PRODUCT: "CREATE_PRODUCT",
+    EDIT_PRODUCT: "EDIT_PRODUCT",
+    DELETE_PRODUCT: "DELETE_PRODUCT",
+    GETALL_PRODUCTLIST: "GETALL_PRODUCTLIST",
+    GETHOT_PRODUCT : "GETHOT_PRODUCT",
+};
+export const thunkFeedbackTypes = {
+    GETALL_FEEDBACK: "GETALL_FEEDBACK",
+    CREATE_FEEDBACK: "CREATE_FEEDBACK",
+    GET_FEEDBACK_BYID: "GET_FEEDBACK_BYID",
+}
+export const thunkBrandTypes = {
+    GETALL_BRAND: "GETALL_BRAND"
+}
+export const thunkUserTypes = {
+    GETALL_USER: "GETALL_USER",
+    GET_USER: "GET_USER",
+    CREATE_USER: "CREATE_USER",
+    EDIT_USER: "EDIT_USER",
+    DELETE_USER: "DELETE_USER",
+};
+export const thunkAddressTypes = {
+    GET_ADDRESS_BY_USER: "GET_ADDRESS_BY_USER",
+    DELETE_ADDRESS_DETAIL: "DELETE_ADDRESS_DETAIL"
+}
+
+export const thunkProductTypeTypes = {
+    GETALL_PRODUCTTYPE: "GETALL_PRODUCTTYPE",
+    GET_PRODUCTTYPE: "GET_PRODUCTTYPE",
+    CREATE_PRODUCTTYPE: "CREATE_PRODUCTTYPE",
+    EDIT_PRODUCTTYPE: "EDIT_PRODUCTTYPE",
+    DELETE_PRODUCTTYPE: "DELETE_PRODUCTTYPE",
+};
+export const thunkCartTypes = {
+    GET_CART : "GET_CART",
+    DELETE_CART: "DELETE_CART",
+    GET_PRODUCT_IN_CART: "GET_PRODUCT_IN_CART"
+};
