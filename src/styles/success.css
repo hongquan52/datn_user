@@ -1,6 +1,25 @@
+
+.payment__btn {
+    padding: 10px;
+    margin-bottom: 10px;
+    width:150px;
+    margin: 10px 10px;
+    border: none;
+    outline: none;
+    background-color: #F9813A;
+    color: white;
+    font-weight: 500;
+    border-radius: 10px;
+    
+}
+.payment__btn:hover {
+    cursor: pointer;
+    transform: scale(1.05);
+    opacity: 0.8;
+} 
 .success__icon img {
-    width: 300px;
-    height: 200px;
+    width: 400px;
+    height: 300px;
 }
 .success__wrapper {
     display: flex;
@@ -11,6 +30,15 @@
 }
 .success__title {
     margin-bottom: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 400px;
+}
+.success__title h5 {
+    /* font-weight: bold; */
+    color: #F9813A;
+    
 }
 .success__wrapper button {
     margin-top: 30px;

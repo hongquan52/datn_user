@@ -1,3 +1,11 @@
+.tab__active {
+    background-color: #F9813A;
+    color: #fff;
+    transform: scale(1.1);
+    width: 200px;
+    padding: 5px;
+}
+
 .userAvatar {  
     width: 400px;
     height: 300px;
@@ -8,7 +16,6 @@
     font-size: 32px !important;
     cursor: pointer;
 }
-
 .defaultAddress_select {
     height: 50px;
     width: 190px;
@@ -18,9 +25,12 @@
     border: none;
 }
 .defaultAddress__flag {
-    border: #df2020 solid 1px;
-    color: #df2020;
+    border: #F9813A solid 1px;
+    color: #F9813A;
     text-align: center;
+    width: 200px;
+    font-weight: 600;
+    margin-left: 20px;
 }
 .profile__userInfo-title {
     flex-direction: row;
@@ -41,6 +51,7 @@
 }
 .address__item-text p {
     font-size: 16px;
+    padding-left: 20px;
 }
 .profile__container {
     background-color: #E5E5E5;
@@ -119,9 +130,9 @@
     border-radius: 10px;
 }
 .addressItem__btn {
-    padding: 10px;
     margin-bottom: 10px;
-    width: 60px;
+    width: 40px;
+    padding: 5px 0px;
     margin: 10px 10px;
     border: none;
     outline: none;

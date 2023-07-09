@@ -57,7 +57,18 @@
   color: #fff;
   cursor: pointer;
 }
-
+.header__avatar {
+  flex-direction: row;
+}
+.header__avatar img {
+  width: 40px;
+  height: 40px;
+  border-radius: 20px;
+}
+.header__avatar:hover {
+  opacity: 0.9;
+  cursor: pointer;
+}
 .cart__icon {
   position: relative;
 }

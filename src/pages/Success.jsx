@@ -9,7 +9,6 @@ const Success = () => {
     
     <Helmet title='Thanh toán thành công'>
     
-    <section>
       <Container>
         <Row>
           <Col lg='6' md='6' sm='12' className='m-auto text-center'>
@@ -18,18 +17,18 @@ const Success = () => {
                         <img src={logoSuccess} alt="" />
                     </div>
                     <div className="success__title">
-                        <h5>Thanh toán thành công</h5>
+                        <h5>Payment successfully</h5>
                     </div>
-                    {/* <div className="sucess__content">
-                        <h6>Mã hơn hàng của bạn là: DH0001</h6>
-                    </div>          */}
-                    <Link to={'/foods'}><button className='addToCart__btn'>Tiếp tục mua hàng</button></Link>
+                    <div>
+                      <Link to={'/historyOrder'}><button className='payment__btn'>Your order</button></Link>
+                      <Link to={'/foods'}><button className='payment__btn'>Shopping</button></Link>
+                    </div>
                     
                 </div>
           </Col>
         </Row>
       </Container>
-    </section>
+    
   </Helmet>
     
   )

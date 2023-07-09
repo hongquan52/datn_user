@@ -34,10 +34,10 @@ const HistoryOrder = () => {
 
     // CALL API GET LIST ORDER:
     useEffect(() => {
-        let userID = sessionStorage.getItem('userId');
+        let userID = sessionStorage.getItem('userID');
 
         setLoading(true);
-        axios.get(`${baseURL}/api/v1/order?userId=${userID}`)
+        axios.get(`${baseURL}/api/v1/order/user?userId=${userID}`)
             .then((res) => {
                 setOrderListData(res.data);
                 setOrderDataOriginal(res.data);
@@ -86,7 +86,7 @@ const HistoryOrder = () => {
         } },
         
         { field: "status", headerName: "Status", width: 200, renderCell: (params) => {
-            if(params.row.status === 'Paid') {
+            if(params.row.status === 'Done') {
                 return (
                     <p
                         className='order__status-view'
@@ -110,7 +110,7 @@ const HistoryOrder = () => {
                     >Confirmed</p>
                 )
             }
-            else if (params.row.status==='Wait__Delivery') {
+            else if (params.row.status==='Wait_Delivering') {
                 return (
                     <p
                         className='order__status-view'
@@ -126,12 +126,20 @@ const HistoryOrder = () => {
                     >Delivering</p>
                 )
             }
-            else if(params.row.status === 'Canceled') {
+            else if(params.row.status === 'Delivered') {
+                return (
+                    <p
+                        className='order__status-view'
+                        style={{backgroundColor:'yellow', color: 'black'}}
+                    >Delivered</p>
+                )
+            }
+            else if(params.row.status === 'Cancel') {
                 return (
                     <p
                         className='order__status-view'
                         style={{backgroundColor:'red', color: 'white'}}
-                    >Canceled</p>
+                    >Cancel</p>
                 )
             }
         }},
@@ -196,21 +204,29 @@ const HistoryOrder = () => {
                                 onClick={() => setTabOrder('Confirmed')}
                             >CONFIRMED</p>
                             <p
-                                className={`${tabOrder === 'Wait__Delivery' ? 'filter__order-item-active' : ''}`}
-                                onClick={() => setTabOrder('Wait__Delivery')}
+                                className={`${tabOrder === 'Wait_Delivering' ? 'filter__order-item-active' : ''}`}
+                                onClick={() => setTabOrder('Wait_Delivering')}
                             >WAIT DELIVERY</p>
                             <p
                                 className={`${tabOrder === 'Delivering' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Delivering')}
                             >DELIVERING</p>
                             <p
-                                className={`${tabOrder === 'Paid' ? 'filter__order-item-active' : ''}`}
-                                onClick={() => setTabOrder('Paid')}
+                                className={`${tabOrder === 'Delivered' ? 'filter__order-item-active' : ''}`}
+                                onClick={() => setTabOrder('Delivered')}
+                            >DELIVERED</p>
+                            <p
+                                className={`${tabOrder === 'Received' ? 'filter__order-item-active' : ''}`}
+                                onClick={() => setTabOrder('Received')}
+                            >RECEIVED</p>
+                            <p
+                                className={`${tabOrder === 'Done' ? 'filter__order-item-active' : ''}`}
+                                onClick={() => setTabOrder('Done')}
                             >DONE</p>
                             <p
-                                className={`${tabOrder === 'Canceled' ? 'filter__order-item-active' : ''}`}
-                                onClick={() => setTabOrder('Canceled')}
-                            >CALCELED</p>
+                                className={`${tabOrder === 'Cancel' ? 'filter__order-item-active' : ''}`}
+                                onClick={() => setTabOrder('Cancel')}
+                            >CANCEL</p>
                             
                         </div>
                     </Col>
@@ -243,292 +259,3 @@ const HistoryOrder = () => {
 }
 
 export default HistoryOrder
-
-const listOrder =
-[
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 1,
-        "status": "Wait__Delivery",
-        "totalPrice": 69508000.00,
-        "shippingFee": null,
-        "finalPrice": 3900000.00,
-        "note": null,
-        "paymentMethod": "VNPAY",
-        "addressId": null,
-        "deliveryApartmentNumber": null,
-        "deliveryWard": null,
-        "deliveryDistrict": null,
-        "deliveryProvince": null,
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 2,
-        "status": "Done",
-        "totalPrice": 900000.00,
-        "shippingFee": null,
-        "finalPrice": 3900000.00,
-        "note": null,
-        "paymentMethod": "COD",
-        "addressId": null,
-        "deliveryApartmentNumber": null,
-        "deliveryWard": null,
-        "deliveryDistrict": null,
-        "deliveryProvince": null,
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 3,
-        "status": "Delivering",
-        "totalPrice": 5440000.00,
-        "shippingFee": null,
-        "finalPrice": 3900000.00,
-        "note": null,
-        "paymentMethod": "COD",
-        "addressId": null,
-        "deliveryApartmentNumber": null,
-        "deliveryWard": null,
-        "deliveryDistrict": null,
-        "deliveryProvince": null,
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 4,
-        "status": "Wait_Delivering",
-        "totalPrice": 2560000.00,
-        "shippingFee": null,
-        "finalPrice": 3900000.00,
-        "note": null,
-        "paymentMethod": "COD",
-        "addressId": null,
-        "deliveryApartmentNumber": null,
-        "deliveryWard": null,
-        "deliveryDistrict": null,
-        "deliveryProvince": null,
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 6,
-        "status": "Confirmed",
-        "totalPrice": 180000.00,
-        "shippingFee": 20000.00,
-        "finalPrice": 200000.00,
-        "note": "Giao ở cơ quan nhà nước, t2-t6",
-        "paymentMethod": "VNPAY",
-        "addressId": null,
-        "deliveryApartmentNumber": null,
-        "deliveryWard": null,
-        "deliveryDistrict": null,
-        "deliveryProvince": null,
-        "orderedDate": "2023-06-10 17:00:00",
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 7,
-        "status": "Wait__Delivery",
-        "totalPrice": 400000.00,
-        "shippingFee": 0.00,
-        "finalPrice": 400000.00,
-        "note": "",
-        "paymentMethod": "COD",
-        "addressId": null,
-        "deliveryApartmentNumber": null,
-        "deliveryWard": null,
-        "deliveryDistrict": null,
-        "deliveryProvince": null,
-        "orderedDate": "2023-06-10 17:00:00",
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 8,
-        "status": "Cancel",
-        "totalPrice": 4890000.00,
-        "shippingFee": 50000.00,
-        "finalPrice": 4940000.00,
-        "note": "Đơn hàng gấp, giao đến UBND Thành phố Thủ Đức",
-        "paymentMethod": "COD",
-        "addressId": null,
-        "deliveryApartmentNumber": null,
-        "deliveryWard": null,
-        "deliveryDistrict": null,
-        "deliveryProvince": null,
-        "orderedDate": "2023-06-21 17:00:00",
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 38,
-        "status": "Received",
-        "totalPrice": 23318000.00,
-        "shippingFee": 20000.00,
-        "finalPrice": 23338000.00,
-        "note": "",
-        "paymentMethod": "COD",
-        "addressId": 13,
-        "deliveryApartmentNumber": "25",
-        "deliveryWard": "Linh Xuân",
-        "deliveryDistrict": "Thủ Đức",
-        "deliveryProvince": "Tp. Hồ Chí Minh",
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 42,
-        "status": "Done",
-        "totalPrice": 29500000.00,
-        "shippingFee": 0.00,
-        "finalPrice": 29500000.00,
-        "note": "Test clear cart",
-        "paymentMethod": "COD",
-        "addressId": 7,
-        "deliveryApartmentNumber": "12/2 street 5",
-        "deliveryWard": "Linh Chiểu",
-        "deliveryDistrict": "Thủ Đức",
-        "deliveryProvince": "TP Hồ Chí Minh",
-        "orderedDate": "2023-06-21 17:00:00",
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 43,
-        "status": "Done",
-        "totalPrice": 5980000.00,
-        "shippingFee": 0.00,
-        "finalPrice": 5980000.00,
-        "note": "",
-        "paymentMethod": "COD",
-        "addressId": 13,
-        "deliveryApartmentNumber": "25",
-        "deliveryWard": "Linh Xuân",
-        "deliveryDistrict": "Thủ Đức",
-        "deliveryProvince": "Tp. Hồ Chí Minh",
-        "orderedDate": "2023-06-22 17:00:00",
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 44,
-        "status": "Wait_Delivering",
-        "totalPrice": 9270000.00,
-        "shippingFee": 0.00,
-        "finalPrice": 9270000.00,
-        "note": "Đơn hàng gấp, giao đến UBND Thành phố Thủ Đức Đơn hàng gấp, giao đến UBND Thành phố Thủ Đức",
-        "paymentMethod": "COD",
-        "addressId": 26,
-        "deliveryApartmentNumber": "Đường CMT8",
-        "deliveryWard": "Xã Mỹ Hòa",
-        "deliveryDistrict": "Huyện Phù Mỹ",
-        "deliveryProvince": "Bình Định",
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 45,
-        "status": "Done",
-        "totalPrice": 9010000.00,
-        "shippingFee": 20000.00,
-        "finalPrice": 9030000.00,
-        "note": "Đơn hàng 50k, phi ship 30k",
-        "paymentMethod": "COD",
-        "addressId": 1,
-        "deliveryApartmentNumber": "Test",
-        "deliveryWard": "Linh Chiểu",
-        "deliveryDistrict": "Thủ Đức",
-        "deliveryProvince": "TP Hồ Chí Minh",
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 46,
-        "status": "Delivering",
-        "totalPrice": 3880000.00,
-        "shippingFee": 20000.00,
-        "finalPrice": 3900000.00,
-        "note": "Đơn hàng 50k, phi ship 30k",
-        "paymentMethod": "VNPAY",
-        "addressId": 1,
-        "deliveryApartmentNumber": "Test",
-        "deliveryWard": "Linh Chiểu",
-        "deliveryDistrict": "Thủ Đức",
-        "deliveryProvince": "TP Hồ Chí Minh",
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 47,
-        "status": "Ordered",
-        "totalPrice": 16970000.00,
-        "shippingFee": 20000.00,
-        "finalPrice": 16990000.00,
-        "note": "Giao hàng trước ngày 3/7/2023",
-        "paymentMethod": "COD",
-        "addressId": 13,
-        "deliveryApartmentNumber": "25",
-        "deliveryWard": "Linh Xuân",
-        "deliveryDistrict": "Thủ Đức",
-        "deliveryProvince": "Tp. Hồ Chí Minh",
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    },
-    {
-        "userName": "Quỳnh Trang Nè",
-        "orderId": 48,
-        "status": "Cancel",
-        "totalPrice": 390000.00,
-        "shippingFee": 0.00,
-        "finalPrice": 390000.00,
-        "note": "Giao hàng trước ngày 2/7/2023",
-        "paymentMethod": "COD",
-        "addressId": 24,
-        "deliveryApartmentNumber": "Hưng long",
-        "deliveryWard": "Phường Hưng Long",
-        "deliveryDistrict": "Huyện Chơn Thành",
-        "deliveryProvince": "Bình Phước",
-        "orderedDate": null,
-        "doneDate": null,
-        "deliveredDate": null,
-        "paidDate": null
-    }
-]

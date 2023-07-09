@@ -6,7 +6,7 @@ import { Link, Navigate } from 'react-router-dom'
 import bestSale from '../../../assets/images/bestSale.png'
 import { useDispatch } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
-import { Rating } from '@mui/material'
+
 const userInfo = JSON.parse(sessionStorage.getItem("userInfo")) 
 const cartId = sessionStorage.getItem("cartId")
 
@@ -35,7 +35,7 @@ const ProductCardBestSale = (props) => {
     }
     return (
     <div className='product__item' style={{position: 'relative'}}>
-        <div style={{position: 'absolute', zIndex: 10, top: -10, left: 0}}>
+        <div style={{position: 'absolute', zIndex: 10, top: 0, left: 0}}>
             <img src={bestSale} style={{width: '5rem', height: '5rem'}} />
             <p style={{backgroundColor: '#df2020',height: '2rem', color: 'white', fontWeight: 'bold', margin: 'auto',marginTop: 10
                     , padding: 5, borderRadius: 10}}>Sales: {quantity}</p>
@@ -43,14 +43,14 @@ const ProductCardBestSale = (props) => {
         <div className="product__img">
             {
                 product.thumbnail ?
-                (<img src={product.thumbnail.slice(0,-1)} alt="product-img" className='w-50'/>):
+                (<img src={product.thumbnail.slice(0,-1)} alt="product-img"/>):
                 (<img src={"https://www.pngitem.com/pimgs/m/45-455622_transparent-computer-png-gaming-pc-transparent-png-png.png"} alt="product-img" className='w-50'/>)
             }
             
         </div>
 
         <div className="product__content">
-            <h5 onClick={handleClickProductName} style={{fontWeight: 500, height: '4rem'}}><Link to={`/foods/${product.id}`}>{product.name}</Link></h5>
+            <h5 onClick={handleClickProductName} style={{fontWeight: 500, height: '4rem', color: 'white'}}><Link to={`/foods/${product.id}`}>{product.name}</Link></h5>
             <div className='d-flex align-items-center
              justify-content-between'>
                 {

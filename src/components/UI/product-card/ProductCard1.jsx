@@ -44,7 +44,13 @@ const ProductCard = (props) => {
             <div className='product__img'>
                 {
                     image ?
-                    (<img src={thumbnail.slice(0,-1)} alt="product-img" style={{width: 140, borderRadius: 20, height: 110}}/>):
+                    (
+                        <img
+                            src={thumbnail.slice(0,-1)}
+                            alt="product-img" 
+                            style={{width: 140, borderRadius: 20, height: 110}}
+                        />
+                    ):
                     (<img src={"https://www.pngitem.com/pimgs/m/45-455622_transparent-computer-png-gaming-pc-transparent-png-png.png"} alt="product-img" className='w-50'/>)
                 }
             </div>

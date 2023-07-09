@@ -165,8 +165,8 @@ const Cart = () => {
                   IMAGE
                 </p>
                 <p className='cartCard__name' style={{marginLeft: 50, fontWeight: 'bold'}}>NAME</p>
-                <p className='cartCard__amount1'>AMOUNT</p>
-                <p className='cartCard__amount1'>PRICE</p>
+                <p className='cartCard__amount1' style={{marginRight: 40}}>AMOUNT</p>
+                <p className='cartCard__amount1' style={{marginRight: 60}}>PRICE</p>
                 <p className='cartCard__amount1'>DISCOUNT</p>
                 <p className='cartCard__amount1' style={{marginRight: 90}}>TOTAL</p>
               </div>

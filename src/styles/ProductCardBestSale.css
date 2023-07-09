@@ -1,17 +1,27 @@
 .product__item {
-    border: 0.3px solid #F9813A;
+    border-radius: 10px;
+    background-color: #e4e1df;
     text-align: center;
     padding: 30px;
     cursor: pointer;
-
+    margin-right: 5px;
     position: relative;
+
 }
 .product__img {
     margin-bottom: 20px;
-    transition: 0.4s;
+    /* transition: 0.4s; */
+    display: flex;
+    justify-content: center;
+    flex-direction: row;
+    background-color: white;
+}
+.product__img img {
+    height: 150px;
+    width: 150px;
 }
 .product__img:hover {
-    transform: scale(1.3);
+    transform: scale(1.1);
 }
 .product__content h5 a{
     color: #212245;

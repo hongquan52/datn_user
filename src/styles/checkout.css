@@ -30,6 +30,15 @@
   margin-right: 20px;
   
 }
+.address__btn1 {
+  display: flex;
+  height: 150px;
+  margin-right: 20px;
+  
+}
+.address__btn1 button:hover {
+  background-color: #F9813A;
+}
 .address__btn button:hover {
   background-color: #df2020;
 }
@@ -42,6 +51,16 @@
   outline: none;
   background-color: #F9813A;
   color: #fff;
+}
+.address__btn1 button {
+  margin: auto;
+  width: 100px;
+  height :40px;
+  border-radius: 10px;
+  border: none;
+  outline: none;
+  background-color: #fde4e4;
+  color:red;
 }
 .address__title p {
   font-weight: bold;
@@ -144,7 +163,7 @@
   border: none;
   outline: none;
   border-radius: 10px;
-  
+  margin-left: 20px;
 }
 .voucher__title {
   display: flex;

@@ -8,17 +8,15 @@ import { useDispatch } from 'react-redux'
 import { cartActions } from '../../../store/shopping-cart/cartSlice'
 import { useNavigate } from 'react-router-dom'
 import { Rating } from '@mui/material'
+
+
 const userInfo = JSON.parse(sessionStorage.getItem("userInfo")) 
 const cartId = sessionStorage.getItem("cartId")
 
 const ProductCard = (props) => {
     const navigate = useNavigate()
     const {id, name, thumbnail, discount, discountPrice, price, rate} = props.item
-    const dispatch = useDispatch()
     
-    const handleClickProductName = () => {
-        window.location.reload();
-    }
     const addToCart = () => {
         // call API
         var requestOptions = {
@@ -30,9 +28,6 @@ const ProductCard = (props) => {
             .then(response => response.text())
             .then(result => console.log(result))
             .catch(error => console.log('error', error));
-      //------
-      window.location.reload();
-      
     }
     return (
     <div className='product__item'>
@@ -47,7 +42,7 @@ const ProductCard = (props) => {
         </div>
 
         <div className="product__content">
-            <h5 onClick={handleClickProductName} style={{fontWeight: 500, }}><Link to={`/foods/${id}`}>{name}</Link></h5>
+            <h5 style={{fontWeight: 500,height: 40 }}><Link to={`/foods/${id}`}>{name}</Link></h5>
             <Rating
                     style={{marginTop: -20}}
                     value={rate}

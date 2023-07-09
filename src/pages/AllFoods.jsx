@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react'
 import Helmet from '../components/Helmet/Helmet'
-import CommonSection from '../components/UI/common-section/CommonSection'
 import { Container, Col, Row } from 'reactstrap'
 import { Box, CircularProgress } from '@mui/material'
 import { Button, Dialog, Alert, AlertTitle, Breadcrumbs, Typography, Link } from '@mui/material'
@@ -45,6 +44,8 @@ const AllFoods = () => {
   // FILTER PRICE
   const [filterPriceMin, setFilterPriceMin] = useState(0);
   const [filterPriceMax, setFilterPriceMax] = useState(70000000);
+  // FILTER FLASH SALE
+  const [filterFlashSale, setFilterFlashSale] = useState(false);
   // SORT ASC / DESC
   const [sortMode, setSortMode] = useState('');
   // ONMODE FILTER
@@ -74,7 +75,7 @@ const AllFoods = () => {
   //const [productData, setProductData] = useState(products)
   const [pageNumber, setPageNumber] = useState(0)
 
-  const productPerPage = 8
+  const productPerPage = 12
   const visitedPage = pageNumber * productPerPage
 
   // react query fetch api
@@ -208,107 +209,220 @@ const AllFoods = () => {
   useEffect(() => {
     
     if(sortMode === 'ASC') {
-      if(filterBrand == '') {
-        if(filterRating ==='') {
-          const z = allProductDataOriginal.filter(
-            (item) => item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          let z1 = z.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
-          setAllProductData(z1);
+      if(filterFlashSale) {
+        if(filterBrand == '') {
+          if(filterRating ==='') {
+            const z = allProductDataOriginal.filter(
+              (item) => item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            let z1 = z.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
+            setAllProductData(z1);
+          }
+          else {
+            const y = allProductDataOriginal.filter(
+              (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            let z1 = y.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
+            setAllProductData(z1);
+          }
         }
         else {
-          const y = allProductDataOriginal.filter(
-            (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          let z1 = y.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
-          setAllProductData(z1);
+          if(filterRating !== '') {
+    
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            let z1 = x.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
+            setAllProductData(z1);
+          }
+          else {
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            let z1 = x.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
+            setAllProductData(z1);
+          }
         }
       }
       else {
-        if(filterRating !== '') {
-  
-          const x = allProductDataOriginal.filter(
-            (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          let z1 = x.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
-          setAllProductData(z1);
+        if(filterBrand == '') {
+          if(filterRating ==='') {
+            const z = allProductDataOriginal.filter(
+              (item) => item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            let z1 = z.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
+            setAllProductData(z1);
+          }
+          else {
+            const y = allProductDataOriginal.filter(
+              (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            let z1 = y.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
+            setAllProductData(z1);
+          }
         }
         else {
-          const x = allProductDataOriginal.filter(
-            (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          let z1 = x.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
-          setAllProductData(z1);
+          if(filterRating !== '') {
+    
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            let z1 = x.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
+            setAllProductData(z1);
+          }
+          else {
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            let z1 = x.sort((a, b) => (a.discountPrice > b.discountPrice) ? 1: -1);
+            setAllProductData(z1);
+          }
         }
       }
     }
     else if(sortMode === 'DESC') {
-      if(filterBrand == '') {
-        if(filterRating ==='') {
-          const z = allProductDataOriginal.filter(
-            (item) => item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          let z1 = z.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
-          setAllProductData(z1);
+      if(filterFlashSale) {
+
+        if(filterBrand == '') {
+          if(filterRating ==='') {
+            const z = allProductDataOriginal.filter(
+              (item) => item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            let z1 = z.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
+            setAllProductData(z1);
+          }
+          else {
+            const y = allProductDataOriginal.filter(
+              (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            let z1 = y.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
+            setAllProductData(z1);
+          }
         }
         else {
-          const y = allProductDataOriginal.filter(
-            (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          let z1 = y.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
-          setAllProductData(z1);
+          if(filterRating !== '') {
+    
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            let z1 = x.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
+            setAllProductData(z1);
+          }
+          else {
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            let z1 = x.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
+            setAllProductData(z1);
+          }
         }
       }
       else {
-        if(filterRating !== '') {
-  
-          const x = allProductDataOriginal.filter(
-            (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          let z1 = x.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
-          setAllProductData(z1);
+        if(filterBrand == '') {
+          if(filterRating ==='') {
+            const z = allProductDataOriginal.filter(
+              (item) => item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            let z1 = z.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
+            setAllProductData(z1);
+          }
+          else {
+            const y = allProductDataOriginal.filter(
+              (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            let z1 = y.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
+            setAllProductData(z1);
+          }
         }
         else {
-          const x = allProductDataOriginal.filter(
-            (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          let z1 = x.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
-          setAllProductData(z1);
+          if(filterRating !== '') {
+    
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            let z1 = x.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
+            setAllProductData(z1);
+          }
+          else {
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            let z1 = x.sort((a,b) => (a.discountPrice < b.discountPrice) ? 1: -1 );
+            setAllProductData(z1);
+          }
         }
       }
     }
     else {
-      if(filterBrand == '') {
-        if(filterRating ==='') {
-          const z = allProductDataOriginal.filter(
-            (item) => item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          
-          setAllProductData(z);
+      if(filterFlashSale) {
+
+        if(filterBrand == '') {
+          if(filterRating ==='') {
+            const z = allProductDataOriginal.filter(
+              (item) => item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            
+            setAllProductData(z);
+          }
+          else {
+            const y = allProductDataOriginal.filter(
+              (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            
+            setAllProductData(y);
+          }
         }
         else {
-          const y = allProductDataOriginal.filter(
-            (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          
-          setAllProductData(y);
+          if(filterRating !== '') {
+    
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+           
+            setAllProductData(x);
+          }
+          else {
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax && item.discount >=30
+            )
+            
+            setAllProductData(x);
+          }
         }
       }
       else {
-        if(filterRating !== '') {
-  
-          const x = allProductDataOriginal.filter(
-            (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-         
-          setAllProductData(x);
+        if(filterBrand == '') {
+          if(filterRating ==='') {
+            const z = allProductDataOriginal.filter(
+              (item) => item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            
+            setAllProductData(z);
+          }
+          else {
+            const y = allProductDataOriginal.filter(
+              (item) => Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            
+            setAllProductData(y);
+          }
         }
         else {
-          const x = allProductDataOriginal.filter(
-            (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax
-          )
-          
-          setAllProductData(x);
+          if(filterRating !== '') {
+    
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && Math.ceil(item.rate) == filterRating && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+           
+            setAllProductData(x);
+          }
+          else {
+            const x = allProductDataOriginal.filter(
+              (item) => item.brand === filterBrand && item.price >= filterPriceMin && item.price <= filterPriceMax
+            )
+            
+            setAllProductData(x);
+          }
         }
       }
     }
@@ -331,14 +445,14 @@ const AllFoods = () => {
     )
   }
 
-  const searchedProduct = data?.data?.filter((item) => {
-    if (searchTerm?.value === '')
-      return item;
-    if (item.name.toLowerCase().includes(searchTerm?.toLowerCase()))
-      return item
-  })
+  // const searchedProduct = data?.data?.filter((item) => {
+  //   if (searchTerm?.value === '')
+  //     return item;
+  //   if (item.name.toLowerCase().includes(searchTerm?.toLowerCase()))
+  //     return item
+  // })
   
-  const searchedProductNew = allProductData.filter((item) => {
+  const searchedProduct = allProductData.filter((item) => {
     if (searchTerm?.value === '')
       return item;
     if (item.name.toLowerCase().includes(searchTerm?.toLowerCase()))
@@ -487,16 +601,22 @@ const AllFoods = () => {
                 />
                 <p>Intel</p>
               </div>
+              <div className='filter__price-item'>
+                <input type='checkbox' value={'MSI'}
+                  onChange={(e) => setFilterBrand(e.target.value)}
+                  checked = { filterBrand === 'MSI' ? true : false }
+                />
+                <p>MSI</p>
+              </div>
               
             </div>
             <div className='filter__price-container'>
               <p className = 'filter__title-item'> ORTHER </p>  
               <div className='filter__price-item'>
-                <input type='checkbox'/>
-                <p>Hot product</p>
-              </div>
-              <div className='filter__price-item'>
-                <input type='checkbox'/>
+                <input type='checkbox'
+                  onChange={(e) => setFilterFlashSale(!filterFlashSale)}
+                  checked={filterFlashSale ? true : false}
+                />
                 <p>Flash sale</p>
               </div>
               
@@ -515,8 +635,8 @@ const AllFoods = () => {
                   setFilterRating('');
                   setFilterPriceMin(0);
                   setFilterPriceMax(100000000);
-                  navigate('/foods');
                   setSearchTerm('');
+                  navigate('/foods');
                 }}
                 className='filter__btn'><LoopIcon /> Refresh</button>
             </div>
@@ -525,7 +645,7 @@ const AllFoods = () => {
             style={{display: 'flex', justifyContent: 'flex-start',flexWrap: 'wrap'}}
           > 
             {
-              searchedProductNew.map((item) => (
+              displayPage.map((item) => (
                 <div style={{height: 270, width: 200,backgroundColor: '#fedac5', margin: 5,
                   borderRadius: 10}}>
                   <ProductCard1 item={item} sukien={handleClick} />
@@ -533,92 +653,7 @@ const AllFoods = () => {
                 </div>
               ))
             }
-
-          </Col>
-          
-        </Row>
-        
-      </Container>
-      <section>
-        <Container>
-          <Row>
-            <Col lg='6' md='6' sm='6' xs='12'>
-              <div className="search__widget d-flex align-items-center
-               justify-content-between w-50">
-                <input type="text" placeholder='Bạn muốn tìm gì?...'
-                  value={searchTerm} onChange={(e) => {
-                    setSearchTerm(e.target.value);
-                    // setAllProductData([]);
-                  }} />
-                <span><i className='ri-search-line'></i></span>
-              </div>
-            </Col>
-            
-            <Col lg='6' md='6' sm='6' xs='12' className='mb-5'>
-              <div className="sorting__widget text-end d-flex align-items-center
-               justify-content-between w-100">
-
-                <Box sx={{ minWidth: 200 }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Brand</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={brand}
-                      label="Brand"
-                      onChange={handleChangeBrand}
-                    >
-                      {
-                        brandData.map((item) => (
-                          <MenuItem value={item.name}>{item.name}</MenuItem>
-                        ))
-                      }
-
-                    </Select>
-                  </FormControl>
-                </Box>
-
-                <Box sx={{ minWidth: 200 }}>
-                  <FormControl fullWidth>
-                    <InputLabel id="demo-simple-select-label">Category</InputLabel>
-                    <Select
-                      labelId="demo-simple-select-label"
-                      id="demo-simple-select"
-                      value={category}
-                      label="Category"
-                      onChange={handleChangeCategory}
-                    >
-                      {
-                        categoryData.map((item) => (
-                          <MenuItem value={item.name}>{item.name}</MenuItem>
-                        ))
-                      }
-
-                    </Select>
-                  </FormControl>
-                </Box>
-
-              </div>
-            </Col>
-            
-            
-            {
-              allProductData.map((item) => (
-                <Col lg='3' md='4' sm='6' xs='6' key={item.id} className='mb-4' >
-                      {""}
-                      <ProductCard item={item} sukien={handleClick} />
-                    </Col>
-              ))
-            }
-            <h2>Search product</h2>
-            {
-              displayPage.map((item) => (
-                <Col lg='3' md='4' sm='6' xs='6' key={item.id} className='mb-4' >
-                      {""}
-                      <ProductCard item={item} sukien={handleClick} />
-                    </Col>
-              ))
-            }
+            {/* NOTIFY AND PAGING */}
             <Dialog open={open} onClose={handleClick}>
               <Alert
 
@@ -627,18 +662,29 @@ const AllFoods = () => {
                 Add product to cart succesfully
               </Alert>
             </Dialog>
-            <div>
-              <ReactPaginate
-                pageCount={pageCount}
-                onPageChange={changePage}
-                previousLabel='Prev'
-                nextLabel='Next'
-                containerClassName='paginationBttns'
-              />
-            </div>
-          </Row>
-        </Container>
-      </section>
+          </Col>
+          
+        </Row>
+        <Row>
+
+        </Row>
+            <Col lg='3'  md='4' sm='6' xs='6' className='mb-4'>
+
+            </Col>
+            <Col lg='9'  md='4' sm='6' xs='6' className='mb-4' style={{display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+              
+                <ReactPaginate
+                  pageCount={pageCount}
+                  onPageChange={changePage}
+                  previousLabel='Prev'
+                  nextLabel='Next'
+                  containerClassName='paginationBttns'
+                />
+              
+            </Col>
+        
+      </Container>
+      
     </Helmet>
   )
 }

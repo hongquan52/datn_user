@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useContext, useState } from 'react'
 import { Col, Row, Container } from 'reactstrap'
 import Helmet from '../components/Helmet/Helmet'
 import { Breadcrumbs, Typography, Box } from '@mui/material'
@@ -13,7 +13,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import '../styles/voucher.css'
 import axios from 'axios'
 import { baseURL } from '../constants/baseURL'
-import { useState } from 'react'
+import { AppContext } from '../Context/AppProvider'
 
 
 const Voucher = () => {
@@ -23,6 +23,7 @@ const Voucher = () => {
     // STATE CLAIM VOUCHER
     const [claimed, setClaimed] = useState({});
     // ALL VOUCHER STATE:
+    const { voucherData } = useContext(AppContext);
     const [allVoucher, setAllVoucher] = useState([]);
     const [allVoucherOriginal, setAllVoucherOriginal] = useState([]);
     // SEARCH VOUCHER:
@@ -52,12 +53,9 @@ const Voucher = () => {
     }, [filterVoucherType])
     useEffect(() => {
         // GET ALL VOUCHER LIST
-        axios.get(`${baseURL}/api/v1/voucher`)
-            .then((res) => {
-            setAllVoucher(res.data);
-            setAllVoucherOriginal(res.data);
-            })
-            .catch((err) => console.log("Voucher all error: ", err))
+        setAllVoucher(voucherData);
+        setAllVoucherOriginal(voucherData);
+        
         // GET VOUCHER BY USER ID
         let x = sessionStorage.getItem('userID');
         axios.get(`${baseURL}/api/v1/voucher/user?userId=${x}`)
@@ -171,10 +169,8 @@ const Voucher = () => {
         
                                         </div>
                                         <div style={{ width: 100 }}>
-                                            {/* <button className='voucher__btn-inactive' */}
-                                            {/* <button className='addressItem__btn' */}
                                             <button
-                                            className= {claimed?.[item.id] ? 'voucher__btn-inactive' : 'addressItem__btn'}
+                                            className= {claimed?.[item.id] ? 'voucher__btn-inactive' : 'voucher__btn'}
                                                 onClick={() => {
                                                     addVoucher(item.id);
                                                     setClaimed(prev=>({...prev, [item.id]: true}));
@@ -196,69 +192,3 @@ const Voucher = () => {
 }
 
 export default Voucher
-
-const a = [1,2,3,4,5]
-// import React from "react"
-// const objectData = [
-//     {name:'Javascript', price: 500},
-//     {name:'PHP', price: 35},
-//     {name:'Phyton', price: 36599},
-//     {name:'Javascript', price: 342},
-//     {name:'PHP', price: 34},
-//     {name:'Phyton', price: 22},
-//     {name:'Javascript', price: 745},
-//     {name:'PHP', price: 24},
-//     {name:'Phyton', price: 12},
-//     {name:'Javascript', price: 7},
-//     {name:'PHP', price: 78},
-//     {name:'Phyton', price: 67},
-//   ]
-  
-  
-//   const Voucher = () =>  {
-//     const [objectsToShow, setToShow] = React.useState(objectData)
-    
-//     const compare = (a, b, ascendingOrder) => {
-//       if (a < b) {
-//         return ascendingOrder ? -1 : 1;
-//       }
-//       if (a > b) {
-//         return ascendingOrder ? 1 : -1;
-//       }
-//       return 0;
-//     }
-    
-//     const handleChange = (value) => {
-//       if(value == 'none'){
-//           setToShow([...objectData])
-//       } else {
-//         let toType, toAscending
-//         switch(value){
-//           case 'ascending' : toType = true; toAscending = true; break;
-//           case 'descending' : toType = true; toAscending = false; break;
-//           case 'high' : toType = false; toAscending = true; break;
-//           case 'low' : toType = false; toAscending = false; break;
-//         }
-//         let current = [...objectData]
-//         current.sort((a, b) => toType ?
-//                compare(a.name, b.name, toAscending) 
-//                : 
-//                compare(a.price, b.price, toAscending))
-//         setToShow([...current])
-//       }
-//     }
-//     return(
-//       <div>
-//       <select onChange={(e) => handleChange(e.target.value)}>
-//         <option value="none">Default</option>
-//         <option value="ascending">Alphabetically, A-Z</option>
-//         <option value="descending">Alphabetically, Z-A</option>
-//         <option value="high">Low to high</option>
-//         <option value="low">High to low</option>
-//       </select>
-//       {objectsToShow.map(elem => <p key={elem.name}>{elem.name} {elem.price}</p>)}
-//       </div>
-//     )
-//   }
-
-//   export default Voucher;

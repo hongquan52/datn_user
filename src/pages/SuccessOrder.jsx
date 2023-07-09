@@ -1,68 +1,49 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect, useRef } from 'react'
 import { Link } from 'react-router-dom'
 import { Container, Row, Col } from 'reactstrap'
-import logoSuccess from '../assets/images/success.gif'
+import VNPAY from '../assets/images/vnpay.png'
 import '../styles/success.css'
 import Helmet from '../components/Helmet/Helmet'
-import { useQuery } from '@tanstack/react-query'
-import { thunkCartTypes, thunkOrderTypes } from '../constants/thunkTypes'
-import { getAllOrder } from '../api/fetchers/order';
-import { getProductInCart } from '../api/fetchers/cart'
-import { useEffect } from 'react'
+
+import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
+import ArrowBackIosNewIcon from '@mui/icons-material/ArrowBackIosNew';
+import axios from 'axios'
+import { baseURL } from '../constants/baseURL'
+import {useLocation, useParams } from 'react-router-dom'
 
 const cartId = sessionStorage.getItem('cartId')
 
 const SuccessOrder = () => {
 
-  const {isLoading, data} = useQuery([thunkOrderTypes.GET_ALLORDER], getAllOrder)
-  const getCartDetail = useQuery([thunkCartTypes.GET_PRODUCT_IN_CART], ()=> getProductInCart(cartId))
-  const [order, setOrder] = useState([])
-  const [cartDetail, setCartDetail] = useState([]);
+  const location = useLocation();
+  const ref = useRef();
 
-  console.log("getOrderBYUser: ", order)
-  const newBillId = order[order.length-1]?.billId;
-  console.log("product in cart detail: ", cartDetail)
-  console.log("new bill", newBillId);
-  
+  const [totalPrice, setTotalPrice] = useState(0);
+  const [orderID, setOrderID] = useState(0);
+
   useEffect(() => {
-    if(data && getCartDetail.data) {
-      setOrder(data.data);
-      setCartDetail(getCartDetail.data.data);
-    }
-  }, [data])
+    const params = new URLSearchParams(location.search);
+    const queryOrderID = params.get('orderID');
+    const queryTotalPrice = params.get('totalPrice');
 
-  const handleConfirm = () => {
-      cartDetail.map((item) => {
-        var requestOptions = {
-          method: 'POST',
-          redirect: 'follow'
-        };
-        
-        fetch(`http://localhost:8080/api/v1/bill/billDetail?billId=${newBillId}&productId=${item.productId}&amount=${item.amount}`, requestOptions)
-          .then(response => response.text())
-          .then(result => console.log(result))
-          .catch(error => console.log('error', error));
+    setTotalPrice(queryTotalPrice);
+    setOrderID(queryOrderID);
+  })
+
+  const handlePayment = () => {
+    sessionStorage.setItem('recentOrderID', orderID.toString());
+    sessionStorage.setItem('recentOrderPrice', totalPrice.toString());
+
+    axios.get(`${baseURL}/create-payment?amount=${totalPrice}&orderId=${orderID}`)
+      .then((res) => {
+        ref.current.href = res.data.data;
+        window.onload = document.getElementById('redirect').click();
       })
-
-      // clear cart detail
-      var requestOptions = {
-        method: 'DELETE',
-        redirect: 'follow'
-      };
-      
-      fetch(`http://localhost:8080/api/v1/cart/product/all?cartId=${cartId}`, requestOptions)
-        .then(response => response.text())
-        .then(result => console.log(result))
-        .catch(error => console.log('error', error));
-      window.location.reload();
-      //---------------------------
-
-      window.location.reload();
-
+      .catch((err) => console.log(err))
   }
   return (
     
-    <Helmet title='Đặt hàng thành công'>
+    <Helmet title='Payment'>
     
     <section>
       <Container>
@@ -70,22 +51,25 @@ const SuccessOrder = () => {
           <Col lg='6' md='6' sm='12' className='m-auto text-center'>
                 <div className="success__wrapper">
                     <div className="success__icon">
-                        <img src={logoSuccess} alt="" />
+                        <img src={VNPAY} alt="" />
                     </div>
                     <div className="success__title">
-                        <h5>Đặt hàng thành công</h5>
+                        <h5>OrderID : {orderID}</h5>
+                        <h5>Total Price : {totalPrice}</h5>
                     </div>
-                    {/* <div className="sucess__content">
-                        <h6>Mã hơn hàng của bạn là: DH0001</h6>
-                    </div>          */}
-                    <Link to={'/historyOrder'}><button className='addToCart__btn'>Lịch sử mua hàng</button></Link>
-                    <button className='addToCart__btn' onClick={handleConfirm}>Xác nhận đặt hàng</button>
+                    <div style={{display: 'flex',width: 500, justifyContent: 'space-between'}}>
+                      <Link to={'/checkout'}><button className='payment__btn'><ArrowBackIosNewIcon />Checkout</button></Link>
+                      <button className='payment__btn'
+                        onClick={() => handlePayment()}
+                      >Payment <ArrowForwardIosIcon /></button>
+                    </div>
                     
                 </div>
           </Col>
         </Row>
       </Container>
     </section>
+    <a href rel="noreferrer" id="redirect" ref={ref}></a>
   </Helmet>
     
   )

@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Link } from 'react-router-dom'
-import CommonSection from '../components/UI/common-section/CommonSection'
+import { Link, useNavigate } from 'react-router-dom'
 import Helmet from '../components/Helmet/Helmet'
 import { Container, Row, Col, ListGroup, ListGroupItem, ListInlineItem } from 'reactstrap'
 import { useForm } from 'react-hook-form'
@@ -15,14 +14,12 @@ import AddLocationIcon from '@mui/icons-material/AddLocation';
 import AccountCircleIcon from '@mui/icons-material/AccountCircle';
 import AddCircleIcon from '@mui/icons-material/AddCircle';
 import HomeIcon from '@mui/icons-material/Home';
-import SaveIcon from '@mui/icons-material/Save';
 import LockIcon from '@mui/icons-material/Lock';
 import CardGiftcardIcon from '@mui/icons-material/CardGiftcard';
 import NavigationNexIcon from '@mui/icons-material/NavigateNext';
 import VisibilityOffIcon from '@mui/icons-material/VisibilityOff';
 import VisibilityIcon from '@mui/icons-material/Visibility';
 import LinkBreadcrums from '@mui/material/Link'
-import EditIcon from '@mui/icons-material/Edit';
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
@@ -32,16 +29,21 @@ import axios from 'axios'
 // TOASTIFY
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { useContext } from 'react'
+import { AppContext } from '../Context/AppProvider'
 
 const UserInformation = () => {
+
+    const { userData } = useContext(AppContext)
+
     const { userId } = useParams()
+    const navigate = useNavigate();
     const [loading, setLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState();
 
     const [linkImageURL, setLinkImageURL] = useState();
 
     const [gender, setGender] = useState()
-
     // REACT HOOK FORM
     const {
         register,
@@ -57,10 +59,10 @@ const UserInformation = () => {
     const [hidePassword, setHidePassword] = useState(true);
     const [modalAddressVisible, setModalAddressVisible] = useState(false);
     // ADDRESS LIST DATA:
+
     const [provinceString, setProvinceString] = useState('');
     const [districtString, setDistrictString] = useState('');
     const [wardString, setWardString] = useState('');
-
 
     const [age, setAge] = React.useState();
     const [provinceData, setProvinceData] = useState([]);
@@ -70,7 +72,7 @@ const UserInformation = () => {
     const [wardData, setWardData] = useState([]);
     const [apartmentNumber, setApartmentNumber] = useState('');
     // USER INFO
-    const [userData, setUserData] = useState({});
+    // const [userData, setUserData] = useState({});===============================================
     // CHANGE PASSWORD STATE:
     const [password0, setPassword0] = useState('');
     const [password1, setPassword1] = useState('');
@@ -90,10 +92,20 @@ const UserInformation = () => {
     };
     // CREATE NEW ADDRESS
     const createAddress = () => {
+        let wardObject = JSON.stringify({
+            ward_id: wardValue,
+            ward_name: wardString
+        })
+        let districtObject = JSON.stringify({
+            district_id: districtValue,
+            district_name: districtString,
+        })
+
+
         var formData = new FormData();
         formData.append('apartmentNumber', apartmentNumber);
-        formData.append('ward', wardString);
-        formData.append('district', districtString);
+        formData.append('ward', wardObject);
+        formData.append('district', districtObject);
         formData.append('province', provinceString);
         formData.append('defaultAddress', '0');
 
@@ -106,8 +118,8 @@ const UserInformation = () => {
             "address": {
                 "id": 3,
                 "apartmentNumber": apartmentNumber,
-                "ward": wardString,
-                "district": districtString,
+                "ward": wardObject,
+                "district": districtObject,
                 "province": provinceString,
             },
             "defaultAddress": false
@@ -117,22 +129,22 @@ const UserInformation = () => {
     }
     // UPDATE CUSTOMER
     const onSubmit = (data) => {
-        const {name, email, phone} = data;
-        
-        if(selectedImage) {
+        const { name, email, phone } = data;
+
+        if (selectedImage) {
             var dataForm = new FormData();
             dataForm.append('name', name);
             dataForm.append('email', email);
             dataForm.append('phone', phone);
             dataForm.append('image', selectedImage);
-            if(gender === 'male') {
+            if (gender === 'male') {
                 dataForm.append('gender', '1');
             }
             else {
                 dataForm.append('gender', '0');
             }
-            
-            axios.put(`${baseURL}/api/v1/user/${userId}`, dataForm,{
+
+            axios.put(`${baseURL}/api/v1/user/${userId}`, dataForm, {
                 headers: {
                     "Content-Type": "multipart/form-data"
                 }
@@ -148,13 +160,13 @@ const UserInformation = () => {
             dataForm.append('name', name);
             dataForm.append('email', email);
             dataForm.append('phone', phone);
-            if(gender === 'male') {
+            if (gender === 'male') {
                 dataForm.append('gender', '1');
             }
             else {
                 dataForm.append('gender', '0');
             }
-            axios.put(`${baseURL}/api/v1/user/${userId}`, dataForm,{
+            axios.put(`${baseURL}/api/v1/user/${userId}`, dataForm, {
             })
                 .then((res) => {
                     console.log(res.data);
@@ -214,28 +226,22 @@ const UserInformation = () => {
 
     useEffect(() => {
         setLoading(true);
-        //GET USER BY ID
-        axios.get(`${baseURL}/api/v1/user/${userId}`)
+        
+        setGender(userData.gender);
+        setValue('name', userData.name);
+        setValue('email', userData.email);
+        setValue('phone', userData.phone);
+        setValue('role', userData.role.name);
+        setValue('rank', userData.rank.name);
+        // GET IMAGE URL
+        axios.get(`${baseURL}/api/v1/user/image?filename=${userData.image}`)
             .then((res) => {
-                setUserData(res.data);
-                setGender(res.data.gender);
-                // SET VALUE REACT HOOK FORM
-                setValue('name', res.data.name);
-                setValue('email', res.data.email);
-                setValue('phone', res.data.phone);
-                setValue('role', res.data.role.name);
-                setValue('rank', res.data.rank.name);
-                // GET IMAGE URL
-                axios.get(`${baseURL}/api/v1/user/image?filename=${res.data.image}`)
-                    .then((res) => {
-                        let x = res.data
-                        let b = x.slice( 0, -1 );
-                        setLinkImageURL(b);
-                    })
-                    .catch((err) => console.log("Image url error: ", err))
+                let x = res.data
+                let b = x.slice(0, -1);
+                setLinkImageURL(b);
             })
-            .catch((err) => console.log("User error: ", err))
-
+            .catch((err) => console.log("Image url error: ", err))
+        
         // GET ALL ADDRESS BY USERID
         axios.get(`${baseURL}/api/v1/address/user?userId=${userId}`)
             .then((res) => {
@@ -268,6 +274,7 @@ const UserInformation = () => {
             })
             .finally(() => setLoading(false))
     }, [])
+
     useEffect(() => {
         axios.get(`https://online-gateway.ghn.vn/shiip/public-api/master-data/district?province_id=${age}`,
             {
@@ -358,6 +365,23 @@ const UserInformation = () => {
                 console.log("Error district response: ", err);
             })
     }, [wardValue])
+
+    // UPDAte ADDRESS
+    const updateDefaultAddress = (item) => {
+        var datas = new FormData();
+
+        datas.append('apartmentNumber', item.address.apartmentNumber);
+        datas.append('ward', item.address.ward);
+        datas.append('district', item.address.district);
+        datas.append('province', item.address.province);
+        datas.append('defaultAddress', true);
+
+        axios.put(`${baseURL}/api/v1/address/user?userId=${userId}&addressId=${item.address.id}`, datas)
+            .then((res) => console.log(res.data.message))
+            .catch((err) => console.log("Error edit address: ", err))
+
+        window.location.reload();
+    }
 
     // if (loading) {
     //     return (
@@ -479,7 +503,7 @@ const UserInformation = () => {
                                     <div className='profile__item'>
                                         <p className='profile__label'>Rank</p>
                                         <div className="newsletter">
-                                            <input type="email" 
+                                            <input type="email"
                                                 {...register("rank")}
                                             />
                                         </div>
@@ -518,7 +542,7 @@ const UserInformation = () => {
                                                     onChange={(event) => {
                                                         setSelectedImage(event.target.files[0]);
                                                         console.log("Name file choose: ", event.target.files[0])
-                                                        
+
                                                     }}
                                                 />
                                             </div>
@@ -553,14 +577,25 @@ const UserInformation = () => {
                                             }}>
                                                 <div className='address__item-text'>
                                                     <p>{item.address.apartmentNumber}</p>
-                                                    <p style={{ color: 'grey' }}>{item.address.ward + ', '}{item.address.district + ', '}{item.address.province}</p>
+                                                    <p style={{ color: 'grey' }}>
+                                                        {item.address.ward[0] === '{' ? JSON.parse(item.address.ward).ward_name : item.address.ward},
+                                                        {item.address.district[0] === '{' ? JSON.parse(item.address.district).district_name : item.address.district},
+                                                        {item.address.province}</p>
                                                     {
                                                         item.defaultAddress == true && <p className='defaultAddress__flag'>Default address</p>
 
                                                     }
                                                 </div>
-                                                <div>
-                                                    <button className='addressItem__btn'><EditIcon /></button>
+                                                <div style={{ display: 'flex', alignItems: 'center' }}>
+                                                    {/* <button className='addressItem__btn'><EditIcon /></button> */}
+                                                    <input
+                                                        type='radio'
+                                                        style={{ width: 20, height: 20, marginRight: 30 }}
+                                                        checked={
+                                                            item.defaultAddress ? true : false
+                                                        }
+                                                        onChange={() => updateDefaultAddress(item)}
+                                                    />
                                                     <button className='addressItem__btn' style={{ backgroundColor: 'red' }}
                                                         onClick={() => removeAddress(item.address.id)}
                                                     ><DeleteIcon /></button>
@@ -649,21 +684,19 @@ const UserInformation = () => {
                                                         style={{ marginLeft: -30 }}
                                                     >
                                                         <input type="email"
+                                                            style={{ height: 50, width: 300 }}
                                                             onChange={(e) => setApartmentNumber(e.target.value)}
                                                         />
                                                     </div>
                                                 </div>
                                                 <button
-                                                    style={{ padding: 5, backgroundColor: '#F9813A', color: 'white' }}
+                                                    style={{ padding: 5, backgroundColor: '#F9813A', color: 'white', border: 'none', outline: 'none', padding: 10 }}
                                                     onClick={() => {
                                                         setModalAddressVisible(!modalAddressVisible);
 
                                                         createAddress();
 
                                                     }}>Save</button>
-                                                <button onClick={() => {
-                                                    console.log({ wardString, districtString, provinceString });
-                                                }}>SHOW ADDRESS</button>
                                             </div>
 
                                         </Box>
@@ -774,52 +807,6 @@ const UserInformation = () => {
 
 export default UserInformation
 
-const addressByUser = [
-    {
-        "user": 1,
-        "address": {
-            "id": 3,
-            "apartmentNumber": "115 Xuan Dieu",
-            "ward": "12",
-            "district": "Can Lộc",
-            "province": "Hà Tĩnh"
-        },
-        "defaultAddress": true
-    },
-    {
-        "user": 1,
-        "address": {
-            "id": 8,
-            "apartmentNumber": "35 Bùi Quang Là",
-            "ward": "Phường 12",
-            "district": "Gò Vấp",
-            "province": "TPHCM"
-        },
-        "defaultAddress": false
-    },
-    {
-        "user": 1,
-        "address": {
-            "id": 9,
-            "apartmentNumber": "12/2 đường số 5",
-            "ward": "Phường 12",
-            "district": "Thủ đức",
-            "province": "TPHCM"
-        },
-        "defaultAddress": false
-    },
-    {
-        "user": 1,
-        "address": {
-            "id": 10,
-            "apartmentNumber": "37 Bùi Quang là",
-            "ward": "Phường 12",
-            "district": "Gò vấp",
-            "province": "TPHCM"
-        },
-        "defaultAddress": false
-    }
-]
 
 const style = {
     position: 'absolute',

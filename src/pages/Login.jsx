@@ -14,6 +14,8 @@ import { getCart } from '../api/fetchers/cart'
 import axios from 'axios'
 import { baseURL } from '../constants/baseURL'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
@@ -25,6 +27,18 @@ const Login = () => {
   const [phone, setPhone] = useState('');
   const [password, setPassword] = useState('');
   const [hidePassword, setHidePassword] = useState(true);
+
+  // NOTIFY TOASTIFY
+  const showToastMessage = (message) => {
+    toast.success(message, {
+      position: toast.POSITION.TOP_RIGHT
+    });
+  };
+  const showToastMessageError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_RIGHT
+    });
+  };
 
   const navigate = useNavigate()
   const {
@@ -38,10 +52,7 @@ const Login = () => {
       .then((res) => sessionStorage.setItem('tokenGG', res.data))
   }
   const onSubmit = async () => {
-    const messageErr = document.querySelector('.response');
-    const info = document.querySelector('.info');
-
-
+   
     var formdata = new FormData();
     formdata.append("phone", phone);
     formdata.append("password", password);
@@ -49,11 +60,16 @@ const Login = () => {
     axios.post(`${baseURL}/auth/login`, formdata)
       .then((res) => {
         if (res.data.status === 'UNAUTHORIZED') {
-          // alert('Your phone or password is incorrect!!!')
-          setOpenNotify(true);
+          if(res.data.message === 'User is disabled') {
+            showToastMessageError(`${res.data.message}. Please check your email to verify account!!!`);
+            
+          }
+          else {
+            showToastMessageError("Your phone or password is incorrect!!")
+          }
         }
         else {
-          console.log("Login thành công: ", res.data.data.accessToken);
+          showToastMessage("Login successfully!")
           decoded(res.data.data.accessToken); // decode bên FE
           navigate("/home");
           window.location.reload();
@@ -76,6 +92,7 @@ const Login = () => {
   }
   return (
     <Helmet title='Login'>
+      <ToastContainer />
       <Dialog open={openNotify} onClose={() => setOpenNotify(!openNotify)}>
         <Alert
           severity="error"
@@ -84,7 +101,7 @@ const Login = () => {
           Your phone or password is incorrect !!!
         </Alert>
       </Dialog>
-      
+
       <div className='login__container'>
 
         <section>
@@ -119,7 +136,9 @@ const Login = () => {
                         style={{ backgroundColor: '#fedac5', padding: 5, borderRadius: 5, fontSize: 14, paddingLeft: 10, width: 200 }} />
 
                     </div>
-                    
+                    <div style={{display: 'flex',flexDirection: 'row'}}>
+                      <Link to={'/reset-password'} style={{fontSize: 14}}>Forgot password</Link>
+                    </div>
                     <button
                       onClick={() => onSubmit()}
                       className='login__btn'

@@ -8,6 +8,8 @@ import '../styles/login.css'
 import axios from 'axios'
 import { baseURL } from '../constants/baseURL'
 
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 const Register = () => {
 
   const [phone, setPhone] = useState('');
@@ -21,16 +23,25 @@ const Register = () => {
   // NOTIFY REGISTER
   const [openNotify, setOpenNotify] = useState(false);
   const [openNotify1, setOpenNotify1] = useState(false);
-
+  // TOASTIFY
+  const showToastMessageSuccess = (message) => {
+    toast.success(message, {
+        position: toast.POSITION.TOP_RIGHT
+    });
+  };
+  const showToastMessageError = (message) => {
+    toast.error(message, {
+        position: toast.POSITION.TOP_RIGHT
+    });
+  };
   const navigate = useNavigate();
   // REGISTER FUNCTION
   const onSubmit = () => {
     if(password !== confirmPassword) {
-      // console.log("Mật khẩu không trùng khớp: ", phone, name, email, password, confirmPassword);
-      setOpenNotify1(true);
+      showToastMessageError('Your password is not match!!!')
     }
     else {
-      setOpenNotify(true);
+      showToastMessageSuccess('Register successfully. Please check your email to active account!')
       var dataForm = new FormData();
       dataForm.append('name', name);
       dataForm.append('email', email);
@@ -46,6 +57,7 @@ const Register = () => {
 
   return (
     <Helmet title='Login'>
+      <ToastContainer />
       <Dialog open={openNotify} onClose={() => navigate('/login')}>
         <Alert
           severity="success"

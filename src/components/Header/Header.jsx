@@ -3,7 +3,6 @@ import { Container } from "reactstrap"
 import { NavLink, Link, useNavigate } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
 import { cartUiActions } from '../../store/shopping-cart/cartUiSlice'
-import avatarHeader from '../../assets/images/ava-1.jpg'
 import "../../styles/header.css";
 import { useQuery } from '@tanstack/react-query'
 import { thunkCartTypes } from '../../constants/thunkTypes'
@@ -11,10 +10,11 @@ import { getCart } from '../../api/fetchers/cart'
 
 import {Button, Dialog, Alert, AlertTitle, Icon} from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
+import axios from 'axios'
+import { baseURL } from '../../constants/baseURL'
 
+const userID1 = sessionStorage.getItem("userID");
 
-const userID = sessionStorage.getItem("userID")
-const userName = sessionStorage.getItem("userName")
 
 const nav__links = [
   {
@@ -28,7 +28,7 @@ const nav__links = [
   
   {
     display: "Profile",
-    path: `/userinformation/${userID}`
+    path: `/userinformation/${userID1}`
     
   } 
   ,
@@ -40,6 +40,9 @@ const nav__links = [
 ]
 
 const Header = () => {
+  const userID = sessionStorage.getItem("userID");
+  const [userData, setUserData]  = useState({});
+
   const {isLoading, data} = useQuery([thunkCartTypes.GET_CART], () => getCart(userID) )
   
   const [searchText, setSearchText] = useState('');
@@ -64,6 +67,24 @@ const Header = () => {
     }
   }, [data])
 
+  useEffect(() => {
+    axios.get(`${baseURL}/api/v1/user/${userID}`)
+      .then((res) => {
+        // SET PHONE AND NAME TO SESSIONSTORAGE
+        sessionStorage.setItem('customerName', res.data.name);
+        sessionStorage.setItem('customerPhone', res.data.phone);
+        // GET IMAGE URL
+        axios.get(`${baseURL}/api/v1/user/image?filename=${res.data.image}`)
+        .then((res) => {
+            let x = res.data
+            let b = x.slice(0, -1);
+            setUserData(b);
+        })
+        .catch((err) => console.log("Image url error: ", err))
+      })
+      .catch((err) => console.log(err))
+  }, [])
+
   const logout = () => {
     sessionStorage.removeItem("userID");
     sessionStorage.removeItem("cartId");
@@ -79,10 +100,6 @@ const Header = () => {
   const handleClick = () => {
     setOpen(!open);
   };
-  const soLuongSanPhamTrongGioHang = data?.data?.results?.product.reduce((acc, currentValue) => {
-    return acc + currentValue.number
-  }, 0)
-
   
   return (
     
@@ -143,11 +160,8 @@ const Header = () => {
             <span>
                 {
                   userID ?
-                  <div style={{flexDirection: 'row'}}>
-                    <img src={avatarHeader}
-                      style={{width: 40, height: 40, borderRadius: 20}}
-                      />
-                      {/* <p>{userName}</p> */}
+                  <div className='header__avatar' onClick={() => navigate(`/userinformation/${userID}`)}>
+                    <img src={userData} />
                   </div>
                   :
                   null

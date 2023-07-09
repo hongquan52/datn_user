@@ -11,3 +11,32 @@
 .delivery__item-info p {
     margin: auto 0px;
 }
+
+.form__group {
+
+}
+.form__group label {
+    margin-right: 50px;
+    width: 200px;
+    margin-bottom: 20px;
+    padding-bottom: 5px;
+    border-bottom: black solid 0.5px;
+}
+.form__group input {
+    outline: none;
+    border: none;
+    padding: 10px;
+    background-color: #fde4e4;
+}
+.addToCart__btn {
+    padding: 5px 10px;
+    background-color: #F9813A;
+    color: white;
+    outline: none;
+    border: none;
+}
+.userFormRight {
+    align-items: center;
+    display: flex;
+    flex-direction: column;
+}

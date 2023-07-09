@@ -38,17 +38,7 @@ const TestimonialSlider = () => {
                 reviewData.map((item, index) => (
                     <div key={index}>
                         <div style={{backgroundColor: '#E5E5E5', borderRadius: 10, paddingBottom: 10}}>
-                            <div className='user__containner' style={{display: 'flex', flexDirection: 'row', alignItems: 'center'}}>
-                                <img src={'https://www.realmadrid.com/img/vertical_380px/380x501_kroos_20230215094339.jpg'}
-                                        style={{
-                                            height: 60,
-                                            width: 60,
-                                            borderRadius: 40,
-                                            margin: 10,
-                                        }}
-                                />
-                                <h6 style={{fontWeight: 'bold', fontSize: 20, color: 'white'}}>{item.userName}</h6>
-                            </div>
+                            <p style={{fontWeight: 'bold', fontSize: 20, color: 'black', margin: 10, paddingTop: 20}}>{item.userName}</p>
                             <Rating
                                 name="simple-controlled"
                                 value={item.vote}
@@ -59,7 +49,7 @@ const TestimonialSlider = () => {
                             {item.content}
                             </p>
                             <div className='d-flex align-items-center gap-3 mt-4' style={{marginLeft: 10}}>
-                                <img src={item.productThumbnail} alt="avatar"
+                                <img src={item.productThumbnail.slice(0,-1)} alt="avatar"
                                     style={{
                                         height: 100,
                                         width: 100,

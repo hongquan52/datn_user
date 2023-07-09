@@ -25,7 +25,6 @@ import BreadCrumb from '../components/Breadcrumb/BreadCrumb'
 import axios from 'axios'
 import { baseURL } from '../constants/baseURL'
 
-const userInfo = JSON.parse(sessionStorage.getItem("userInfo"))
 const cartId = sessionStorage.getItem("cartId")
 
 const userID = sessionStorage.getItem("userID")
@@ -46,18 +45,34 @@ const FoodDetails = () => {
   const [feedbackDataOriginal, setFeedbackDataOriginal] = useState([])
   // RATING STATE
   const [value, setValue] = React.useState(2);
+  const [totalReview, setTotalReview] = useState(0);
+
+  // TOTAL REVIEW STAR
+  const [total5Star, setTotal5Star] = useState(0)
+  const [total4Star, setTotal4Star] = useState(0)
+  const [total3Star, setTotal3Star] = useState(0)
+  const [total2Star, setTotal2Star] = useState(0)
+  const [total1Star, setTotal1Star] = useState(0)
+
   // AMOUNT PRODUCT BUY STATE:
   const [amountProduct, setAmountProduct] = useState(1);
-  const dispatch = useDispatch()
 
   const [previewImgList, setPreviewImgList] = useState([]);
   const [previewImg, setPreviewImg] = useState()
 
 
   const addItem = (productID) => {
-    axios.post(`${baseURL}/api/v1/cart/product?cartId=1&productId=${productID}&amount=${amountProduct}`)
-      .then((res) => console.log(res.data.message))
-      .catch((err) => console.log("Add product to cart error: ", err))
+    if(amountProduct > productDetail.inventory) {
+      showToastMessageError('Amount purchase must less product inventory!');
+    }
+    else {
+      axios.post(`${baseURL}/api/v1/cart/product?cartId=${cartId}&productId=${productID}&amount=${amountProduct}`)
+        .then((res) => {
+          showToastMessage('Add product successfully!!')
+        })
+        .catch((err) => console.log("Add product to cart error: ", err))
+      
+    }
   }
 
 
@@ -89,7 +104,7 @@ const FoodDetails = () => {
 
         }
         else {
-          showToastMessage();
+          showToastMessage("Write review successfully!!");
           setRatingFlag(!ratingFlag);
         }
 
@@ -98,14 +113,21 @@ const FoodDetails = () => {
 
   }
   // TOAST SUCCESS BUY PRODUCT:
-  const showToastMessage = () => {
-    toast.success('Buy successfully !', {
+  const showToastMessage = (message) => {
+    toast.success(message, {
       position: toast.POSITION.TOP_RIGHT
     });
   };
   // TOAST ERROR REVIEW BEFORE BUY DONE PRODUCT:
   const showToastMessageErrorReview = () => {
     toast.error('Cannot review before bought product !', {
+      position: toast.POSITION.TOP_RIGHT
+    });
+
+  };
+  // TOAST ERROR
+  const showToastMessageError = (message) => {
+    toast.error(message, {
       position: toast.POSITION.TOP_RIGHT
     });
 
@@ -137,16 +159,28 @@ const FoodDetails = () => {
     // GET ALL REVIEW BY PRODUCT ID
     axios.get(`${baseURL}/api/v1/review/product?productId=${productId}`)
       .then((res) => {
-        console.log("Product data review: ", res.data);
+        setTotalReview(res.data.list.length);
         setFeedbackData(res.data.list);
         setFeedbackDataOriginal(res.data.list);
+
+        // GET TOTAL AMOUNT REVIEW
+        const total5Star = res.data.list.filter((item) => {return item.vote == 5.0})
+        setTotal5Star(total5Star.length);
+        const total4Star = res.data.list.filter((item) => {return item.vote == 4.0})
+        setTotal4Star(total4Star.length);
+        const total3Star = res.data.list.filter((item) => {return item.vote == 3.0})
+        setTotal3Star(total3Star.length);
+        const total2Star = res.data.list.filter((item) => {return item.vote == 2.0})
+        setTotal2Star(total2Star.length);
+        const total1Star = res.data.list.filter((item) => {return item.vote == 1.0})
+        setTotal1Star(total1Star.length);
       })
       .catch((err) => console.log("Review error: ", err))
   }, [])
 
   // RELATED PRODUCT
   const relatedProduct = allProductData.filter(
-    item => item.price <= productDetail.price && item.id != productId
+    item => item.price <= productDetail.price && item.id != productId && item.category === productDetail.category
   )
 
   // if () {
@@ -226,7 +260,7 @@ const FoodDetails = () => {
                 <p className="product__title mb-3">{productDetail.name}</p>
                 <div style={{ flexDirection: 'row', display: 'flex', alignItems: 'center' }}>
                   <p className='product__title-item' style={{ marginRight: 20, paddingRight: 10, fontWeight: 'bold' }}>{productDetail?.rate?.toFixed(2)} ★</p>
-                  <p className='product__title-item' style={{ marginRight: 20, paddingRight: 10, fontWeight: 'bold' }}>2.7K reviews</p>
+                  <p className='product__title-item' style={{ marginRight: 20, paddingRight: 10, fontWeight: 'bold' }}>{totalReview} reviews</p>
                   <p style={{ fontWeight: 'bold' }}>{200 - productDetail.inventory} purchased</p>
                 </div>
                 <Rating
@@ -275,7 +309,6 @@ const FoodDetails = () => {
                   <button
                     onClick={() => {
                       addItem(productId);
-                      showToastMessage();
                     }}
                     className="addTOCart__btn">
                     ADD TO CART
@@ -286,8 +319,8 @@ const FoodDetails = () => {
             </Col>
             <Col lg='10'>
               <div className="tabs d-flex align-items-center gap-3 py-3">
-                <h6 className={`${tab === 'desc' ? 'tab__active' : ''}`} onClick={() => setTab('desc')}>Mô tả</h6>
-                <h6 className={`${tab === 'rev' ? 'tab__active' : ''}`}
+                <h6 className={`${tab === 'desc' ? 'tab__activeProductDetail' : ''}`} onClick={() => setTab('desc')}>Mô tả</h6>
+                <h6 className={`${tab === 'rev' ? 'tab__activeProductDetail' : ''}`}
                   onClick={() => setTab('rev')}>Đánh giá</h6>
               </div>
               {
@@ -301,7 +334,7 @@ const FoodDetails = () => {
                       <div style={{ marginTop: 50 }}>
                         <div>
                           <p style={{ fontSize: 20, fontWeight: 'bold' }}>Review product</p>
-                          <p>3.4/5 ( 5 reviews)</p>
+                          <p>{productDetail?.rate?.toFixed(2)}/5 ( {totalReview} reviews)</p>
                           <Rating
                             name="simple-controlled"
                             value={4}
@@ -313,7 +346,7 @@ const FoodDetails = () => {
                             <p style={{ width: 10, fontSize: 20 }}>5</p>
                             <i class="ri-star-fill" style={{ color: '#f9a825', fontSize: 20 }}></i>
                             <div style={{ backgroundColor: 'white', height: 20, width: 200 }}>
-                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 120 }}></div>
+                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 10*total5Star }}></div>
 
                             </div>
                           </div>
@@ -321,7 +354,7 @@ const FoodDetails = () => {
                             <p style={{ width: 10, fontSize: 20 }}>4</p>
                             <i class="ri-star-fill" style={{ color: '#f9a825', fontSize: 20 }}></i>
                             <div style={{ backgroundColor: 'white', height: 20, width: 200 }}>
-                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 190 }}></div>
+                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 10*total4Star }}></div>
 
                             </div>
                           </div>
@@ -329,7 +362,7 @@ const FoodDetails = () => {
                             <p style={{ width: 10, fontSize: 20 }}>3</p>
                             <i class="ri-star-fill" style={{ color: '#f9a825', fontSize: 20 }}></i>
                             <div style={{ backgroundColor: 'white', height: 20, width: 200 }}>
-                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 110 }}></div>
+                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 10*total3Star }}></div>
 
                             </div>
                           </div>
@@ -337,7 +370,7 @@ const FoodDetails = () => {
                             <p style={{ width: 10, fontSize: 20 }}>2</p>
                             <i class="ri-star-fill" style={{ color: '#f9a825', fontSize: 20 }}></i>
                             <div style={{ backgroundColor: 'white', height: 20, width: 200 }}>
-                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 80 }}></div>
+                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 10*total2Star }}></div>
 
                             </div>
                           </div>
@@ -345,7 +378,7 @@ const FoodDetails = () => {
                             <p style={{ width: 10, fontSize: 20 }}>1</p>
                             <i class="ri-star-fill" style={{ color: '#f9a825', fontSize: 20 }}></i>
                             <div style={{ backgroundColor: 'white', height: 20, width: 200 }}>
-                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 20 }}></div>
+                              <div style={{ backgroundColor: '#F9813A', height: 20, width: 10*total1Star }}></div>
 
                             </div>
                           </div>

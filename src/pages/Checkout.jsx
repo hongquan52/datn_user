@@ -5,11 +5,8 @@ import CommonSection from '../components/UI/common-section/CommonSection'
 import Helmet from '../components/Helmet/Helmet'
 import { Combobox, DropdownList } from "react-widgets"
 import '../styles/checkout.css'
-import { useQuery } from '@tanstack/react-query'
-import { thunkAddressTypes, thunkCartTypes, thunkOrderTypes, thunkUserTypes } from '../constants/thunkTypes'
-import { getCart, getProductInCart } from '../api/fetchers/cart'
+
 import { useEffect } from 'react'
-import { API } from '../api/baseUrl'
 import { Link, useNavigate } from 'react-router-dom'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
 import { InputLabel, MenuItem, Select, FormControl } from '@mui/material'
@@ -21,25 +18,25 @@ import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
 import { pay } from '../api/fetchers/pay'
 import { useRef } from 'react'
-import { getUSer } from '../api/fetchers/user'
-import { getAddressByUser } from '../api/fetchers/address'
+
 import axios from 'axios'
 import { baseURL } from '../constants/baseURL'
-
-const userInfo = sessionStorage.getItem("userID")
+import { useContext } from 'react'
+import { AppContext } from '../Context/AppProvider'
 
 const Checkout = () => {
+  const { userData } = useContext(AppContext);
   const cartIDD = sessionStorage.getItem("cartId");
   const [userIDD, setUserIDD] = useState(0);
 
   const navigate = useNavigate()
   const ref = useRef()
-  const queryGetUser = useQuery([thunkUserTypes.GET_USER], () => getUSer(userInfo));
-  const queryGetAddressByUser = useQuery([thunkAddressTypes.GET_ADDRESS_BY_USER], () => getAddressByUser(userInfo));
+
   // NOTE ORDER
   const [noteValue, setNoteValue] = useState('');
   // PAYMENT METHOD
   const [paymentMethod, setPaymentMethod] = useState('COD')
+
   // MODAL VISIBLE CHOOSE ADDRESS
   const [modalAddressVisible, setModalAddressVisible] = useState(false);
   const [modalVoucherVisible, setModalVoucherVisible] = useState(false);
@@ -50,6 +47,8 @@ const Checkout = () => {
   // ADDRESS STATE SELECTED
   const [addressUserSelectedId, setAddressUserSelectedId] = useState(0); // address ID
   const [addressUserSelected, setAddressUserSelected] = useState({});
+
+  const [addressConfirm, setAddressConfirm] = useState(false);
   // VOUCHER STATE SELECTED
   const [voucherUserSelectedId, setVoucherUserSelectedId] = useState(0); // voucher ID
   const [voucherUserSelected, setVoucherUserSelected] = useState({});
@@ -58,27 +57,10 @@ const Checkout = () => {
 
   // STATE PRICE
   const [shippingState, setShippingState] = useState(0);
-  const shippingStateOriginal = 20000;
+  const [shippingStateOriginal, setShippingStateOriginal] = useState(20000);
   const [subtotalStateOriginal, setSubtotalStateOriginal] = useState(0)
   const [subtotalState, setSubtotalState] = useState(0);
-  //console.log(userInfo.customer?.uid)
-  const subtotalPrice = productCartData.reduce((acc, item) => {
-    return acc + item.price * item.amount
-  }, 0)
-  var today = new Date();
-  var date = today.getFullYear() + '/' + (today.getMonth() + 1) + '/' + today.getDate();
 
-  console.log(date)
-  // CREATE DELIVERY
-  const createDelivery = (orderId) => {
-    var data = new FormData();
-    data.append('addressId', addressUserSelectedId);
-    data.append('orderId', orderId);
-    data.append('shipperId', '11');
-    axios.post(`${baseURL}/api/v1/delivery`, data)
-      .then((res) => console.log(res.data.message))
-      .catch((err) => console.log("Create delivery: ", err))
-  }
   // DELETE ALL PRODUCT IN CART WHEN CREATE ORDER:
   const clearCart = () => {
     axios.delete(`${baseURL}/api/v1/cart/product/clear-all?cartId=${cartIDD}`)
@@ -106,41 +88,65 @@ const Checkout = () => {
     axios.post(`${baseURL}/api/v1/order?userId=${userIDD}`, dataJSON, {
       headers: {
         'Content-Type': 'application/json'
-      }})
-        .then((res) => {
-          console.log("Create order res: ", res.data.message);
-          sessionStorage.setItem('orderIdCreate', res.data.data.orderId)
-          addProductToOrder(res.data.data.orderId)
-          clearCart();
-          
-        })
-        .catch((err) => {
-          console.log('Create order error: ', err);
-        })
-  }
-
-  const submitHandler = async (e) => {
-    if (paymentMethod === 'PAYPAL') {
-      const form = {
-        price: `${2000}`
-      };
-      const { data } = await pay(form);
-      console.log('Data: :', data)
-      if (data) {
-        ref.current.href = data
-        window.onload = document.getElementById("redirect").click();
       }
-    }
-    else if (paymentMethod === 'COD') {
-      navigate('/successOrder')
-    }
+    })
+      .then((res) => {
+        sessionStorage.setItem('orderIdCreate', res.data.data.orderId)
+        addProductToOrder(res.data.data.orderId)
+        clearCart();
+        if (paymentMethod === 'VNPAY') {
+          navigate(`/payment?orderID=${res.data.data.orderId}&&totalPrice=${subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState}`);
+        }
+        else {
+          navigate('/success')
+        }
+
+      })
+      .catch((err) => {
+        console.log('Create order error: ', err);
+      })
 
   }
 
   useEffect(() => {
+    if (addressUserSelected?.ward?.[0] === '{' && addressUserSelected?.district?.[0] === '{') {
+      let wardObject = JSON.parse(addressUserSelected?.ward)
+      let districtObject = JSON.parse(addressUserSelected?.district)
+      console.log("ssssssssssssssssssss: ", `type of ward: ${(wardObject.ward_id)}`, `type of district: ${(districtObject.district_id)}`)
+
+      var dataJSON = JSON.stringify({
+        "service_id": 53320,
+        "insurance_value": subtotalStateOriginal,
+        "coupon": null,
+        "from_district_id": 3695,
+        "to_district_id": districtObject.district_id,
+        "to_ward_code": wardObject.ward_id,
+        "height": 15,
+        "length": 15,
+        "weight": 1000,
+        "width": 15
+      });
+
+      axios.post(`https://online-gateway.ghn.vn/shiip/public-api/v2/shipping-order/fee`, dataJSON, {
+        headers: {
+          'token': '466cdca6-febd-11ed-a967-deea53ba3605',
+          'shop_id': '4311551',
+          'Content-Type': 'application/json'
+        }
+      })
+        .then((res) => {
+          setShippingStateOriginal(res.data.data.total);
+        })
+        .catch((err) => console.log(err))
+    }
+    setShippingStateOriginal(30000);
+
+  }, [addressConfirm])
+
+  useEffect(() => {
     // GET PRODUCT BY CART ID
     let cartID = sessionStorage.getItem("cartId");
-    
+
     axios.get(`${baseURL}/api/v1/cart/product?cartId=${cartID}`)
       .then((res) => {
         console.log("Cart data product: ", res.data);
@@ -224,12 +230,12 @@ const Checkout = () => {
     return (
       <>
         <div className='orderProductCard__container'>
-          <img src={item.productImage.slice(0,-1)}
+          <img src={item.productImage.slice(0, -1)}
             style={{ height: 80, width: 80, marginLeft: 5 }}
           />
           <p className='orderProductCard__name'>{item.productName}</p>
           <p className='orderProductCard__amount'>{item.price} $</p>
-          <p className='orderProductCard__amount'>{item.discount} %</p>
+          {/* <p className='orderProductCard__amount'>{item.discount} %</p> */}
           <p style={{ marginLeft: 300 }}>{item.amount}</p>
 
         </div>
@@ -279,7 +285,11 @@ const Checkout = () => {
             {
               addressUserData.map((item) => (
                 <div className='address__detail-select' key={item.address.id}>
-                  <p style={{ fontSize: 16, width: 500 }}>{item.address.apartmentNumber}, {item.address.ward}, {item.address.district}, {item.address.province}</p>
+                  <p style={{ fontSize: 16, width: 600 }}>
+                    {item.address.apartmentNumber},
+                    {item.address.ward[0] === '{' ? JSON.parse(item.address.ward).ward_name : item.address.ward},
+                    {item.address.district[0] === '{' ? JSON.parse(item.address.district).district_name : item.address.district},
+                    {item.address.province}</p>
                   <input
                     checked={addressUserSelectedId === item.address.id ? true : false}
                     style={{ width: 20, height: 20 }}
@@ -290,20 +300,23 @@ const Checkout = () => {
               ))
             }
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 50 }}>
-              <button type='submit' className='addTOCart__btn' style={{ marginRight: 30 }}
-                onClick={() => {
-                  navigate(`/userinformation/${1}`)
-                }}
-              >
-                Manage my address
-              </button>
-              <button type='submit' className='addTOCart__btn' style={{ marginRight: 30 }}
-                onClick={() => {
-                  setModalAddressVisible(!modalAddressVisible)
-                }}
-              >
-                Done
-              </button>
+
+              <div className='address__btn'>
+                <button
+                  onClick={() => {
+                    navigate(`/userinformation/${1}`)
+                  }}
+                >My address</button>
+              </div>
+              <div className='address__btn'>
+                <button
+                  onClick={() => {
+                    setModalAddressVisible(!modalAddressVisible)
+                    setAddressConfirm(!addressConfirm);
+                  }}
+                >Done</button>
+              </div>
+
             </div>
           </Box>
         </Fade>
@@ -349,21 +362,22 @@ const Checkout = () => {
               })
             }
             <div style={{ display: 'flex', justifyContent: 'center', marginTop: 50 }}>
-              <button type='submit' className='addTOCart__btn' style={{ marginRight: 30 }}
-                onClick={() => {
-                  setVoucherUserSelectedId(0);
-                  setModalVoucherVisible(!modalVoucherVisible);
-                }}
-              >
-                Don't use any voucher
-              </button>
-              <button type='submit' className='addTOCart__btn' style={{ marginRight: 30 }}
-                onClick={() => {
-                  setModalVoucherVisible(!setModalVoucherVisible)
-                }}
-              >
-                Done
-              </button>
+              <div className='address__btn1'>
+                <button
+                  onClick={() => {
+                    setVoucherUserSelectedId(0);
+                    setModalVoucherVisible(!modalVoucherVisible);
+                  }}
+                >No use</button>
+              </div>
+              <div className='address__btn'>
+                <button
+                  onClick={() => {
+                    setModalVoucherVisible(!setModalVoucherVisible)
+                  }}
+                >Done</button>
+              </div>
+              
             </div>
           </Box>
         </Fade>
@@ -381,8 +395,11 @@ const Checkout = () => {
                     <p >Delivery address</p>
                   </div>
                   <div className='address__detail'>
-                    <p style={{ fontWeight: 'bold', fontSize: 16 }}>Nguyễn Lê Quỳnh Trang (+84942394898)</p>
-                    <p style={{ fontSize: 16 }}>{addressUserSelected?.apartmentNumber}, {addressUserSelected?.ward}, {addressUserSelected?.district}, {addressUserSelected?.province}</p>
+                    <p style={{ fontWeight: 'bold', fontSize: 16 }}>{userData.name} ({userData.phone})</p>
+                    <p style={{ fontSize: 16 }}>{addressUserSelected?.apartmentNumber},
+                      {addressUserSelected?.ward !== undefined && JSON.parse(addressUserSelected?.ward).ward_name},
+                      {addressUserSelected?.district !== undefined && JSON.parse(addressUserSelected?.district)?.district_name},
+                      {addressUserSelected?.province}</p>
                   </div>
                 </div>
                 <div className='address__btn'>

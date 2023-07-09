@@ -1,11 +1,11 @@
 
-import React, {useState,useEffect} from "react";
+import React, {useState,useEffect, Suspense} from "react";
 
 import { ListGroup } from "reactstrap";
 import { Link } from "react-router-dom";
-import CartItem from "./CartItem";
 
-import {Button, Dialog, Alert, AlertTitle} from '@mui/material'
+
+
 import { useDispatch, useSelector } from "react-redux";
 import { cartUiActions } from "../../../store/shopping-cart/cartUiSlice";
 import { Box, CircularProgress } from '@mui/material'
@@ -16,6 +16,8 @@ import { thunkCartTypes } from "../../../constants/thunkTypes";
 import { getCart, getProductInCart } from "../../../api/fetchers/cart";
 import axios from "axios";
 import { baseURL } from "../../../constants/baseURL";
+
+const CartItem = React.lazy(() => import('./CartItem'))
 
 const cartId = sessionStorage.getItem('cartId')
 
@@ -79,14 +81,16 @@ const Carts = () => {
         </div>
 
         <div className="cart__item-list">
-          {cartData.length === 0 ? (
-            <h6 className="text-center mt-5">Giỏ hàng trống</h6>
-          ) : (
-            
-            cartData.map((item, index) => (
-              <CartItem item={item} key={index}/>
-            ))
-          )}
+          <Suspense fallback={<p>Loading......</p>}>
+            {cartData.length === 0 ? (
+              <h6 className="text-center mt-5">Giỏ hàng trống</h6>
+            ) : (
+              
+              cartData.map((item, index) => (
+                <CartItem item={item} key={index}/>
+              ))
+            )}
+          </Suspense>
           <Link className="m-3" to='/cart'><button onClick={toggleCart} className="addToCart__btn">Chi tiết giỏ hàng</button></Link>
         </div>
         
