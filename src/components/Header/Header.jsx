@@ -14,8 +14,17 @@ import axios from 'axios'
 import { baseURL } from '../../constants/baseURL'
 
 const userID1 = sessionStorage.getItem("userID");
-
-
+console.log(userID1,'sdlfjslkdfjlsdkfjlskdfjsldkfjlsdkjfsdlkj')
+const nav__links1 = [
+  {
+    display: "Home",
+    path: "/home",
+  },
+  {
+    display: "Shopping",
+    path: "/foods",
+  },
+]
 const nav__links = [
   {
     display: "Home",
@@ -36,6 +45,10 @@ const nav__links = [
     display: "Your order",
     path: "/historyOrder",
   },
+  {
+    display: "Chat",
+    path: "/chat-box",
+  }
   
 ]
 
@@ -121,16 +134,30 @@ const Header = () => {
           {/* ======= menu ======= */}
           <div className="navigation" ref={menuRef} onClick={toggleMenu}>
             <div className="menu d-flex align-items-center gap-5">
-              {nav__links.map((item, index) => (
+              {
+              userID1 !== null ?
+              nav__links.map((item, index) => (
                 <NavLink
                 
                   to={item?.path}
                   key={index}
                   className={navClass => navClass.isActive ? 'active__menu' : ''}
                 >
-                  {item?.display}
+                  {item?.display.toUpperCase()}
                 </NavLink>
-              ))}
+              ))
+              :
+              nav__links1.map((item, index) => (
+                <NavLink
+                
+                  to={item?.path}
+                  key={index}
+                  className={navClass => navClass.isActive ? 'active__menu' : ''}
+                >
+                  {item?.display.toUpperCase()}
+                </NavLink>
+              ))
+              }
             </div>
           </div>
           

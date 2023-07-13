@@ -91,7 +91,9 @@ const Carts = () => {
               ))
             )}
           </Suspense>
-          <Link className="m-3" to='/cart'><button onClick={toggleCart} className="addToCart__btn">Chi tiết giỏ hàng</button></Link>
+          <Link className="m-3" to='/cart'><button onClick={toggleCart}
+            style={{padding: 5, backgroundColor: '#F9813A', color: 'white', outline: 'none', border: 'none', borderRadius: 5}}
+          >Chi tiết giỏ hàng</button></Link>
         </div>
         
         <div>

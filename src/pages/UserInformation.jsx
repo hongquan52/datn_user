@@ -23,6 +23,8 @@ import LinkBreadcrums from '@mui/material/Link'
 import DeleteIcon from '@mui/icons-material/Delete';
 import ClearIcon from '@mui/icons-material/Clear';
 import FileUploadIcon from '@mui/icons-material/FileUpload';
+import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
+import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { baseURL } from '../constants/baseURL'
 import axios from 'axios'
 
@@ -32,12 +34,20 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useContext } from 'react'
 import { AppContext } from '../Context/AppProvider'
 
+import rank1 from '../assets/images/rank/DiamondRank.png'
+import rank2 from '../assets/images/rank/GoldRank.png'
+import rank3 from '../assets/images/rank/SilverRank.png'
+import rank4 from '../assets/images/rank/BronzeRank.png'
+
 const UserInformation = () => {
 
     const { userData } = useContext(AppContext)
 
     const { userId } = useParams()
     const navigate = useNavigate();
+
+    const [phoneGG, setPhoneGG] = useState();
+
     const [loading, setLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState();
 
@@ -58,6 +68,7 @@ const UserInformation = () => {
     // STATE
     const [hidePassword, setHidePassword] = useState(true);
     const [modalAddressVisible, setModalAddressVisible] = useState(false);
+    const [modalRankDetail, setModalRankDetail] = useState(false);
     // ADDRESS LIST DATA:
 
     const [provinceString, setProvinceString] = useState('');
@@ -226,13 +237,16 @@ const UserInformation = () => {
 
     useEffect(() => {
         setLoading(true);
-        
+
         setGender(userData.gender);
         setValue('name', userData.name);
         setValue('email', userData.email);
         setValue('phone', userData.phone);
         setValue('role', userData.role.name);
         setValue('rank', userData.rank.name);
+
+        setPhoneGG(userData.phone);
+
         // GET IMAGE URL
         axios.get(`${baseURL}/api/v1/user/image?filename=${userData.image}`)
             .then((res) => {
@@ -241,7 +255,7 @@ const UserInformation = () => {
                 setLinkImageURL(b);
             })
             .catch((err) => console.log("Image url error: ", err))
-        
+
         // GET ALL ADDRESS BY USERID
         axios.get(`${baseURL}/api/v1/address/user?userId=${userId}`)
             .then((res) => {
@@ -414,7 +428,79 @@ const UserInformation = () => {
                     <Typography color={"black"}>Profile</Typography>
                 </Breadcrumbs>
             </Box>
+            <Modal
+                aria-labelledby="transition-modal-title"
+                aria-describedby="transition-modal-description"
+                open={modalRankDetail}
+                onClose={() => setModalRankDetail(!modalRankDetail)}
+                closeAfterTransition
+                slots={{ backdrop: Backdrop }}
+                slotProps={{
+                    backdrop: {
+                        timeout: 500,
+                    },
+                }}
+            >
+                <Fade in={modalRankDetail}>
+                    <Box sx={style}>
+                        <Typography id="transition-modal-title" variant="h6" component="h2" fontWeight={'bold'}>
+                            Rank detail
+                        </Typography>
+                        <p style={{marginTop: 30}}>Your points</p>
+                        <div style={{marginTop: 40}}>
+                            <div style={{width: 600, height: 40, backgroundColor: 'grey', position: 'relative'}}>
+                                <img src={rank4} style={{width: 40, height: 30, position: 'absolute', left: 1, top: -35}} />
+                                <img src={rank3} style={{width: 40, height: 30, position: 'absolute', left: 150, top: -35}} />
+                                <img src={rank2} style={{width: 40, height: 30, position: 'absolute', left: 300, top: -35}} />
+                                <img src={rank1} style={{width: 40, height: 30, position: 'absolute', left: 580, top: -35}} />
+                                <div style={{width: userData.point*3 > 600 ? 600 :
+                                    userData.point*3, height: 40, backgroundColor: 'orange'}}>
+                                </div>
+                            </div>
+                        </div>
+                        {
+                            userData.rank.id === 1 ?
+                            <p style={{marginTop: 10}}>
+                                <MilitaryTechIcon />You get the max rank !!!
+                            </p>
+                            :
+                            <p style={{marginTop: 10}}><MilitaryTechIcon />Your need <span style={{fontWeight: 'bold', color: 'red'}}>
+                                {
+                                    userData.rank.id === 4 && 50-userData.point
+                                }
+                                {
+                                    userData.rank.id === 3 && 100-userData.point
+                                }
+                                {
+                                    userData.rank.id === 2 && 200-userData.point
+                                }
+                                </span> points to up your rank</p>
+                        }
+                        
+                        <p style={{width: 600}}><ThumbUpAltIcon />Khi mua sản phẩm ở cửa hàng, với mỗi 100K trong tổng thanh toán khách hàng đã mua sắm sẽ được tích lũy 1 điểm</p>
+                        <div style={{display: 'flex', justifyContent: 'space-evenly', flexDirection: 'column', height: 250, backgroundColor: '#fde4e4'}}>    
+                            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 10}}>
+                                <img src={rank4} style={{width: 40, height: 30}} />
+                                <p style={{margin: 'auto'}}>Khi điểm tích lũy của khách hàng đạt mức dưới 50 điểm. Mức ưu đãi là 0 %</p>
+                            </div>
+                            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 10}}>
+                                <img src={rank3} style={{width: 40, height: 30}} />
+                                <p style={{margin: 'auto'}}>Khi điểm tích lũy của khách hàng đạt mức 50-100 điểm. Mức ưu đãi là 5 %</p>
+                            </div>
+                            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 10}}>
+                                <img src={rank2} style={{width: 40, height: 30}} />
+                                <p style={{margin: 'auto'}}>Khi điểm tích lũy của khách hàng đạt mức 100-200 điểm. Mức ưu đãi là 10 %</p>
+                            </div>
+                            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 10}}>
+                                <img src={rank1} style={{width: 40, height: 30}} />
+                                <p style={{margin: 'auto'}}>Khi điểm tích lũy của khách hàng đạt mức trên 200 điểm. Mức ưu đãi là 15 %</p>
+                            </div>
+                        </div>
 
+                        
+                    </Box>
+                </Fade>
+            </Modal>
             <Container className='profile__container'>
                 <Row className='profile__header' style={{ color: 'white' }}>
                     <h5 style={{ fontSize: 30, fontWeight: 'bold' }}>My profile</h5>
@@ -427,7 +513,32 @@ const UserInformation = () => {
                             <img src={linkImageURL}
                                 style={{ height: 50, width: 50, borderRadius: 25 }}
                             />
-                            <p>{userData.name}</p>
+                            <div style={{ marginLeft: 25 }}>
+
+                                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center' }}>
+                                    <div style={{ display: 'flex', alignItems: 'center' }}>
+                                        {
+                                            userData.rank.id === 1 &&
+                                            <img src={rank1} style={{ height: 40, width: 50 }} />
+                                        }
+                                        {
+                                            userData.rank.id === 2 &&
+                                            <img src={rank2} style={{ height: 40, width: 50 }} />
+                                        }
+                                        {
+                                            userData.rank.id === 3 &&
+                                            <img src={rank3} style={{ height: 40, width: 50 }} />
+                                        }
+                                        {
+                                            userData.rank.id === 4 &&
+                                            <img src={rank4} style={{ height: 40, width: 50 }} />
+                                        }
+                                        <p style={{ fontSize: 12 }}>{userData.rank.name.toUpperCase()}</p>
+
+                                    </div>
+                                    <p style={{ fontSize: 12 }}>{userData.point} points</p>
+                                </div>
+                            </div>
                         </div>
                         <div style={{ marginTop: 30 }}>
                             <div style={{ cursor: 'pointer', flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
@@ -474,7 +585,7 @@ const UserInformation = () => {
                                     <div className='profile__item'>
                                         <p className='profile__label'>Phone</p>
                                         <div className="newsletter">
-                                            <input type="email" readOnly
+                                            <input type="email" readOnly={phoneGG === null ? false : true}
                                                 {...register("phone", { required: true })}
                                             />
                                         </div>
@@ -500,10 +611,10 @@ const UserInformation = () => {
                                             <FormControlLabel value="male" control={<Radio />} label="Male" />
                                         </RadioGroup>
                                     </div>
-                                    <div className='profile__item'>
+                                    <div className='profile__item' style={{ cursor: 'pointer' }} onClick={() => setModalRankDetail(true)}>
                                         <p className='profile__label'>Rank</p>
                                         <div className="newsletter">
-                                            <input type="email"
+                                            <input type="email" readOnly
                                                 {...register("rank")}
                                             />
                                         </div>

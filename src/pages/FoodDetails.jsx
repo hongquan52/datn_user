@@ -42,7 +42,7 @@ const FoodDetails = () => {
   const [productDetail, setProductDetail] = useState({});
 
   const [feedbackData, setFeedbackData] = useState([])
-  const [feedbackDataOriginal, setFeedbackDataOriginal] = useState([])
+
   // RATING STATE
   const [value, setValue] = React.useState(2);
   const [totalReview, setTotalReview] = useState(0);
@@ -77,20 +77,7 @@ const FoodDetails = () => {
 
 
   const addReview = () => {
-    let xyz = {
-      "id": 1,
-      "content": enteredName,
-      "vote": value,
-      "user": userID,
-      "userName": "Quỳnh Trang Nè",
-      "product": productId,
-      "productName": productDetail.name,
-      "productThumbnail": productDetail.thumbnail,
-      "createDate": "2023-06-07T12:36:50.581+00:00",
-      "updateDate": "2023-06-07T12:36:50.581+00:00"
-    }
-    feedbackDataOriginal.push(xyz);
-
+    
     var formdata = new FormData();
     formdata.append("content", enteredName);
     formdata.append("vote", value);
@@ -100,11 +87,11 @@ const FoodDetails = () => {
     axios.post(`${baseURL}/api/v1/review`, formdata)
       .then((res) => {
         if (res.data.status === 'BAD_REQUEST') {
-          showToastMessageErrorReview();
+          showToastMessageErrorReview(res.data.message);
 
         }
         else {
-          showToastMessage("Write review successfully!!");
+          showToastMessage("Thêm đánh giá thành công!");
           setRatingFlag(!ratingFlag);
         }
 
@@ -119,8 +106,8 @@ const FoodDetails = () => {
     });
   };
   // TOAST ERROR REVIEW BEFORE BUY DONE PRODUCT:
-  const showToastMessageErrorReview = () => {
-    toast.error('Cannot review before bought product !', {
+  const showToastMessageErrorReview = (message) => {
+    toast.error(message, {
       position: toast.POSITION.TOP_RIGHT
     });
 
@@ -133,11 +120,11 @@ const FoodDetails = () => {
 
   };
 
+ 
   useEffect(() => {
     axios.get(`${baseURL}/api/v1/review/product?productId=${productId}`)
       .then((res) => {
-        console.log("Product data review: ", res.data);
-        setFeedbackData(feedbackDataOriginal);
+        setFeedbackData(res.data.list);
       })
       .catch((err) => console.log("Review error: ", err))
   }, [ratingFlag])
@@ -161,7 +148,7 @@ const FoodDetails = () => {
       .then((res) => {
         setTotalReview(res.data.list.length);
         setFeedbackData(res.data.list);
-        setFeedbackDataOriginal(res.data.list);
+        
 
         // GET TOTAL AMOUNT REVIEW
         const total5Star = res.data.list.filter((item) => {return item.vote == 5.0})
@@ -273,14 +260,21 @@ const FoodDetails = () => {
 
                     <img src={flashSaleLogo} height={40} width={160} />
                   </div>
-                  <div style={{ backgroundColor: '#fedac5', display: 'flex', flexDirection: 'row', alignItems: 'center', height: 70 }}>
-                    {
-                      productDetail.discountPercent > 0 &&
-                      <h5 className='product__title-originalPrice'>{productDetail.price} đ</h5>
-                    }
-                    <h4 className='product__title-discountPrice'>{productDetail.price * ((100-productDetail.discountPercent)/100)} đ</h4>
-                    <p className='product__title-discountPercent'>-{productDetail.discountPercent}%</p>
-                  </div>
+                  {
+                    productDetail.forSale ?
+                    <div style={{ backgroundColor: '#fedac5', display: 'flex', flexDirection: 'row', alignItems: 'center', height: 70 }}>
+                      {
+                        productDetail.discountPercent > 0 &&
+                        <h5 className='product__title-originalPrice'>{productDetail.price} đ</h5>
+                      }
+                      <h4 className='product__title-discountPrice'>{productDetail.price * ((100-productDetail.discountPercent)/100)} đ</h4>
+                      <p className='product__title-discountPercent'>-{productDetail.discountPercent}%</p>
+                    </div>
+                    :
+                    <div style={{ backgroundColor: '#fedac5', display: 'flex', flexDirection: 'row', alignItems: 'center', height: 70 }}>
+                      <p style={{fontWeight: 'bold', fontSize: 25, color: 'red', marginLeft: 10}}>The product has been discontinued</p>
+                    </div>
+                  }
                 </div>
                 <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 25 }}>
                   <p className='product__category'>Brand: {productDetail.brand}</p>
@@ -446,7 +440,7 @@ const FoodDetails = () => {
                       </Modal>
                       <div style={{ marginRight: 200, width: 400 }}>
                         {
-                          feedbackData.map((item) => (
+                          feedbackData?.map((item) => (
                             <div className="review pt-5" >
                               <div className="review__content">
                                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>

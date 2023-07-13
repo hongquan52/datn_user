@@ -274,17 +274,17 @@ const Home = () => {
                 display: 'flex', justifyContent: 'space-around', backgroundColor: '#F9813A', alignItems: 'center', height: 120,
                 marginTop: 50, borderRadius: 10
               }}>
-                <div className='item_group'>
+                <div className='item_group' onClick={() => navigate('/foods')}>
                   <img src='https://seeklogo.com/images/H/hot-sale-mexico-logo-726E38BE8E-seeklogo.com.png'
                     style={{ height: 50, width: 70, marginBottom: 15 }} />
                   <h5 style={{ fontWeight: 'bold', fontSize: 15, color: 'black', width: 100, textAlign: 'center' }}>Sale</h5>
                 </div>
-                <div className='item_group'>
+                <div className='item_group' onClick={() => navigate('/voucher')}>
                   <img src={voucherLogo}
                     style={{ height: 50, width: 70, marginBottom: 15 }} />
                   <h5 style={{ fontWeight: 'bold', fontSize: 15, color: 'black', width: 100, textAlign: 'center' }}>Hot voucher</h5>
                 </div>
-                <div className='item_group'>
+                <div className='item_group' onClick={() => navigate('/foods')}>
                   <img src='https://cdn-icons-png.flaticon.com/512/1069/1069102.png'
                     style={{ height: 50, width: 70, marginBottom: 15 }} />
                   <h5 style={{ fontWeight: 'bold', fontSize: 15, color: 'black', width: 100, textAlign: 'center' }}>Top product</h5>
@@ -294,7 +294,7 @@ const Home = () => {
                     style={{ height: 50, width: 70, marginBottom: 15 }} />
                   <h5 style={{ fontWeight: 'bold', fontSize: 15, color: 'black', width: 100, textAlign: 'center' }}>Ranking</h5>
                 </div>
-                <div className='item_group'>
+                <div className='item_group' onClick={() => navigate('/voucher')}>
                   <img src='https://freepngimg.com/save/14102-free-shipping-png-image/550x446'
                     style={{ height: 50, width: 70, marginBottom: 15 }} />
                   <h5 style={{ fontWeight: 'bold', fontSize: 15, color: 'black', width: 100, textAlign: 'center' }}>Free shipping</h5>

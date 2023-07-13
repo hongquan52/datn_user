@@ -17,7 +17,7 @@ const LoginOAuth2 = () => {
         const manguoidung1 = parseInt(manguoidung);
         sessionStorage.setItem("userID", manguoidung1);
         sessionStorage.setItem("accessToken", token);
-
+        
     }
     return (
         <div></div>

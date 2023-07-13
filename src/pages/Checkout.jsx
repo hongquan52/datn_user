@@ -16,7 +16,9 @@ import NavigationNexIcon from '@mui/icons-material/NavigateNext'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import ArrowForwardIosIcon from '@mui/icons-material/ArrowForwardIos';
 
-import { pay } from '../api/fetchers/pay'
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 import { useRef } from 'react'
 
 import axios from 'axios'
@@ -61,6 +63,13 @@ const Checkout = () => {
   const [subtotalStateOriginal, setSubtotalStateOriginal] = useState(0)
   const [subtotalState, setSubtotalState] = useState(0);
 
+  // NOTIFY
+  const showToastMessageError = (message) => {
+    toast.error(message, {
+        position: toast.POSITION.TOP_RIGHT
+    });
+  };
+
   // DELETE ALL PRODUCT IN CART WHEN CREATE ORDER:
   const clearCart = () => {
     axios.delete(`${baseURL}/api/v1/cart/product/clear-all?cartId=${cartIDD}`)
@@ -77,34 +86,40 @@ const Checkout = () => {
   }
   // PLACE AN ORDER FUNCTION:
   const orderHandle = () => {
-    var dataJSON = JSON.stringify({
-      "totalPrice": subtotalStateOriginal - subtotalState,
-      "shippingFee": shippingStateOriginal - shippingState,
-      "finalPrice": subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState,
-      "note": noteValue,
-      "paymentMethod": paymentMethod,
-      "addressId": addressUserSelectedId,
-    });
-    axios.post(`${baseURL}/api/v1/order?userId=${userIDD}`, dataJSON, {
-      headers: {
-        'Content-Type': 'application/json'
-      }
-    })
-      .then((res) => {
-        sessionStorage.setItem('orderIdCreate', res.data.data.orderId)
-        addProductToOrder(res.data.data.orderId)
-        clearCart();
-        if (paymentMethod === 'VNPAY') {
-          navigate(`/payment?orderID=${res.data.data.orderId}&&totalPrice=${subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState}`);
+    if(userData.phone === null) {
+      showToastMessageError('Please update your phone to checkout');
+    }
+    else {
+      
+      var dataJSON = JSON.stringify({
+        "totalPrice": subtotalStateOriginal - subtotalState,
+        "shippingFee": shippingStateOriginal - shippingState,
+        "finalPrice": subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState,
+        "note": noteValue,
+        "paymentMethod": paymentMethod,
+        "addressId": addressUserSelectedId,
+      });
+      axios.post(`${baseURL}/api/v1/order?userId=${userIDD}`, dataJSON, {
+        headers: {
+          'Content-Type': 'application/json'
         }
-        else {
-          navigate('/success')
-        }
-
       })
-      .catch((err) => {
-        console.log('Create order error: ', err);
-      })
+        .then((res) => {
+          sessionStorage.setItem('orderIdCreate', res.data.data.orderId)
+          addProductToOrder(res.data.data.orderId)
+          clearCart();
+          if (paymentMethod === 'VNPAY') {
+            navigate(`/payment?orderID=${res.data.data.orderId}&&totalPrice=${subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState}`);
+          }
+          else {
+            navigate('/success')
+          }
+  
+        })
+        .catch((err) => {
+          console.log('Create order error: ', err);
+        })
+    }
 
   }
 
@@ -247,6 +262,7 @@ const Checkout = () => {
   }
   return (
     <Helmet title='Checkout'>
+      <ToastContainer />
       <Box m={2} style={{ padding: 10, marginTop: 50, marginLeft: 100, marginBottom: -50 }}>
         <Breadcrumbs
           // maxItems={}
@@ -366,6 +382,7 @@ const Checkout = () => {
                 <button
                   onClick={() => {
                     setVoucherUserSelectedId(0);
+                    setShippingState(0);
                     setModalVoucherVisible(!modalVoucherVisible);
                   }}
                 >No use</button>
@@ -509,9 +526,13 @@ const Checkout = () => {
                   <h5>Voucher (Shipping)</h5>
                   <h5>-{shippingState} $</h5>
                 </div>
+                <div className='finalPrice__item'>
+                  <h5>Rank {userData.rank.name } ({userData.rank.discount}%)</h5>
+                  <h5>-{userData.rank.discount/100 * subtotalStateOriginal} $</h5>
+                </div>
                 <div className='finalPrice__item1'>
                   <h5>Total price</h5>
-                  <h5>{subtotalStateOriginal + shippingStateOriginal - subtotalState - shippingState} $</h5>
+                  <h5>{subtotalStateOriginal + shippingStateOriginal - subtotalState - shippingState-(userData.rank.discount/100 * subtotalStateOriginal)} $</h5>
                 </div>
               </div>
               <div style={{ marginTop: 20, display: 'flex', justifyContent: 'space-between' }}>

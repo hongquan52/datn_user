@@ -1,5 +1,8 @@
 import React , {Suspense}from 'react'
 import { Routes, Route, Navigate } from 'react-router-dom'
+import ChatBox from '../pages/ChatBox'
+// import LoginOAuth2 from '../pages/LoginOAuth2';
+// import Login from '../pages/Login'
 
 // LAZY LOADING
 const Home = React.lazy(() => import('../pages/Home'));
@@ -12,19 +15,19 @@ const Checkout = React.lazy(() => import('../pages/Checkout'));
 const Contact = React.lazy(() => import('../pages/Contact'));
 const FoodDetails = React.lazy(() => import('../pages/FoodDetails'));
 const Login = React.lazy(() => import('../pages/Login'));
+const LoginOAuth2 = React.lazy(() => import('../pages/LoginOAuth2'));
 const Register = React.lazy(() => import('../pages/Register'));
 const AllFoods = React.lazy(() => import('../pages/AllFoods'));
 const Delivery = React.lazy(() => import('../pages/Delivery'));
 const UserInformation = React.lazy(() => import('../pages/UserInformation'));
 const Voucher = React.lazy(() => import('../pages/Voucher'));
-const LoginOAuth2 = React.lazy(() => import('../pages/LoginOAuth2'));
 const ResetPassword = React.lazy(() => import('../pages/ResetPassword'));
 const CreateNewPassword = React.lazy(() => import('../pages/CreateNewPassword'));
 
 const Routers = () => {
   return (
-      <Suspense fallback={<div>Loading...</div>}>
-        <Routes>
+          <Suspense fallback={<div>Loading...</div>}>
+    <Routes>
             <Route path='/' element={<Navigate to='/home' />} />
             <Route path='/home' element={<Home />} />
             <Route path='/foods' element={<AllFoods />} />
@@ -32,7 +35,6 @@ const Routers = () => {
             <Route path='/cart' element={<Cart />} />
             <Route path='/checkout' element={<Checkout />} />
             <Route path='/contact' element={<Contact />} />
-            <Route path='/login' element={<Login />} />
             <Route path='/register' element={<Register />} />
             <Route path='/userinformation/:userId' element={<UserInformation />} />
             <Route path='/successOrder' element={<Success />} />
@@ -41,11 +43,13 @@ const Routers = () => {
             <Route path='/historyOrder' element={<HistoryOrder />} />
             <Route path='/delivery/:orderID' element={<Delivery />} />
             <Route path='/voucher' element={<Voucher />} />
-            <Route path='/loginGG' element={<LoginOAuth2 />} />
             <Route path='/reset-password' element={<ResetPassword />} />
             <Route path='/new-password' element={<CreateNewPassword />} />
+            <Route path='/chat-box' element={<ChatBox />} />
+            <Route path='/login' element={<Login />} />
+            <Route path='/loginGG' element={<LoginOAuth2 />} />
         </Routes>
-      </Suspense>
+          </Suspense>
 
   )
 }

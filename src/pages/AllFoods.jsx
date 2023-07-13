@@ -645,7 +645,10 @@ const AllFoods = () => {
             style={{display: 'flex', justifyContent: 'flex-start',flexWrap: 'wrap'}}
           > 
             {
-              displayPage.map((item) => (
+              displayPage.filter(
+                (item) => item.deleted === false
+              )
+              .map((item) => (
                 <div style={{height: 270, width: 200,backgroundColor: '#fedac5', margin: 5,
                   borderRadius: 10}}>
                   <ProductCard1 item={item} sukien={handleClick} />

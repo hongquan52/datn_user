@@ -5,28 +5,34 @@ import '../../../styles/product-card1.css'
 import { Link, Navigate } from 'react-router-dom'
 import flashSaleLogo from '../../../assets/images/flashSaleIcon.png'
 import image from '../../../assets/images/ava-1.jpg'
-import { useDispatch } from 'react-redux'
-import { cartActions } from '../../../store/shopping-cart/cartSlice'
+
 import { useNavigate } from 'react-router-dom'
 import { Rating } from '@mui/material'
 import AddCircleIcon from '@mui/icons-material/AddCircle';
-const userInfo = JSON.parse(sessionStorage.getItem("userInfo")) 
+
+const userID1 = sessionStorage.getItem("userID");
 const cartId = sessionStorage.getItem("cartId")
+
 const ProductCard = (props) => {
     const navigate = useNavigate()
     const {id, name, thumbnail, discount, discountPrice, price, rate} = props.item
     
     const addToCart = () => {
-        // CALL API ADD PRODUCT TO CART
-        var requestOptions = {
-            method: 'POST',
-            redirect: 'follow'
-          };
-          
-          fetch(`http://localhost:8080/api/v1/cart/product?cartId=${cartId}&productId=${id}&amount=1`, requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
+        if(userID1 !== null) {
+            // CALL API ADD PRODUCT TO CART
+            var requestOptions = {
+                method: 'POST',
+                redirect: 'follow'
+              };
+              
+              fetch(`http://localhost:8080/api/v1/cart/product?cartId=${cartId}&productId=${id}&amount=1`, requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+        }
+        else {
+            navigate('/login');
+        }
       
       
     }
