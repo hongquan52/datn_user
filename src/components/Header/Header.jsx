@@ -12,41 +12,41 @@ import {Button, Dialog, Alert, AlertTitle, Icon} from '@mui/material'
 import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios'
 import { baseURL } from '../../constants/baseURL'
-
+import avatarDefault from '../../assets/images/avatarDefault.png'
 const userID1 = sessionStorage.getItem("userID");
 console.log(userID1,'sdlfjslkdfjlsdkfjlskdfjsldkfjlsdkjfsdlkj')
 const nav__links1 = [
   {
-    display: "Home",
+    display: "Trang chủ",
     path: "/home",
   },
   {
-    display: "Shopping",
+    display: "Mua sắm",
     path: "/foods",
   },
 ]
 const nav__links = [
   {
-    display: "Home",
+    display: "Trang chủ",
     path: "/home",
   },
   {
-    display: "Shopping",
+    display: "Mua sắm",
     path: "/foods",
   },
   
   {
-    display: "Profile",
+    display: "Tài khoản",
     path: `/userinformation/${userID1}`
     
   } 
   ,
   {
-    display: "Your order",
+    display: "Đơn hàng",
     path: "/historyOrder",
   },
   {
-    display: "Chat",
+    display: "Nhắn tin",
     path: "/chat-box",
   }
   
@@ -86,14 +86,20 @@ const Header = () => {
         // SET PHONE AND NAME TO SESSIONSTORAGE
         sessionStorage.setItem('customerName', res.data.name);
         sessionStorage.setItem('customerPhone', res.data.phone);
-        // GET IMAGE URL
-        axios.get(`${baseURL}/api/v1/user/image?filename=${res.data.image}`)
-        .then((res) => {
-            let x = res.data
-            let b = x.slice(0, -1);
-            setUserData(b);
-        })
-        .catch((err) => console.log("Image url error: ", err))
+
+        if(res.data.image !== null) {
+          // GET IMAGE URL
+          axios.get(`${baseURL}/api/v1/user/image?filename=${res.data.image}`)
+          .then((res) => {
+              let x = res.data
+              let b = x.slice(0, -1);
+              setUserData(b);
+          })
+          .catch((err) => console.log("Image url error: ", err))
+        }
+        else {
+          setUserData(avatarDefault);
+        }
       })
       .catch((err) => console.log(err))
   }, [])
@@ -180,7 +186,7 @@ const Header = () => {
                 <SearchIcon/>
               </div>
               <input
-                placeholder='Search for...'
+                placeholder='Tìm kiếm...'
                 onChange={(e) => setSearchText(e.target.value)}
               />
             </span>

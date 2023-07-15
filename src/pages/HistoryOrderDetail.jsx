@@ -106,13 +106,13 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
             <ToastContainer />
             <div className="orderDetail__heading">
                 <div className='orderDetail__heading-title' style={{display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
-                    <h4 style={{fontWeight: 'bold', backgroundColor: '#fff', color: 'black', padding: 10, borderRadius: 10}} >ORDER ID: {data?.orderId}</h4>
+                    <h4 style={{fontWeight: 'bold', backgroundColor: '#fff', color: 'black', padding: 10, borderRadius: 10}} >Mã đơn hàng: {data?.orderId}</h4>
                     {
                         orderItem?.status === 'Done' ?
                         (
                             <div>
                                 <DoneIcon style={{height: 60, width: 60}} />
-                                <h5>Done</h5>
+                                <h5>Hoàn tất</h5>
                             </div>
                         ):
                         null
@@ -122,7 +122,7 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                         (
                             <div>
                                 <FactCheckIcon style={{height: 60, width: 60}} />
-                                <h5>Confirmed</h5>
+                                <h5>Đã xác nhận</h5>
                             </div>
                         ):
                         null
@@ -132,7 +132,7 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                         (
                             <div>
                                 <ShoppingBasketIcon style={{height: 60, width: 60}} />
-                                <h5>Ordered</h5>
+                                <h5>Vừa đặt</h5>
                             </div>
                         ):
                         null
@@ -142,7 +142,7 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                         (
                             <div>
                                 <WorkHistoryIcon style={{height: 60, width: 60}} />
-                                <h5>Wait delivery</h5>
+                                <h5>Chờ giao</h5>
                             </div>
                         ):
                         null
@@ -152,7 +152,7 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                         (
                             <div>
                                 <LocalShippingIcon style={{height: 60, width: 60}} />
-                                <h5>Delivering</h5>
+                                <h5>Đang giao</h5>
                             </div>
                         ):
                         null
@@ -162,7 +162,7 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                         (
                             <div>
                                 <TaskIcon style={{height: 60, width: 60}} />
-                                <h5>Delivered</h5>
+                                <h5>Đã giao hàng</h5>
                             </div>
                         ):
                         null
@@ -172,7 +172,7 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                         (
                             <div>
                                 <AssignmentTurnedInIcon style={{height: 60, width: 60}} />
-                                <h5>Received</h5>
+                                <h5>Đã nhận hàng</h5>
                             </div>
                         ):
                         null
@@ -182,7 +182,7 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                         (
                             <div>
                                 <EventBusyIcon  style={{height: 60, width: 60}} />
-                                <h5>Cancel</h5>
+                                <h5>Hủy đơn</h5>
                             </div>
                         ):
                         null
@@ -190,13 +190,13 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                 </div>
                 <div className="orderDetail__heading-content">
                     <div>
-                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Customer: </span>{userData.name}</p>
-                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Phone: </span>{userData.phone}</p>
-                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Address:</span> {`${data?.deliveryApartmentNumber}, 
+                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Tên khách hàng: </span>{userData.name}</p>
+                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Số điện thoại: </span>{userData.phone}</p>
+                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Địa chỉ:</span> {`${data?.deliveryApartmentNumber}, 
                          ${data?.deliveryWard[0] === '{' ? JSON.parse(data?.deliveryWard)?.ward_name : data?.deliveryWard},
                          ${data?.deliveryDistrict[0] === '{' ? JSON.parse(data?.deliveryDistrict)?.district_name : data?.deliveryProvince}, ${data?.deliveryProvince}`}</p>
-                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Order date: </span>{data?.orderedDate}</p>
-                        <p style={{width: 300}}><span style={{fontWeight: 'bold', marginRight: 10}}>Note: </span>{data?.note}</p>
+                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Ngày đặt: </span>{data?.orderedDate}</p>
+                        <p style={{width: 300}}><span style={{fontWeight: 'bold', marginRight: 10}}>Lưu ý: </span>{data?.note}</p>
                     </div>
                     {
                         data?.paymentMethod === 'VNPAY' ?
@@ -242,17 +242,17 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                 ))
             }
             <div style={{display: 'flex', justifyContent: 'flex-end', marginRight: 20}}>
-                <h5 ><span style={{marginRight: 30}}>Price: </span><span className='total__amount'>{data?.finalPrice} $</span></h5>
+                <h5 ><span style={{marginRight: 30}}>Giá đơn hàng: </span><span className='total__amount'>{data?.finalPrice} đ</span></h5>
             </div>
             <div style={{display: 'flex', marginTop: 50, justifyContent: 'center'}}>
                 <Link style={{marginLeft: 30}}  to={`/delivery/${orderItem.orderId}`}><button className='viewDelivery'
-                                >View delivery</button>
+                                >Xem vận chuyển</button>
                 </Link>
                 <button className='viewDelivery1' 
                     style={{marginLeft: 30, fontWeight: 'bold'}}
                     onClick={() => cancelOrder(orderItem?.status)}
                 >
-                    Cancel order</button>
+                    Hủy đơn</button>
             </div>
             
         </Drawer>

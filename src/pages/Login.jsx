@@ -1,16 +1,12 @@
 import React, { useRef, useState } from 'react'
 import Helmet from '../components/Helmet/Helmet'
-import CommonSection from '../components/UI/common-section/CommonSection'
 import { Container, Row, Col } from 'react-bootstrap'
 import { Link, useNavigate } from 'react-router-dom'
 import { useForm } from 'react-hook-form'
-import { login } from '../api/fetchers/user'
 import '../styles/login.css'
 import jwtDecode from 'jwt-decode'
 import { Button, Dialog, Alert, AlertTitle } from '@mui/material'
-import { useQuery } from '@tanstack/react-query'
-import { thunkCartTypes } from '../constants/thunkTypes'
-import { getCart } from '../api/fetchers/cart'
+
 import axios from 'axios'
 import { baseURL } from '../constants/baseURL'
 
@@ -19,9 +15,7 @@ import 'react-toastify/dist/ReactToastify.css';
 
 
 const Login = () => {
-  const [open, setOpen] = useState(false);
-  const [data, setData] = useState([])
-
+  
   const [openNotify, setOpenNotify] = useState(false);
 
   const [phone, setPhone] = useState('');
@@ -61,11 +55,11 @@ const Login = () => {
       .then((res) => {
         if (res.data.status === 'UNAUTHORIZED') {
           if(res.data.message === 'User is disabled') {
-            showToastMessageError(`${res.data.message}. Please check your email to verify account!!!`);
+            showToastMessageError(`${res.data.message}. Vui lòng kiểm tra email để kích hoạt tài khoản`);
             
           }
           else {
-            showToastMessageError("Your phone or password is incorrect!!")
+            showToastMessageError("Số điện thoại hoặc mật khẩu không đúng!!")
           }
         }
         else {
@@ -113,7 +107,7 @@ const Login = () => {
               <Col lg='5' md='6'>
                 <div style={{ width: 400, height: 400, backgroundColor: 'white', borderRadius: 10 }}>
                   <div className='login__form d-flex justify-content-center'>
-                    <h5 style={{ marginTop: 10, fontWeight: 'bold' }}>SIGN IN</h5>
+                    <h5 style={{ marginTop: 10, fontWeight: 'bold' }}>Đăng nhập</h5>
                     <div className="newsletter">
                       <span>
                         <i class="ri-phone-fill"></i>
@@ -137,15 +131,15 @@ const Login = () => {
 
                     </div>
                     <div style={{display: 'flex',flexDirection: 'row'}}>
-                      <Link to={'/reset-password'} style={{fontSize: 14}}>Forgot password</Link>
+                      <Link to={'/reset-password'} style={{fontSize: 14}}>Quên mật khẩu</Link>
                     </div>
                     <button
                       onClick={() => onSubmit()}
                       className='login__btn'
                     >
-                      Login
+                      Đăng nhập
                     </button>
-                    <p>Or login with...</p>
+                    <p>Đăng nhập bằng</p>
                     <div
                       className='login__bt1-container'
                     >
@@ -162,20 +156,11 @@ const Login = () => {
                           />
                         </a>
                       </button>
-                      <button
-
-                        className='login__btn1'
-                        style={{ backgroundColor: '' }}
-                      >
-                        <img
-                          src='https://upload.wikimedia.org/wikipedia/en/thumb/0/04/Facebook_f_logo_%282021%29.svg/2048px-Facebook_f_logo_%282021%29.svg.png'
-                          style={{ height: 20, width: 20 }}
-                        />
-                      </button>
+                      
                     </div>
-                    <p>You don't have an account ?</p>
+                    <p>Bạn chưa có tài khoản ?</p>
                     <Link to='/register'>
-                      <p style={{ marginTop: -10, color: '#F9813A' }}>Register here</p>
+                      <p style={{ marginTop: -10, color: '#F9813A' }}>Đăng kí</p>
                     </Link>
                   </div>
                 </div>

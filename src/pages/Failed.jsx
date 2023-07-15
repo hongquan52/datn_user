@@ -40,7 +40,7 @@ const Failed = () => {
     }
     return (
         
-        <Helmet title='Thanh toán thành công'>
+        <Helmet title='Thanh toán thất bại'>
         
         <Container>
             <Row>
@@ -50,11 +50,11 @@ const Failed = () => {
                             <img src={logoSuccess} alt="" />
                         </div>
                         <div className="success__title">
-                            <h5 style={{color: '#df2020'}}>Your payment is failed. Please try again</h5>
+                            <h5 style={{color: '#df2020'}}>Thanh toán thất bại. Vui lòng thực hiện lại</h5>
                         </div>
                         <div>
-                        <Link onClick={handleCancel}><button className='payment__btn'>Cancel</button></Link>
-                        <Link onClick={handlePayment}><button className='payment__btn'>Payment</button></Link>
+                        <Link onClick={handleCancel}><button className='payment__btn'>Quay về</button></Link>
+                        <Link onClick={handlePayment}><button className='payment__btn'>Thanh toán lại</button></Link>
                         </div>
                         
                     </div>

@@ -49,7 +49,7 @@ const Delivery = () => {
             .catch((err) => console.log(err))
     }
     if(loading) {
-        return <div>...Loading</div>
+        return <div>...Đang tải</div>
     }
     return (
         
@@ -62,12 +62,12 @@ const Delivery = () => {
                     separator={<NavigationNexIcon fontSize='small' />}
                 >
                     <LinkBreadcrums underline='hover' color={'#F9813A'}>
-                        <Link to={"/home"}>Home</Link>
+                        <Link to={"/home"}>Trang chủ</Link>
                     </LinkBreadcrums>
                     <LinkBreadcrums underline='hover' color={'#F9813A'}>
-                        <Link to={"/historyOrder"}>My order</Link>
+                        <Link to={"/historyOrder"}>Đơn hàng</Link>
                     </LinkBreadcrums>
-                    <Typography color={"black"}>Delivery</Typography>
+                    <Typography color={"black"}>Vận chuyển</Typography>
                 </Breadcrumbs>
             </Box>
             {
@@ -78,7 +78,7 @@ const Delivery = () => {
                         <Col lg='8'>
                             <div className="userUpdateLeft">
                                 <div className="form__group">
-                                    <label>Delivery ID</label>
+                                    <label>Mã vận chuyển</label>
                                     <input
                                         readOnly
                                         type='text'
@@ -88,7 +88,7 @@ const Delivery = () => {
                                     />
                                 </div>
                                 <div className="form__group">
-                                    <label>Price</label>
+                                    <label>Giá</label>
                                     <input
                                         readOnly
                                         type='text'
@@ -99,7 +99,7 @@ const Delivery = () => {
                                     />
                                 </div>
                                 <div className="form__group">
-                                    <label>Shipper name</label>
+                                    <label>Tên người giao</label>
                                     <input
                                         readOnly
                                         type='text'
@@ -110,7 +110,7 @@ const Delivery = () => {
                                 </div>
                                 
                                 <div className="form__group">
-                                    <label>Shipper phone</label>
+                                    <label>Số điện thoại người giao</label>
                                     <input
                                         type='text'
                                         placeholder='Ngay sinh'
@@ -120,7 +120,7 @@ const Delivery = () => {
                                     />
                                 </div>
                                 <div className="form__group">
-                                    <label>Delivery Status</label>
+                                    <label>Tình trạng</label>
                                     <input
                                         type='text'
                                         placeholder='Tình trạng đơn hàng'
@@ -131,15 +131,25 @@ const Delivery = () => {
                             
                                 </div>
                                 <div className="form__group">
-                                    <label>Address</label>
+                                    <label>Địa chỉ giao</label>
                                     <input
                                         
                                         readOnly
                                         type='text'
                                         placeholder='Phone'
-                                        style={{width: 600}}
-                                        value={deliveryData?.deliveryApartmentNumber+', '+
-                                            deliveryData?.deliveryWard+',   '+deliveryData?.deliveryDistrict+',   '+deliveryData?.deliveryProvince}
+                                        style={{width: 500}}
+                                        
+                                        value={`${deliveryData?.deliveryApartmentNumber},${
+                                            deliveryData?.deliveryWard[0] === '{' ?
+                                            JSON.parse(deliveryData?.deliveryWard).ward_name :
+                                            deliveryData?.deliveryWard
+                                        },${
+                                            deliveryData?.deliveryDistrict[0] === '{' ?
+                                            JSON.parse(deliveryData?.deliveryDistrict).district_name :
+                                            deliveryData?.deliveryDistrict
+                                        },${
+                                            deliveryData?.deliveryProvince
+                                        }`}
                                     />
                                     
                                 </div>
@@ -151,7 +161,7 @@ const Delivery = () => {
                                         style={{ backgroundColor: received ? 'grey' : null , marginRight: 100}}
                                         disabled={ received ? true : false }
                                     >
-                                        Received
+                                        Đã giao hàng
                                     </button>
                                 }
                                 
@@ -185,7 +195,7 @@ const Delivery = () => {
                                     src={deliveryData?.image?.slice(0,-1)}
                                     style={{width: 300, height: 300, borderRadius: 30, marginBottom: 20}}
                                 />
-                                <a href={deliveryData?.image?.slice(0,-1)}>Photo shipper delivery</a>   
+                                <a href={deliveryData?.image?.slice(0,-1)}>Hình ảnh giao hàng</a>   
                             </div>
                         </Col>
                     </Row>
@@ -196,7 +206,7 @@ const Delivery = () => {
                     style={{height: 400}}
                   >
                     <h5 style={{textAlign: 'center', margin: 'auto', color: '#df2020'}}>
-                        Your order hasn't been created delivery</h5>
+                        Đơn hàng của bạn chưa được vận chuyển</h5>
                 </Row>  
                 </Container>
             }

@@ -38,10 +38,10 @@ const Register = () => {
   // REGISTER FUNCTION
   const onSubmit = () => {
     if(password !== confirmPassword) {
-      showToastMessageError('Your password is not match!!!')
+      showToastMessageError('Mật khẩu không trùng khớp')
     }
     else {
-      showToastMessageSuccess('Register successfully. Please check your email to active account!')
+      showToastMessageSuccess('Đăng kí thành công. Vui lòng kiểm tra email để kích hoạt tài khoản')
       var dataForm = new FormData();
       dataForm.append('name', name);
       dataForm.append('email', email);
@@ -85,13 +85,13 @@ const Register = () => {
               <Col lg='5' md='6'>
                 <div style={{width: 400, height: 500, backgroundColor: 'white', borderRadius: 10}}>
                   <div className='login__form d-flex justify-content-center'>
-                    <h5 style={{marginTop: 10, fontWeight: 'bold'}}>SIGN IN</h5>
+                    <h5 style={{marginTop: 10, fontWeight: 'bold'}}>Đăng kí</h5>
                     <div className="newsletter">
                       <span>
                       <i class="ri-phone-fill"></i>
                       </span>
                       <input 
-                        placeholder='phone...'
+                        placeholder='Số điện thoại...'
                         onChange={(e) => setPhone(e.target.value)}
                       type="email"  style={{backgroundColor: '#fedac5', padding: 5, borderRadius: 5, fontSize: 15, width: 200}} />
                     </div>
@@ -101,7 +101,7 @@ const Register = () => {
                       </span>
                       <input 
                         onChange={(e) => setName(e.target.value)}
-                        placeholder='name...'
+                        placeholder='Tên...'
                       type="email"  style={{backgroundColor: '#fedac5', padding: 5, borderRadius: 5, fontSize: 15, width: 200}} />
                     </div>
                     <div className="newsletter"> 
@@ -110,7 +110,7 @@ const Register = () => {
                       </span>
                       <input 
                         onChange={(e) => setEmail(e.target.value)}
-                        placeholder='email...'
+                        placeholder='Email...'
                       type="email"  style={{backgroundColor: '#fedac5', padding: 5, borderRadius: 5, fontSize: 15, width: 200}} />
                     </div>
                     <div className="newsletter">
@@ -122,7 +122,7 @@ const Register = () => {
                       
                       </span>
                       <input 
-                        placeholder='password...'
+                        placeholder='Mật khẩu...'
                         onChange={(e) => setPassword(e.target.value)}
                       type={hidePassword ? 'password' : 'email'}  
                       style={{backgroundColor: '#fedac5', padding: 5, borderRadius: 5, fontSize: 15, width: 200}}/>
@@ -137,7 +137,7 @@ const Register = () => {
                       
                       </span>
                       <input 
-                        placeholder='confirm password'
+                        placeholder='Xác nhận mật khẩu'
                         onChange={(e) => setConfirmPassword(e.target.value)}
                       type={hidePassword ? 'password' : 'email'}  
                       style={{backgroundColor: '#fedac5', padding: 5, borderRadius: 5, fontSize: 15, width: 200}}/>
@@ -147,12 +147,12 @@ const Register = () => {
                       onClick={() => onSubmit()}
                       className='login__btn'
                     >
-                      Sign up
+                      Đăng kí
                     </button>
                     
-                    <p>You already have an account?</p>
+                    <p>Bạn đã có tài khoản?</p>
                     <Link to='/login'>
-                      <p style={{marginTop: -10, color: '#F9813A'}}>Login now</p>
+                      <p style={{marginTop: -10, color: '#F9813A'}}>Đăng nhập ngay</p>
                     </Link>
                   </div>
                 </div>

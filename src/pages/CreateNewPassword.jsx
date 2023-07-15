@@ -67,7 +67,7 @@ const CreateNewPassword = () => {
                             <Col lg='5' md='6'>
                                 <div style={{ width: 400, height: 400, backgroundColor: 'white', borderRadius: 10 }}>
                                     <div className='login__form d-flex justify-content-center'>
-                                        <h5 style={{ marginTop: 10, fontWeight: 'bold' }}>NEW PASSWORD</h5>
+                                        <h5 style={{ marginTop: 10, fontWeight: 'bold' }}>ĐẶT MẬT KHẨU MỚI</h5>
 
                                         <div className="newsletter">
                                             <span>
@@ -92,13 +92,13 @@ const CreateNewPassword = () => {
                                               onClick={() => createPassword()}
                                             className='login__btn'
                                         >
-                                            SAVE PASSWORD
+                                            Lưu mật khẩu
                                         </button>
                                         <button
                                               onClick={() => navigate('/login')}
                                             className='login__btn'
                                         >
-                                            LOGIN NOW
+                                            Đăng nhập ngay
                                         </button>
 
                                     </div>

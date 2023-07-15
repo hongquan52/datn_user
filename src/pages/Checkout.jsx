@@ -9,8 +9,7 @@ import '../styles/checkout.css'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
-import { InputLabel, MenuItem, Select, FormControl } from '@mui/material'
-import { Box, Typography, Breadcrumbs, Fade, Modal, Backdrop } from '@mui/material'
+import { Box, Typography, Breadcrumbs, Fade, Modal, Backdrop, CircularProgress } from '@mui/material'
 import LinkBreadcrumb from '@mui/material/Link'
 import NavigationNexIcon from '@mui/icons-material/NavigateNext'
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
@@ -33,6 +32,8 @@ const Checkout = () => {
 
   const navigate = useNavigate()
   const ref = useRef()
+
+  const [loading, setLoading] = useState(false);
 
   // NOTE ORDER
   const [noteValue, setNoteValue] = useState('');
@@ -90,6 +91,7 @@ const Checkout = () => {
       showToastMessageError('Please update your phone to checkout');
     }
     else {
+      setLoading(true);
       
       var dataJSON = JSON.stringify({
         "totalPrice": subtotalStateOriginal - subtotalState,
@@ -119,6 +121,7 @@ const Checkout = () => {
         .catch((err) => {
           console.log('Create order error: ', err);
         })
+        .finally(() => setLoading(false))
     }
 
   }
@@ -260,6 +263,22 @@ const Checkout = () => {
 
     )
   }
+  if (loading) {
+      return (
+          <div style={{
+              display: "flex",
+              height: "100vh",
+              alignItems: "center",
+              justifyContent: "center",
+              flexDirection: 'column'
+          }}>
+              <p style={{marginBottom: 20, fontSize: 20}}>Đang tiến hành xử lý đơn hàng</p>
+              <Box sx={{ display: 'flex' }}>
+                  <CircularProgress />
+              </Box>
+          </div>
+      )
+  }
   return (
     <Helmet title='Checkout'>
       <ToastContainer />
@@ -271,12 +290,12 @@ const Checkout = () => {
           separator={<NavigationNexIcon fontSize='small' />}
         >
           <LinkBreadcrumb underline='hover' color={'#F9813A'}>
-            <Link to={"/home"}>Home</Link>
+            <Link to={"/home"}>Trang chủ</Link>
           </LinkBreadcrumb>
           <LinkBreadcrumb underline='hover' color={'#F9813A'}>
-            <Link to={"/cart"}>Cart</Link>
+            <Link to={"/cart"}>Giỏ hàng</Link>
           </LinkBreadcrumb>
-          <Typography color={"black"}>Checkout</Typography>
+          <Typography color={"black"}>Đặt hàng</Typography>
         </Breadcrumbs>
       </Box>
       {/* MODAL ADDRESS CHOOSE */}
@@ -296,7 +315,7 @@ const Checkout = () => {
         <Fade in={modalAddressVisible}>
           <Box sx={style}>
             <Typography id="transition-modal-title" variant="h6" component="h2">
-              Choose address
+              Chọn địa chỉ
             </Typography>
             {
               addressUserData.map((item) => (
@@ -322,7 +341,7 @@ const Checkout = () => {
                   onClick={() => {
                     navigate(`/userinformation/${1}`)
                   }}
-                >My address</button>
+                >Địa chỉ của tôi</button>
               </div>
               <div className='address__btn'>
                 <button
@@ -330,7 +349,7 @@ const Checkout = () => {
                     setModalAddressVisible(!modalAddressVisible)
                     setAddressConfirm(!addressConfirm);
                   }}
-                >Done</button>
+                >Hoàn tất</button>
               </div>
 
             </div>
@@ -354,7 +373,7 @@ const Checkout = () => {
         <Fade in={modalVoucherVisible}>
           <Box sx={style}>
             <Typography id="transition-modal-title" variant="h6" component="h2" style={{ marginBottom: 20 }}>
-              Choose voucher
+              Chọn ưu đãi
             </Typography>
             {
               voucherUserData.map((item) => {
@@ -385,14 +404,14 @@ const Checkout = () => {
                     setShippingState(0);
                     setModalVoucherVisible(!modalVoucherVisible);
                   }}
-                >No use</button>
+                >Không sử dụng</button>
               </div>
               <div className='address__btn'>
                 <button
                   onClick={() => {
                     setModalVoucherVisible(!setModalVoucherVisible)
                   }}
-                >Done</button>
+                >Hoàn tất</button>
               </div>
               
             </div>
@@ -409,7 +428,7 @@ const Checkout = () => {
 
                     <i class="ri-map-pin-fill"></i>
 
-                    <p >Delivery address</p>
+                    <p >Địa chỉ giao hàng</p>
                   </div>
                   <div className='address__detail'>
                     <p style={{ fontWeight: 'bold', fontSize: 16 }}>{userData.name} ({userData.phone})</p>
@@ -422,22 +441,22 @@ const Checkout = () => {
                 <div className='address__btn'>
                   <button
                     onClick={() => setModalAddressVisible(!modalAddressVisible)}
-                  >Edit</button>
+                  >Đổi địa chỉ</button>
                 </div>
               </div>
               <div style={{ backgroundColor: '#fde4e4', width: '100%', marginBottom: 10, borderRadius: 10 }}>
                 <div className='borderBottom'>
                   <div className='orderList__title'>
-                    <p style={{ fontWeight: 'bold', fontSize: 18, color: '#F9813A' }}>List product</p>
+                    <p style={{ fontWeight: 'bold', fontSize: 18, color: '#F9813A' }}>Danh sách sản phẩm</p>
                     <span
 
                     ><i style={{ width: 20, height: 20, color: '#F9813A' }} class="ri-arrow-down-s-line"></i></span>
                   </div>
                   <div style={{ backgroundColor: 'white', padding: 20, borderRadius: 10 }}>
                     <div className='product__table-title'>
-                      <p style={{ marginRight: 750 }}>Product</p>
-                      <p style={{ marginRight: 300 }}>Price</p>
-                      <p >Amount</p>
+                      <p style={{ marginRight: 750 }}>Sản phẩm</p>
+                      <p style={{ marginRight: 300 }}>Giá</p>
+                      <p >Số lượng</p>
                     </div>
                     <div>
                       {
@@ -450,12 +469,12 @@ const Checkout = () => {
                 </div>
                 <div className='borderBottom orderList__footer'>
                   <div style={{ height: 50, display: 'flex', justifyContent: 'center', flexDirection: 'row' }}>
-                    <p style={{ marginRight: 30, margin: 'auto' }}>Note</p>
+                    <p style={{ marginRight: 30, margin: 'auto' }}>Lưu ý</p>
                     <input className='note__input' type='email'
                       onChange={(e) => setNoteValue(e.target.value)}
                     />
                   </div>
-                  <p>Subtotal ({productCartData.length} items) : {subtotalStateOriginal}$</p>
+                  <p>Tổng ({productCartData.length} sản phẩm) : {subtotalStateOriginal} đ</p>
                 </div>
               </div>
 
@@ -463,16 +482,16 @@ const Checkout = () => {
                 <div className='voucher__title'>
                   <div style={{ display: 'flex', fontSize: 20, fontWeight: 600, color: '#F9813A' }}>
                     <span><i class="ri-map-pin-fill"></i></span>
-                    <p>Voucher</p>
+                    <p>Ưu đãi</p>
                   </div>
                   <button className='voucher__btn'
                     onClick={() => setModalVoucherVisible(true)}
-                  ><i class="ri-add-circle-fill"></i> Add</button>
+                  ><i class="ri-add-circle-fill"></i> Chọn</button>
                 </div>
                 {
                   voucherUserSelectedId == 0 ?
                     <div className="voucher__item">
-                      <p style={{ color: 'red' }}>No voucher is used <DeleteForeverIcon /></p>
+                      <p style={{ color: 'red' }}>Không sử dụng ưu đãi <DeleteForeverIcon /></p>
                     </div>
                     :
                     <div className='voucher__item'>
@@ -489,7 +508,7 @@ const Checkout = () => {
               <div
                 className='payment__container'
                 style={{ height: 100, marginTop: 70, display: 'flex', alignItems: 'center', backgroundColor: '#fde4e4' }}>
-                <p style={{ fontSize: 18, fontWeight: 600, color: '#F9813A' }}>Payment method</p>
+                <p style={{ fontSize: 18, fontWeight: 600, color: '#F9813A' }}>Hình thức thanh toán</p>
                 <div style={{ display: 'flex', alignItems: 'center', marginRight: 50 }}>
                   <input type='radio' style={{ height: 20, width: 20, marginRight: 10 }}
                     checked={paymentMethod == 'VNPAY' ? true : false}
@@ -511,37 +530,37 @@ const Checkout = () => {
               </div>
               <div className='finalPrice__container'>
                 <div className='finalPrice__item'>
-                  <h5>Subtotal</h5>
-                  <h5>{subtotalStateOriginal} $</h5>
+                  <h5>Giá đơn hàng</h5>
+                  <h5>{subtotalStateOriginal} đ</h5>
                 </div>
                 <div className='finalPrice__item'>
-                  <h5>Shipping fee</h5>
-                  <h5>{shippingStateOriginal} $</h5>
+                  <h5>Phí vận chuyển</h5>
+                  <h5>{shippingStateOriginal} đ</h5>
                 </div>
                 <div className='finalPrice__item'>
-                  <h5>Voucher (Subtotal)</h5>
-                  <h5>-{subtotalState} $</h5>
+                  <h5>Ưu đãi (Đơn hàng)</h5>
+                  <h5>-{subtotalState} đ</h5>
                 </div>
                 <div className='finalPrice__item'>
-                  <h5>Voucher (Shipping)</h5>
-                  <h5>-{shippingState} $</h5>
+                  <h5>Ưu đãi (Vận chuyển)</h5>
+                  <h5>-{shippingState} đ</h5>
                 </div>
                 <div className='finalPrice__item'>
-                  <h5>Rank {userData.rank.name } ({userData.rank.discount}%)</h5>
-                  <h5>-{userData.rank.discount/100 * subtotalStateOriginal} $</h5>
+                  <h5>Xếp hạng {userData.rank.name } ({userData.rank.discount}%)</h5>
+                  <h5>-{userData.rank.discount/100 * subtotalStateOriginal} đ</h5>
                 </div>
                 <div className='finalPrice__item1'>
-                  <h5>Total price</h5>
-                  <h5>{subtotalStateOriginal + shippingStateOriginal - subtotalState - shippingState-(userData.rank.discount/100 * subtotalStateOriginal)} $</h5>
+                  <h5>Tổng thanh toán</h5>
+                  <h5>{subtotalStateOriginal + shippingStateOriginal - subtotalState - shippingState-(userData.rank.discount/100 * subtotalStateOriginal)} đ</h5>
                 </div>
               </div>
               <div style={{ marginTop: 20, display: 'flex', justifyContent: 'space-between' }}>
                 <Link to={'/cart'}>
-                  <button className='checkout__btn'><ArrowBackIosIcon />Back</button>
+                  <button className='checkout__btn'><ArrowBackIosIcon />Trở về</button>
                 </Link>
                 <button className='checkout__btn'
                   onClick={() => orderHandle()}
-                >Place an order <ArrowForwardIosIcon /></button>
+                >Đặt hàng <ArrowForwardIosIcon /></button>
               </div>
             </Col>
           </Row>

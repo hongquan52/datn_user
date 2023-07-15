@@ -54,14 +54,14 @@ const SuccessOrder = () => {
                         <img src={VNPAY} alt="" />
                     </div>
                     <div className="success__title">
-                        <h5>OrderID : {orderID}</h5>
-                        <h5>Total Price : {totalPrice}</h5>
+                        <h5>Mã đơn hàng : {orderID}</h5>
+                        <h5>Giá : {totalPrice}</h5>
                     </div>
                     <div style={{display: 'flex',width: 500, justifyContent: 'space-between'}}>
-                      <Link to={'/checkout'}><button className='payment__btn'><ArrowBackIosNewIcon />Checkout</button></Link>
+                      <Link to={'/checkout'}><button className='payment__btn'><ArrowBackIosNewIcon />Quay ại</button></Link>
                       <button className='payment__btn'
                         onClick={() => handlePayment()}
-                      >Payment <ArrowForwardIosIcon /></button>
+                      >Thanh toán <ArrowForwardIosIcon /></button>
                     </div>
                     
                 </div>

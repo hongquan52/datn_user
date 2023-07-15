@@ -239,7 +239,7 @@ const Home = () => {
           <Row >
             <Col>
               <div style={{ display: 'flex', justifyContent: 'center', backgroundColor: '#F9813A', alignItems: 'center' }}>
-                <h5 style={{ fontWeight: 'bold', fontSize: 30, color: 'white' }}>EVENTS AND VOUCHERS</h5>
+                <h5 style={{ fontWeight: 'bold', fontSize: 30, color: 'white' }}>Ưu đãi và sự kiện</h5>
               </div>
             </Col>
           </Row>
@@ -316,7 +316,7 @@ const Home = () => {
                 <h5 style={{
                   fontWeight: 'bold', fontSize: 30, color: '#F9813A',
                   padding: 5, borderRadius: 5, marginLeft: 10, backgroundColor: 'white'
-                }}>ITEM</h5>
+                }}>Loại sản phẩm</h5>
               </div>
             </Col>
           </Row>
@@ -348,8 +348,8 @@ const Home = () => {
                 <h5 style={{
                   fontWeight: 'bold', fontSize: 30, color: '#F9813A',
                   padding: 5, borderRadius: 5, marginLeft: 10, backgroundColor: 'white'
-                }}> BEST SALES</h5>
-                <h5 style={{ fontSize: 20, color: 'white', marginRight: 20 }}>Show all {'>'}</h5>
+                }}> Sản phẩm bán chạy</h5>
+                <h5 style={{ fontSize: 20, color: 'white', marginRight: 20 }}>Xem tất cả {'>'}</h5>
               </div>
             </Col>
           </Row>
@@ -377,7 +377,7 @@ const Home = () => {
                 <h5 style={{
                   fontWeight: 'bold', fontSize: 30, color: '#F9813A',
                   padding: 5, borderRadius: 5, marginLeft: 10, backgroundColor: 'white'
-                }}>PORPULAR BRAND</h5>
+                }}>Thương hiệu phổ biến</h5>
               </div>
             </Col>
           </Row>
@@ -460,8 +460,8 @@ const Home = () => {
                 <h5 style={{
                   fontWeight: 'bold', fontSize: 30, color: '#F9813A',
                   padding: 5, borderRadius: 5, marginLeft: 10, backgroundColor: 'white'
-                }}>FLASH SALES</h5>
-                <h5 style={{ fontSize: 20, color: 'white', marginRight: 20 }}>Show all {'>'}</h5>
+                }}>Flash sale</h5>
+                <h5 style={{ fontSize: 20, color: 'white', marginRight: 20 }}>Xem tất cả {'>'}</h5>
               </div>
             </Col>
           </Row>
@@ -489,10 +489,10 @@ const Home = () => {
                 <h5 style={{
                   fontWeight: 'bold', fontSize: 30, color: '#F9813A',
                   padding: 5, borderRadius: 5, marginLeft: 10, backgroundColor: 'white'
-                }}>HOT VOUCHERS</h5>
+                }}>Ưu đãi</h5>
                 <h5 style={{ fontSize: 18, color: 'white', marginRight: 20 }}
                   onClick={() => navigate("/voucher")}
-                >Show all <ArrowForwardIcon /></h5> 
+                >Xem tất cả<ArrowForwardIcon /></h5> 
               </div>
             </Col>
           </Row>
@@ -529,7 +529,7 @@ const Home = () => {
                 <h5 style={{
                     fontWeight: 'bold', fontSize: 30, color: '#F9813A',
                     padding: 5, borderRadius: 5, backgroundColor: 'white'
-                  }}>EVERYONE SAY ABOUT US</h5>
+                  }}>MỌI NGƯỜI NÓI GÌ VỀ CHÚNG TÔI</h5>
                 
                 <p className="testimonial__desc">
                 Chúng tôi luôn luôn mong muốn mọi người nêu cảm nhận, ý kiến và sự hài lòng của mình về sản phẩm sau khi nhận hàng, đó là động lực để chúng tôi ngày càng cải thiện dịch vụ và nâng cao lòng tin mọi người cho công ty của chúng tôi.

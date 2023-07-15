@@ -61,14 +61,14 @@ const HistoryOrder = () => {
     }, [tabOrder])
     
     const columns = [
-        { field: "orderId", headerName: "Order ID", width: 100},
-        { field: "orderedDate", headerName: "Order date", width: 200 },
-        { field: "totalPrice", headerName: "Total Price", width: 240, renderCell: (params) => {
+        { field: "orderId", headerName: "Mã đơn hàng", width: 100},
+        { field: "orderedDate", headerName: "Ngày đặt", width: 200 },
+        { field: "totalPrice", headerName: "Giá", width: 240, renderCell: (params) => {
             if(params.row.total) {
                 return `${params.row.totalPrice} VNĐ`
             }
         } },
-        { field: "paymentMethod", headerName: "Payment method", width: 200, renderCell: (params) => {
+        { field: "paymentMethod", headerName: "Loại thanh toán", width: 200, renderCell: (params) => {
             if(params.row.paymentMethod === 'VNPAY') {
                 return (
                     <img src='https://inkythuatso.com/uploads/images/2021/12/vnpay-logo-inkythuatso-01-13-16-26-42.jpg'
@@ -85,13 +85,13 @@ const HistoryOrder = () => {
             }
         } },
         
-        { field: "status", headerName: "Status", width: 200, renderCell: (params) => {
+        { field: "status", headerName: "Tình trạng", width: 200, renderCell: (params) => {
             if(params.row.status === 'Done') {
                 return (
                     <p
                         className='order__status-view'
                         style={{backgroundColor:'green', color: 'white'}}
-                    >Done</p>
+                    >Hoàn tất</p>
                 )
             }
             else if(params.row.status === 'Ordered') {
@@ -99,7 +99,7 @@ const HistoryOrder = () => {
                     <p
                         className='order__status-view'
                         style={{backgroundColor:'blue', color: 'white'}}
-                    >Ordered</p>
+                    >Vừa đặt</p>
                 )
             }
             else if(params.row.status === 'Confirmed') {
@@ -107,7 +107,7 @@ const HistoryOrder = () => {
                     <p
                         className='order__status-view'
                         style={{backgroundColor:'#14d9e3', color: 'black'}}
-                    >Confirmed</p>
+                    >Đã xác nhận</p>
                 )
             }
             else if (params.row.status==='Wait_Delivering') {
@@ -115,7 +115,7 @@ const HistoryOrder = () => {
                     <p
                         className='order__status-view'
                         style={{backgroundColor:'#F9813A', color: 'white'}}
-                    >Wait delivery</p>
+                    >Chờ giao hàng</p>
                 )
             }
             else if(params.row.status === 'Delivering') {
@@ -123,7 +123,7 @@ const HistoryOrder = () => {
                     <p
                         className='order__status-view'
                         style={{backgroundColor:'yellow', color: 'black'}}
-                    >Delivering</p>
+                    >Đang giao</p>
                 )
             }
             else if(params.row.status === 'Delivered') {
@@ -131,7 +131,7 @@ const HistoryOrder = () => {
                     <p
                         className='order__status-view'
                         style={{backgroundColor:'yellow', color: 'black'}}
-                    >Delivered</p>
+                    >Đã giao</p>
                 )
             }
             else if(params.row.status === 'Cancel') {
@@ -139,7 +139,7 @@ const HistoryOrder = () => {
                     <p
                         className='order__status-view'
                         style={{backgroundColor:'red', color: 'white'}}
-                    >Cancel</p>
+                    >Đơn hủy</p>
                 )
             }
         }},
@@ -181,9 +181,9 @@ const HistoryOrder = () => {
                     separator={<NavigationNexIcon fontSize='small' />}
                 >
                     <LinkBreadcrums underline='hover' color={'#F9813A'}>
-                        <Link to={"/home"}>Home</Link>
+                        <Link to={"/home"}>Trang chủ</Link>
                     </LinkBreadcrums>
-                    <Typography color={"black"}>My order</Typography>
+                    <Typography color={"black"}>Đơn hàng</Typography>
                 </Breadcrumbs>
             </Box>
             <Container style={{marginBottom: 20}}>
@@ -193,40 +193,40 @@ const HistoryOrder = () => {
                             <p
                                 className={`${tabOrder === 'All' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('All')}
-                            >ALL</p>
+                            >Tất cả</p>
                             <p
                                 className={`${tabOrder === 'Ordered' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Ordered')}
-                            >ORDERED</p>
+                            >Vừa đặt</p>
                             <p
                             
                                 className={`${tabOrder === 'Confirmed' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Confirmed')}
-                            >CONFIRMED</p>
+                            >Đã xác nhận</p>
                             <p
                                 className={`${tabOrder === 'Wait_Delivering' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Wait_Delivering')}
-                            >WAIT DELIVERY</p>
+                            >Chờ giao hàng</p>
                             <p
                                 className={`${tabOrder === 'Delivering' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Delivering')}
-                            >DELIVERING</p>
+                            >Đang giao</p>
                             <p
                                 className={`${tabOrder === 'Delivered' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Delivered')}
-                            >DELIVERED</p>
+                            >Đã giao</p>
                             <p
                                 className={`${tabOrder === 'Received' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Received')}
-                            >RECEIVED</p>
+                            >Đã nhận hàng</p>
                             <p
                                 className={`${tabOrder === 'Done' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Done')}
-                            >DONE</p>
+                            >Hoàn tất</p>
                             <p
                                 className={`${tabOrder === 'Cancel' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Cancel')}
-                            >CANCEL</p>
+                            >Đơn hủy</p>
                             
                         </div>
                     </Col>

@@ -82,9 +82,9 @@ const Voucher = () => {
                     separator={<NavigationNexIcon fontSize='small' />}
                 >
                     <LinkBreadcrums underline='hover' color={'#F9813A'}>
-                        <Link to={"/home"}>Home</Link>
+                        <Link to={"/home"}>Trang chủ</Link>
                     </LinkBreadcrums>
-                    <Typography color={"black"}>Voucher</Typography>
+                    <Typography color={"black"}>Ưu đãi</Typography>
                 </Breadcrumbs>
             </Box>
             <span style={{ marginBottom: 20 }}>
@@ -109,7 +109,7 @@ const Voucher = () => {
                     <Row>
                         <Col lg='3' md='6' sm='6' xs='12' style={{ background: '#F9813A', borderRadius: 5, height: 350, display: 'flex', flexDirection: 'column', justifyContent: 'space-around' }}>
                             <div className='voucher__filter-container'>
-                                <p style={{textAlign: 'center', backgroundColor: '#fde4e4', padding: 5, fontWeight: 'bold'}}>SEARCH VOUCHER</p>
+                                <p style={{textAlign: 'center', backgroundColor: '#fde4e4', padding: 5, fontWeight: 'bold'}}>Tìm kiếm</p>
                                 <div className='voucher__filter-item'>
                                     <input type='email' style={{ width: 200, padding: 5, height: 40, borderRadius: 5, fontSize: 16 }}
                                       onChange={(e) => setSearchText(e.target.value)}
@@ -122,19 +122,14 @@ const Voucher = () => {
                                 </div>
                             </div>
                             <div className='voucher__filter-container'>
-                                <div className='voucher__filter-item1'>
-                                    <input type='checkbox'
-
-                                    />
-                                    <p><FlashOnIcon />{'    '}Hot deals</p>
-                                </div>
+                                
                                 <div className='voucher__filter-item1'>
                                     <input type='checkbox'
                                       value={1}
                                       onChange={(e) => setFilterVoucherType(2)}
                                       checked={filterVoucherType === 2 ? true : false}
                                     />
-                                    <p><LocalShippingIcon />{'    '}Free ship</p>
+                                    <p><LocalShippingIcon />{'    '}Miễn phí vận chuyển</p>
                                 </div>
                                 <div className='voucher__filter-item1'>
                                     <input type='checkbox'
@@ -142,7 +137,7 @@ const Voucher = () => {
                                       onChange={(e) => setFilterVoucherType(1)}
                                       checked={filterVoucherType === 1 ? true : false}
                                     />
-                                    <p><ShoppingBasketIcon />{'    '}Promotion order</p>
+                                    <p><ShoppingBasketIcon />{'    '}Giảm đơn hàng</p>
                                 </div>
                             </div>
                         </Col> 
@@ -150,7 +145,7 @@ const Voucher = () => {
                             <Link to={`/userinformation/${userID}`}>
                                 <p
                                     style={{color: 'white'}}
-                                >See your voucher <ArrowForwardIosIcon fontSize='small' /></p>
+                                >Ưu đãi của tôi <ArrowForwardIosIcon fontSize='small' /></p>
                             </Link>
                             {
                                 searchedProduct.map((item) => (
@@ -176,7 +171,7 @@ const Voucher = () => {
                                                     setClaimed(prev=>({...prev, [item.id]: true}));
                                                 }}
                                             >
-                                                Claim
+                                                Lưu
                                             </button>
                                         </div>
                                     </div>

@@ -106,7 +106,7 @@ const Carts = () => {
           </h6>
           <button>
             <Link to="/checkout" onClick={toggleCart}>
-              Checkout now
+              Thanh toán ngay
             </Link>
           </button>
         </div>

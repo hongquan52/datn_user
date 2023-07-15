@@ -47,7 +47,7 @@ const ResetPassword = () => {
                 showToastMessageError(res.data.message);
             }
             else {
-                showToastMessage('Please check your email to get verify code!!')
+                showToastMessage('Vui lòng kiểm tra mã xác thực trong email của bạn')
             }
         })
         .catch((err) => console.log(err))
@@ -95,7 +95,7 @@ const ResetPassword = () => {
               <Col lg='5' md='6'>
                 <div style={{ width: 400, height: 400, backgroundColor: 'white', borderRadius: 10 }}>
                   <div className='login__form d-flex justify-content-center'>
-                    <h5 style={{ marginTop: 10, fontWeight: 'bold' }}>RESET PASSWORD</h5>
+                    <h5 style={{ marginTop: 10, fontWeight: 'bold' }}>Đặt lại mật khẩu</h5>
                     <div className="newsletter">
                       <span>
                         <i class="ri-mail-line"></i>
@@ -127,13 +127,13 @@ const ResetPassword = () => {
                       onClick={() => getVerifyCode()}
                       className='login__btn'
                     >
-                      GET VERIFY CODE
+                      Gửi mã xác thực
                     </button>
                     <button
                       onClick={() => nextStep()}
                       className='login__btn'
                     >
-                      NEXT STEP <ArrowForwardIcon />
+                      Tiếp theo <ArrowForwardIcon />
                     </button>
                     
                   </div>

@@ -39,6 +39,8 @@ import rank2 from '../assets/images/rank/GoldRank.png'
 import rank3 from '../assets/images/rank/SilverRank.png'
 import rank4 from '../assets/images/rank/BronzeRank.png'
 
+import avatarDefault from '../assets/images/avatarDefault.png'
+
 const UserInformation = () => {
 
     const { userData } = useContext(AppContext)
@@ -64,6 +66,7 @@ const UserInformation = () => {
 
     // TAB PROFILE
     const [tab, setTab] = useState('information')
+    
 
     // STATE
     const [hidePassword, setHidePassword] = useState(true);
@@ -140,6 +143,7 @@ const UserInformation = () => {
     }
     // UPDATE CUSTOMER
     const onSubmit = (data) => {
+        setLoading(true);
         const { name, email, phone } = data;
 
         if (selectedImage) {
@@ -165,8 +169,10 @@ const UserInformation = () => {
                     showToastMessageSuccess(res.data.message);
                 })
                 .catch((err) => console.log("Save customer err: ", err))
+                .finally(() => setLoading(false))
         }
         else {
+            
             var dataForm = new FormData();
             dataForm.append('name', name);
             dataForm.append('email', email);
@@ -180,7 +186,7 @@ const UserInformation = () => {
             axios.put(`${baseURL}/api/v1/user/${userId}`, dataForm, {
             })
                 .then((res) => {
-                    console.log(res.data);
+                    // alert(res.data.message)
                     showToastMessageSuccess(res.data.message);
                 })
                 .catch((err) => console.log("Save customer err: ", err))
@@ -247,14 +253,19 @@ const UserInformation = () => {
 
         setPhoneGG(userData.phone);
 
-        // GET IMAGE URL
-        axios.get(`${baseURL}/api/v1/user/image?filename=${userData.image}`)
-            .then((res) => {
-                let x = res.data
-                let b = x.slice(0, -1);
-                setLinkImageURL(b);
-            })
-            .catch((err) => console.log("Image url error: ", err))
+        if(userData.image !== null) {
+            // GET IMAGE URL
+            axios.get(`${baseURL}/api/v1/user/image?filename=${userData.image}`)
+                .then((res) => {
+                    let x = res.data
+                    let b = x.slice(0, -1);
+                    setLinkImageURL(b);
+                })
+                .catch((err) => console.log("Image url error: ", err))
+        }
+        else {
+            setLinkImageURL(avatarDefault);
+        }
 
         // GET ALL ADDRESS BY USERID
         axios.get(`${baseURL}/api/v1/address/user?userId=${userId}`)
@@ -397,20 +408,21 @@ const UserInformation = () => {
         window.location.reload();
     }
 
-    // if (loading) {
-    //     return (
-    //         <div style={{
-    //             display: "flex",
-    //             height: "100vh",
-    //             alignItems: "center",
-    //             justifyContent: "center",
-    //         }}>
-    //             <Box sx={{ display: 'flex' }}>
-    //                 <CircularProgress />
-    //             </Box>
-    //         </div>
-    //     )
-    // }
+    if (loading) {
+        return (
+            <div style={{
+                display: "flex",
+                height: "100vh",
+                alignItems: "center",
+                justifyContent: "center",
+            }}>
+                
+                <Box sx={{ display: 'flex' }}>
+                    <CircularProgress />
+                </Box>
+            </div>
+        )
+    }
 
     return (
         <Helmet title='User Information'>
@@ -423,9 +435,9 @@ const UserInformation = () => {
                     separator={<NavigationNexIcon fontSize='small' />}
                 >
                     <LinkBreadcrums underline='hover' color={'#F9813A'}>
-                        <Link to={"/home"}>Home</Link>
+                        <Link to={"/home"}>Trang chủ</Link>
                     </LinkBreadcrums>
-                    <Typography color={"black"}>Profile</Typography>
+                    <Typography color={"black"}>Thông tin tài khoản</Typography>
                 </Breadcrumbs>
             </Box>
             <Modal
@@ -444,9 +456,9 @@ const UserInformation = () => {
                 <Fade in={modalRankDetail}>
                     <Box sx={style}>
                         <Typography id="transition-modal-title" variant="h6" component="h2" fontWeight={'bold'}>
-                            Rank detail
+                            Xếp hạng của tài khoản
                         </Typography>
-                        <p style={{marginTop: 30}}>Your points</p>
+                        <p style={{marginTop: 30}}>Điểm tích lũy</p>
                         <div style={{marginTop: 40}}>
                             <div style={{width: 600, height: 40, backgroundColor: 'grey', position: 'relative'}}>
                                 <img src={rank4} style={{width: 40, height: 30, position: 'absolute', left: 1, top: -35}} />
@@ -461,10 +473,10 @@ const UserInformation = () => {
                         {
                             userData.rank.id === 1 ?
                             <p style={{marginTop: 10}}>
-                                <MilitaryTechIcon />You get the max rank !!!
+                                <MilitaryTechIcon />Tài khoản của bạn đã đạt xếp hạng cao nhất !!!
                             </p>
                             :
-                            <p style={{marginTop: 10}}><MilitaryTechIcon />Your need <span style={{fontWeight: 'bold', color: 'red'}}>
+                            <p style={{marginTop: 10}}><MilitaryTechIcon />Bạn cần thêm <span style={{fontWeight: 'bold', color: 'red'}}>
                                 {
                                     userData.rank.id === 4 && 50-userData.point
                                 }
@@ -474,7 +486,7 @@ const UserInformation = () => {
                                 {
                                     userData.rank.id === 2 && 200-userData.point
                                 }
-                                </span> points to up your rank</p>
+                                </span> điểm để nâng cấp hạng</p>
                         }
                         
                         <p style={{width: 600}}><ThumbUpAltIcon />Khi mua sản phẩm ở cửa hàng, với mỗi 100K trong tổng thanh toán khách hàng đã mua sắm sẽ được tích lũy 1 điểm</p>
@@ -503,7 +515,7 @@ const UserInformation = () => {
             </Modal>
             <Container className='profile__container'>
                 <Row className='profile__header' style={{ color: 'white' }}>
-                    <h5 style={{ fontSize: 30, fontWeight: 'bold' }}>My profile</h5>
+                    <h5 style={{ fontSize: 30, fontWeight: 'bold' }}>Thông tin tài khoản</h5>
                     <p>Quản lý hồ sơ để bảo mật tài khoản</p>
 
                 </Row>
@@ -536,7 +548,7 @@ const UserInformation = () => {
                                         <p style={{ fontSize: 12 }}>{userData.rank.name.toUpperCase()}</p>
 
                                     </div>
-                                    <p style={{ fontSize: 12 }}>{userData.point} points</p>
+                                    <p style={{ fontSize: 12 }}>{userData.point} điểm</p>
                                 </div>
                             </div>
                         </div>
@@ -546,26 +558,26 @@ const UserInformation = () => {
                                 <p
                                     className={`${tab === 'information' ? 'tab__active' : ''}`}
                                     onClick={() => setTab('information')}
-                                ><AccountCircleIcon /> Information</p>
+                                ><AccountCircleIcon /> Thông tin cá nhân</p>
                             </div>
                             <div style={{ cursor: 'pointer', flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
 
                                 <p
                                     className={`${tab === 'password' ? 'tab__active' : ''}`}
                                     onClick={() => setTab('password')}
-                                ><LockIcon /> Edit password</p>
+                                ><LockIcon /> Đổi mật khẩu</p>
                             </div>
                             <div style={{ cursor: 'pointer', flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
 
                                 <p onClick={() => setTab('changPassword')}
                                     className={`${tab === 'changPassword' ? 'tab__active' : ''}`}
-                                ><HomeIcon /> Address</p>
+                                ><HomeIcon /> Địa chỉ</p>
                             </div>
                             <div style={{ cursor: 'pointer', flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
 
                                 <p onClick={() => setTab('voucher')}
                                     className={`${tab === 'voucher' ? 'tab__active' : ''}`}
-                                ><CardGiftcardIcon /> My voucher</p>
+                                ><CardGiftcardIcon /> Ưu đãi của tôi</p>
                             </div>
 
                         </div>
@@ -575,7 +587,7 @@ const UserInformation = () => {
                             <>
                                 <Col lg='7' md='9' className='profile__content'>
                                     <div className='profile__item'>
-                                        <p className='profile__label'>Full name</p>
+                                        <p className='profile__label'>Tên tài khoản</p>
                                         <div className="newsletter">
                                             <input type="email"
                                                 {...register("name", { required: true })}
@@ -583,7 +595,7 @@ const UserInformation = () => {
                                         </div>
                                     </div>
                                     <div className='profile__item'>
-                                        <p className='profile__label'>Phone</p>
+                                        <p className='profile__label'>Số điện thoại</p>
                                         <div className="newsletter">
                                             <input type="email" readOnly={phoneGG === null ? false : true}
                                                 {...register("phone", { required: true })}
@@ -599,7 +611,7 @@ const UserInformation = () => {
                                         </div>
                                     </div>
                                     <div className='profile__item'>
-                                        <p className='profile__label' style={{ marginLeft: -120 }}>Gender</p>
+                                        <p className='profile__label' style={{ marginLeft: -150 }}>Giới tính</p>
                                         <RadioGroup
                                             aria-labelledby="demo-radio-buttons-group-label"
                                             defaultValue={userData.gender ? 'male' : 'female'}
@@ -607,12 +619,12 @@ const UserInformation = () => {
                                             style={{ display: 'flex', flexDirection: 'row' }}
                                             onChange={(e) => setGender(e.target.value)}
                                         >
-                                            <FormControlLabel value="female" control={<Radio />} label="Female" />
-                                            <FormControlLabel value="male" control={<Radio />} label="Male" />
+                                            <FormControlLabel value="female" control={<Radio />} label="Nữ" />
+                                            <FormControlLabel value="male" control={<Radio />} label="Nam" />
                                         </RadioGroup>
                                     </div>
                                     <div className='profile__item' style={{ cursor: 'pointer' }} onClick={() => setModalRankDetail(true)}>
-                                        <p className='profile__label'>Rank</p>
+                                        <p className='profile__label'>Xếp hạng</p>
                                         <div className="newsletter">
                                             <input type="email" readOnly
                                                 {...register("rank")}
@@ -620,7 +632,7 @@ const UserInformation = () => {
                                         </div>
                                     </div>
                                     <div className='profile__item'>
-                                        <p className='profile__label'>Role</p>
+                                        <p className='profile__label'>Loại tài khoản</p>
                                         <div className="newsletter">
                                             <input type="email"
                                                 {...register("role")}
@@ -629,7 +641,7 @@ const UserInformation = () => {
                                     </div>
                                     <div style={{ marginBottom: 20 }}>
                                         <button className='newAddress_btn' style={{ marginLeft: 320 }} onClick={handleSubmit(onSubmit)}
-                                        >Save</button>
+                                        >Lưu</button>
                                     </div>
                                 </Col>
                                 <Col lg='3' md='9' style={{ display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
@@ -674,10 +686,10 @@ const UserInformation = () => {
                         tab === 'changPassword' && (
                             <Col lg='10' md='9'>
                                 <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 80 }}>
-                                    <h5 style={{ color: '#F9813A', fontWeight: 'bold' }}>My address</h5>
+                                    <h5 style={{ color: '#F9813A', fontWeight: 'bold' }}>Địa chỉ</h5>
                                     <button className='newAddress_btn'
                                         onClick={() => setModalAddressVisible(true)}
-                                    ><AddLocationIcon /> Address</button>
+                                    ><AddLocationIcon /> Địa chỉ</button>
                                 </div>
                                 <div >
                                     {
@@ -693,7 +705,7 @@ const UserInformation = () => {
                                                         {item.address.district[0] === '{' ? JSON.parse(item.address.district).district_name : item.address.district},
                                                         {item.address.province}</p>
                                                     {
-                                                        item.defaultAddress == true && <p className='defaultAddress__flag'>Default address</p>
+                                                        item.defaultAddress == true && <p className='defaultAddress__flag'>Mặc định</p>
 
                                                     }
                                                 </div>
@@ -732,11 +744,11 @@ const UserInformation = () => {
                                     <Fade in={modalAddressVisible}>
                                         <Box sx={style}>
                                             <Typography id="transition-modal-title" variant="h6" component="h2">
-                                                New address
+                                                Thêm địa chỉ
                                             </Typography>
                                             <div>
                                                 <div className='profile__item'>
-                                                    <p className='profile__label'>Province</p>
+                                                    <p className='profile__label'>Tỉnh / Thành phố</p>
                                                     <Select
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
@@ -753,7 +765,7 @@ const UserInformation = () => {
                                                     </Select>
                                                 </div>
                                                 <div className='profile__item'>
-                                                    <p className='profile__label'>District</p>
+                                                    <p className='profile__label'>Quận / Huyện</p>
                                                     <Select
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
@@ -770,7 +782,7 @@ const UserInformation = () => {
                                                     </Select>
                                                 </div>
                                                 <div className='profile__item'>
-                                                    <p className='profile__label'>Ward</p>
+                                                    <p className='profile__label'>Phường / xã</p>
                                                     <Select
                                                         labelId="demo-simple-select-label"
                                                         id="demo-simple-select"
@@ -789,8 +801,8 @@ const UserInformation = () => {
 
                                                 <div className='profile__item'>
                                                     <p className='profile__label'
-                                                        style={{ marginLeft: -170 }}
-                                                    >Apartment Number</p>
+                                                        style={{ marginLeft: -0 }}
+                                                    >Số nhà</p>
                                                     <div className="newsletter1"
                                                         style={{ marginLeft: -30 }}
                                                     >
@@ -807,7 +819,7 @@ const UserInformation = () => {
 
                                                         createAddress();
 
-                                                    }}>Save</button>
+                                                    }}>Lưu</button>
                                             </div>
 
                                         </Box>
@@ -820,7 +832,7 @@ const UserInformation = () => {
                         tab === 'password' && (
                             <Col lg='10' md='9' className='profile__content'>
                                 <div className='profile__item'>
-                                    <p className='profile__label'>Current password</p>
+                                    <p className='profile__label'>Mật khẩu hiện tại</p>
                                     <div className="newsletter">
                                         <input type={hidePassword ? 'password' : 'email'}
                                             onChange={(e) => setPassword0(e.target.value)}
@@ -832,7 +844,7 @@ const UserInformation = () => {
                                     </div>
                                 </div>
                                 <div className='profile__item'>
-                                    <p className='profile__label'>New password</p>
+                                    <p className='profile__label'>Mật khẩu mới</p>
                                     <div className="newsletter">
                                         <input type={hidePassword ? 'password' : 'email'}
                                             onChange={(e) => setPassword1(e.target.value)}
@@ -844,7 +856,7 @@ const UserInformation = () => {
                                     </div>
                                 </div>
                                 <div className='profile__item'>
-                                    <p className='profile__label'>New password</p>
+                                    <p className='profile__label'>Nhập lại mật khẩu</p>
                                     <div className="newsletter">
                                         <input type={hidePassword ? 'password' : 'email'}
                                             onChange={(e) => setPassword2(e.target.value)}
@@ -859,7 +871,7 @@ const UserInformation = () => {
                                     onClick={() => handleChangePassword()}
                                     className='newAddress_btn'
                                     style={{ marginLeft: 490 }}
-                                >Save</button>
+                                >Lưu mật khẩu</button>
                             </Col>
                         )
 
@@ -868,12 +880,12 @@ const UserInformation = () => {
                         tab === 'voucher' && (
                             <Col lg='10' md='9' className='profile__content'>
                                 <div style={{ flexDirection: 'row', display: 'flex', justifyContent: 'space-between', alignItems: 'center', height: 80 }}>
-                                    <h5 style={{ color: '#F9813A', fontWeight: 'bold' }}>My voucher</h5>
+                                    <h5 style={{ color: '#F9813A', fontWeight: 'bold' }}>Ưu đãi của tôi</h5>
                                     <Link to={"/voucher"}>
 
                                         <button className='newAddress_btn'
 
-                                        ><AddCircleIcon /> Voucher</button>
+                                        ><AddCircleIcon /> Ưu đãi</button>
                                     </Link>
                                 </div>
                                 <div style={{ backgroundColor: '#F9813A' }}>

@@ -1,6 +1,7 @@
 import React from 'react'
 import {DialogActions, DialogContent, DialogContentText, DialogTitle} from '@mui/material';
-
+import { ToastContainer, toast } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
 import { ListGroupItem } from 'react-bootstrap'
 import '../../../styles/cart-item.css'
 
@@ -9,6 +10,8 @@ import { cartActions } from '../../../store/shopping-cart/cartSlice'
 import { useState } from 'react'
 import { Button, Dialog, Alert, AlertTitle } from '@mui/material'
 import { deleteCart } from '../../../api/fetchers/cart'
+import axios from 'axios';
+import { baseURL } from '../../../constants/baseURL';
 
 const cartId = sessionStorage.getItem("cartId")
 
@@ -23,6 +26,13 @@ const CartItem = ({ item }) => {
     const handleCloseNotify = () => {
         setOpenNotify(false);
     };
+    // FAILURE
+  const showToastMessageError = (message) => {
+    toast.error(message, {
+      position: toast.POSITION.TOP_RIGHT
+    });
+
+  };
     //----------------------------------------------------------------
     const { productId, productName, productImage, price, amount} = item
     const discountPrice = price * amount;
@@ -34,51 +44,62 @@ const CartItem = ({ item }) => {
     //     setOpen(!open);
     //   };
     const increaseItem = () => {
-        var requestOptions = {
-            method: 'POST',
-            redirect: 'follow'
-          };
-          
-          fetch(`http://localhost:8080/api/v1/cart/product?cartId=${cartId}&productId=${productId}&amount=1`, requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
-        //------
-        setSoLuong(soLuong + 1)
-        window.location.reload();
+        axios.get(`${baseURL}/api/v1/product/${productId}`)
+        .then((res) => {
+            if(res.data.inventory > amount) {
+                var requestOptions = {
+                    method: 'POST',
+                    redirect: 'follow'
+                  };
+                  
+                  fetch(`http://localhost:8080/api/v1/cart/product?cartId=${cartId}&productId=${productId}&amount=1`, requestOptions)
+                    .then(response => response.text())
+                    .then(result => console.log(result))
+                    .catch(error => console.log('error', error));
+                //------
+                setSoLuong(soLuong + 1)
+                window.location.reload();
+            }
+            else {
+                showToastMessageError("Số lượng mua lớn hơn số lượng sản phẩm còn lại!")
+            }
+        })
+        .catch((err) => console.log(err))
+        
 
 
     }
     const decreaseItem = () => {
-        // dispatch(cartActions.removeItem(productId))
-
-        // call API
-        var requestOptions = {
-            method: 'POST',
-            redirect: 'follow'
-          };
-          
-          fetch(`http://localhost:8080/api/v1/cart/product?cartId=${cartId}&productId=${productId}&amount=-1`, requestOptions)
-            .then(response => response.text())
-            .then(result => console.log(result))
-            .catch(error => console.log('error', error));
-        //------
-        setSoLuong(soLuong - 1)
-        window.location.reload();
+        if(amount > 1) {
+            // call API
+            var requestOptions = {
+                method: 'POST',
+                redirect: 'follow'
+              };
+              
+              fetch(`http://localhost:8080/api/v1/cart/product?cartId=${cartId}&productId=${productId}&amount=-1`, requestOptions)
+                .then(response => response.text())
+                .then(result => console.log(result))
+                .catch(error => console.log('error', error));
+            //------
+            setSoLuong(soLuong - 1)
+            window.location.reload();
+        }
+        else {
+            showToastMessageError('Không thể giảm khi số lượng sản phẩm bằng 1!')
+        }
 
     }
 
-    const deleteItem = () => {
-        
+    const deleteItem = () => {   
         deleteCart(productId, cartId);
         setSoLuong(0)
         window.location.reload();
-
-
     }
 
     return (
         <>
+            <ToastContainer />
             <ListGroupItem className='border-0 cart__item'>
                 {
                     soLuong > 0 ?
@@ -98,11 +119,11 @@ const CartItem = ({ item }) => {
                                         <div className='d-flex align-items-center justify-content-between
                          increase__decrease-btn'>
                                             <span>
-                                                <span className='increase__btn' onClick={increaseItem}><i className='ri-add-line'></i></span>
+                                                <span className='decrease__btn' onClick={decreaseItem}><i className='ri-subtract-line'></i></span>
                                             </span>
                                             <span className='quantity'>{soLuong}</span>
                                             <span>
-                                                <span className='decrease__btn' onClick={decreaseItem}><i className='ri-subtract-line'></i></span>
+                                                <span className='increase__btn' onClick={increaseItem}><i className='ri-add-line'></i></span>
                                             </span>
                                         </div>
                                     </div>

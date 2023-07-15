@@ -37,11 +37,6 @@ const ChatBox = () => {
         onChildAdded(fetchChat, (snapshot) => {
             const messages = snapshot.val();
 
-            //     const message = `<li class=${messages.userIdFrom === 1 ? "sent" : "receive"
-            // }><span>${messages.userIdTo}: </span>${messages.content}</li>`;
-            // // append the message on the page
-            // document.getElementById("messages").innerHTML += message;
-
             y.push({
                 userIdFrom: messages.userIdFrom,
                 userIdTo: messages.userIdTo,
@@ -69,7 +64,7 @@ const ChatBox = () => {
     useEffect(() => {
         setSendMessageState(!sendMessageState);
         
-    }, [])
+    },[])
 
     function sendMessage(userIdFrom, userIdTo, content) {
         const timestamp = Date.now();
@@ -78,7 +73,7 @@ const ChatBox = () => {
             userIdFrom: userIdFrom,
             userIdTo: userIdTo,
             content: content,
-
+            time: timestamp,
         });
 
         setSendMessageState(!sendMessageState);
@@ -102,7 +97,7 @@ const ChatBox = () => {
                             src={avatar}
 
                         />
-                        <h5>Admin</h5>
+                        <h5>Cửa hàng</h5>
                     </Col>
                 </Row>
                 <Row style={{marginBottom : 50, overflowY: 'scroll', height: 400}}>
@@ -141,7 +136,7 @@ const ChatBox = () => {
                             style={{ width: 'inherit' }}
                             value={content}
                         />
-                        <button onClick={() => sendMessage(userID, 3, content)} >SEND</button>
+                        <button onClick={() => sendMessage(userID, 3, content)} >Gửi</button>
                     </Col>
                    
                 </Row>
