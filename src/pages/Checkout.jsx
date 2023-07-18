@@ -5,7 +5,7 @@ import CommonSection from '../components/UI/common-section/CommonSection'
 import Helmet from '../components/Helmet/Helmet'
 import { Combobox, DropdownList } from "react-widgets"
 import '../styles/checkout.css'
-
+import QLPAY from '../assets/images/QLPAY.JPG'
 import { useEffect } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import DeleteForeverIcon from '@mui/icons-material/DeleteForever';
@@ -24,10 +24,10 @@ import axios from 'axios'
 import { baseURL } from '../constants/baseURL'
 import { useContext } from 'react'
 import { AppContext } from '../Context/AppProvider'
-
+const cartIDD = sessionStorage.getItem("cartId");
 const Checkout = () => {
   const { userData } = useContext(AppContext);
-  const cartIDD = sessionStorage.getItem("cartId");
+
   const [userIDD, setUserIDD] = useState(0);
 
   const navigate = useNavigate()
@@ -67,10 +67,9 @@ const Checkout = () => {
   // NOTIFY
   const showToastMessageError = (message) => {
     toast.error(message, {
-        position: toast.POSITION.TOP_RIGHT
+      position: toast.POSITION.TOP_RIGHT
     });
   };
-
   // DELETE ALL PRODUCT IN CART WHEN CREATE ORDER:
   const clearCart = () => {
     axios.delete(`${baseURL}/api/v1/cart/product/clear-all?cartId=${cartIDD}`)
@@ -85,43 +84,63 @@ const Checkout = () => {
         .catch((err) => console.log("Response add porduct to ordeer", err))
     })
   }
+
+  const decreaseVoucherAmount = () => {
+    axios.put(`${baseURL}/api/v1/voucher/decrease-quantity?voucherId=${voucherUserSelectedId}`)
+    .then((res) => console.log(res.data))
+    .catch((err) => console.log(err))
+  }
   // PLACE AN ORDER FUNCTION:
   const orderHandle = () => {
-    if(userData.phone === null) {
+    if (userData.phone === null) {
       showToastMessageError('Please update your phone to checkout');
     }
     else {
-      setLoading(true);
-      
-      var dataJSON = JSON.stringify({
-        "totalPrice": subtotalStateOriginal - subtotalState,
-        "shippingFee": shippingStateOriginal - shippingState,
-        "finalPrice": subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState,
-        "note": noteValue,
-        "paymentMethod": paymentMethod,
-        "addressId": addressUserSelectedId,
-      });
-      axios.post(`${baseURL}/api/v1/order?userId=${userIDD}`, dataJSON, {
-        headers: {
-          'Content-Type': 'application/json'
-        }
-      })
-        .then((res) => {
-          sessionStorage.setItem('orderIdCreate', res.data.data.orderId)
-          addProductToOrder(res.data.data.orderId)
-          clearCart();
-          if (paymentMethod === 'VNPAY') {
-            navigate(`/payment?orderID=${res.data.data.orderId}&&totalPrice=${subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState}`);
+      if (paymentMethod === 'VNPAY') {
+        navigate(`/payment?totalPrice=${subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState}`);
+
+        var dataJSON = JSON.stringify({
+          "totalPrice": subtotalStateOriginal - subtotalState,
+          "shippingFee": shippingStateOriginal - shippingState,
+          "finalPrice": subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState,
+          "note": noteValue,
+          "paymentMethod": paymentMethod,
+          "addressId": addressUserSelectedId,
+        });
+        sessionStorage.setItem('dataJSON', dataJSON);
+        sessionStorage.setItem('voucherSelectedId', voucherUserSelectedId);
+      }
+      else {
+        // COD
+        setLoading(true);
+        var dataJSON = JSON.stringify({
+          "totalPrice": subtotalStateOriginal - subtotalState,
+          "shippingFee": shippingStateOriginal - shippingState,
+          "finalPrice": subtotalStateOriginal - subtotalState + shippingStateOriginal - shippingState,
+          "note": noteValue,
+          "paymentMethod": paymentMethod,
+          "addressId": addressUserSelectedId,
+        });
+        axios.post(`${baseURL}/api/v1/order?userId=${userIDD}`, dataJSON, {
+          headers: {
+            'Content-Type': 'application/json'
           }
-          else {
-            navigate('/success')
-          }
-  
         })
-        .catch((err) => {
-          console.log('Create order error: ', err);
-        })
-        .finally(() => setLoading(false))
+          .then((res) => {
+            decreaseVoucherAmount();
+            addProductToOrder(res.data.data.orderId);
+            clearCart();
+            navigate('/successOrder');
+
+          })
+          .catch((err) => {
+            console.log('Create order error: ', err);
+          })
+          .finally(() => setLoading(false))
+
+
+      }
+
     }
 
   }
@@ -252,7 +271,7 @@ const Checkout = () => {
             style={{ height: 80, width: 80, marginLeft: 5 }}
           />
           <p className='orderProductCard__name'>{item.productName}</p>
-          <p className='orderProductCard__amount'>{item.price} $</p>
+          <p className='orderProductCard__amount'>{item.price} đ</p>
           {/* <p className='orderProductCard__amount'>{item.discount} %</p> */}
           <p style={{ marginLeft: 300 }}>{item.amount}</p>
 
@@ -264,20 +283,20 @@ const Checkout = () => {
     )
   }
   if (loading) {
-      return (
-          <div style={{
-              display: "flex",
-              height: "100vh",
-              alignItems: "center",
-              justifyContent: "center",
-              flexDirection: 'column'
-          }}>
-              <p style={{marginBottom: 20, fontSize: 20}}>Đang tiến hành xử lý đơn hàng</p>
-              <Box sx={{ display: 'flex' }}>
-                  <CircularProgress />
-              </Box>
-          </div>
-      )
+    return (
+      <div style={{
+        display: "flex",
+        height: "100vh",
+        alignItems: "center",
+        justifyContent: "center",
+        flexDirection: 'column'
+      }}>
+        <p style={{ marginBottom: 20, fontSize: 20 }}>Đang tiến hành xử lý đơn hàng</p>
+        <Box sx={{ display: 'flex' }}>
+          <CircularProgress />
+        </Box>
+      </div>
+    )
   }
   return (
     <Helmet title='Checkout'>
@@ -341,7 +360,7 @@ const Checkout = () => {
                   onClick={() => {
                     navigate(`/userinformation/${1}`)
                   }}
-                >Địa chỉ của tôi</button>
+                >Thêm địa chỉ</button>
               </div>
               <div className='address__btn'>
                 <button
@@ -404,7 +423,7 @@ const Checkout = () => {
                     setShippingState(0);
                     setModalVoucherVisible(!modalVoucherVisible);
                   }}
-                >Không sử dụng</button>
+                >Không dùng</button>
               </div>
               <div className='address__btn'>
                 <button
@@ -413,7 +432,7 @@ const Checkout = () => {
                   }}
                 >Hoàn tất</button>
               </div>
-              
+
             </div>
           </Box>
         </Fade>
@@ -514,7 +533,7 @@ const Checkout = () => {
                     checked={paymentMethod == 'VNPAY' ? true : false}
                     onChange={() => setPaymentMethod('VNPAY')}
                   />
-                  <img src='https://inkythuatso.com/uploads/images/2021/12/vnpay-logo-inkythuatso-01-13-16-26-42.jpg'
+                  <img src={QLPAY}
                     style={{ height: 60, width: 60, borderRadius: 10 }}
                   />
                 </div>
@@ -546,12 +565,12 @@ const Checkout = () => {
                   <h5>-{shippingState} đ</h5>
                 </div>
                 <div className='finalPrice__item'>
-                  <h5>Xếp hạng {userData.rank.name } ({userData.rank.discount}%)</h5>
-                  <h5>-{userData.rank.discount/100 * subtotalStateOriginal} đ</h5>
+                  <h5>Xếp hạng {userData.rank.name} ({userData.rank.discount}%)</h5>
+                  <h5>-{userData.rank.discount / 100 * subtotalStateOriginal} đ</h5>
                 </div>
                 <div className='finalPrice__item1'>
                   <h5>Tổng thanh toán</h5>
-                  <h5>{subtotalStateOriginal + shippingStateOriginal - subtotalState - shippingState-(userData.rank.discount/100 * subtotalStateOriginal)} đ</h5>
+                  <h5>{subtotalStateOriginal + shippingStateOriginal - subtotalState - shippingState - (userData.rank.discount / 100 * subtotalStateOriginal)} đ</h5>
                 </div>
               </div>
               <div style={{ marginTop: 20, display: 'flex', justifyContent: 'space-between' }}>

@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useState, useRef } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Helmet from '../components/Helmet/Helmet'
 import { Container, Row, Col, ListGroup, ListGroupItem, ListInlineItem } from 'reactstrap'
@@ -27,7 +27,7 @@ import MilitaryTechIcon from '@mui/icons-material/MilitaryTech';
 import ThumbUpAltIcon from '@mui/icons-material/ThumbUpAlt';
 import { baseURL } from '../constants/baseURL'
 import axios from 'axios'
-
+import QLPAY from '../assets/images/QLPAY.JPG'
 // TOASTIFY
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
@@ -47,7 +47,7 @@ const UserInformation = () => {
 
     const { userId } = useParams()
     const navigate = useNavigate();
-
+    const ref = useRef();
     const [phoneGG, setPhoneGG] = useState();
 
     const [loading, setLoading] = useState(false);
@@ -66,7 +66,7 @@ const UserInformation = () => {
 
     // TAB PROFILE
     const [tab, setTab] = useState('information')
-    
+
 
     // STATE
     const [hidePassword, setHidePassword] = useState(true);
@@ -85,6 +85,10 @@ const UserInformation = () => {
     const [wardValue, setWardValue] = useState();
     const [wardData, setWardData] = useState([]);
     const [apartmentNumber, setApartmentNumber] = useState('');
+
+    // WALLET:
+    const [balanceWallet, setBalanceWallet] = useState(0);
+
     // USER INFO
     // const [userData, setUserData] = useState({});===============================================
     // CHANGE PASSWORD STATE:
@@ -101,6 +105,11 @@ const UserInformation = () => {
     // TOASTIFY
     const showToastMessageSuccess = (message) => {
         toast.success(message, {
+            position: toast.POSITION.TOP_RIGHT
+        });
+    };
+    const showToastMessageError = (message) => {
+        toast.error(message, {
             position: toast.POSITION.TOP_RIGHT
         });
     };
@@ -172,7 +181,7 @@ const UserInformation = () => {
                 .finally(() => setLoading(false))
         }
         else {
-            
+
             var dataForm = new FormData();
             dataForm.append('name', name);
             dataForm.append('email', email);
@@ -253,7 +262,7 @@ const UserInformation = () => {
 
         setPhoneGG(userData.phone);
 
-        if(userData.image !== null) {
+        if (userData.image !== null) {
             // GET IMAGE URL
             axios.get(`${baseURL}/api/v1/user/image?filename=${userData.image}`)
                 .then((res) => {
@@ -407,6 +416,23 @@ const UserInformation = () => {
 
         window.location.reload();
     }
+    const addBalanceWallet = () => {
+        let x = parseInt(balanceWallet)
+
+        if (x < 100000 || x > 10000000) {
+            showToastMessageError('Số tiền nạp phải từ 100000 đồng đến dưới 10 triệu đồng')
+        }
+        else {
+            axios.get(`${baseURL}/create-payment?amount=${balanceWallet}&userId=${userData.id}`)
+                .then((res) => {
+                    ref.current.href = res.data.data;
+                    window.onload = document.getElementById('redirect').click();
+                    // alert(res.data.data)
+                })
+                .catch((err) => console.log(err))
+                .finally(() => setLoading(false))
+        }
+    }
 
     if (loading) {
         return (
@@ -416,7 +442,7 @@ const UserInformation = () => {
                 alignItems: "center",
                 justifyContent: "center",
             }}>
-                
+                <p style={{ marginBottom: 30 }}>Đang tiến hành xử lý</p>
                 <Box sx={{ display: 'flex' }}>
                     <CircularProgress />
                 </Box>
@@ -458,58 +484,60 @@ const UserInformation = () => {
                         <Typography id="transition-modal-title" variant="h6" component="h2" fontWeight={'bold'}>
                             Xếp hạng của tài khoản
                         </Typography>
-                        <p style={{marginTop: 30}}>Điểm tích lũy</p>
-                        <div style={{marginTop: 40}}>
-                            <div style={{width: 600, height: 40, backgroundColor: 'grey', position: 'relative'}}>
-                                <img src={rank4} style={{width: 40, height: 30, position: 'absolute', left: 1, top: -35}} />
-                                <img src={rank3} style={{width: 40, height: 30, position: 'absolute', left: 150, top: -35}} />
-                                <img src={rank2} style={{width: 40, height: 30, position: 'absolute', left: 300, top: -35}} />
-                                <img src={rank1} style={{width: 40, height: 30, position: 'absolute', left: 580, top: -35}} />
-                                <div style={{width: userData.point*3 > 600 ? 600 :
-                                    userData.point*3, height: 40, backgroundColor: 'orange'}}>
+                        <p style={{ marginTop: 30 }}>Điểm tích lũy</p>
+                        <div style={{ marginTop: 40 }}>
+                            <div style={{ width: 600, height: 40, backgroundColor: 'grey', position: 'relative' }}>
+                                <img src={rank4} style={{ width: 40, height: 30, position: 'absolute', left: 1, top: -35 }} />
+                                <img src={rank3} style={{ width: 40, height: 30, position: 'absolute', left: 150, top: -35 }} />
+                                <img src={rank2} style={{ width: 40, height: 30, position: 'absolute', left: 300, top: -35 }} />
+                                <img src={rank1} style={{ width: 40, height: 30, position: 'absolute', left: 580, top: -35 }} />
+                                <div style={{
+                                    width: userData.point * 3 > 600 ? 600 :
+                                        userData.point * 3, height: 40, backgroundColor: 'orange'
+                                }}>
                                 </div>
                             </div>
                         </div>
                         {
                             userData.rank.id === 1 ?
-                            <p style={{marginTop: 10}}>
-                                <MilitaryTechIcon />Tài khoản của bạn đã đạt xếp hạng cao nhất !!!
-                            </p>
-                            :
-                            <p style={{marginTop: 10}}><MilitaryTechIcon />Bạn cần thêm <span style={{fontWeight: 'bold', color: 'red'}}>
-                                {
-                                    userData.rank.id === 4 && 50-userData.point
-                                }
-                                {
-                                    userData.rank.id === 3 && 100-userData.point
-                                }
-                                {
-                                    userData.rank.id === 2 && 200-userData.point
-                                }
+                                <p style={{ marginTop: 10 }}>
+                                    <MilitaryTechIcon />Tài khoản của bạn đã đạt xếp hạng cao nhất !!!
+                                </p>
+                                :
+                                <p style={{ marginTop: 10 }}><MilitaryTechIcon />Bạn cần thêm <span style={{ fontWeight: 'bold', color: 'red' }}>
+                                    {
+                                        userData.rank.id === 4 && 50 - userData.point
+                                    }
+                                    {
+                                        userData.rank.id === 3 && 100 - userData.point
+                                    }
+                                    {
+                                        userData.rank.id === 2 && 200 - userData.point
+                                    }
                                 </span> điểm để nâng cấp hạng</p>
                         }
-                        
-                        <p style={{width: 600}}><ThumbUpAltIcon />Khi mua sản phẩm ở cửa hàng, với mỗi 100K trong tổng thanh toán khách hàng đã mua sắm sẽ được tích lũy 1 điểm</p>
-                        <div style={{display: 'flex', justifyContent: 'space-evenly', flexDirection: 'column', height: 250, backgroundColor: '#fde4e4'}}>    
-                            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 10}}>
-                                <img src={rank4} style={{width: 40, height: 30}} />
-                                <p style={{margin: 'auto'}}>Khi điểm tích lũy của khách hàng đạt mức dưới 50 điểm. Mức ưu đãi là 0 %</p>
+
+                        <p style={{ width: 600 }}><ThumbUpAltIcon />Khi mua sản phẩm ở cửa hàng, với mỗi 100K trong tổng thanh toán khách hàng đã mua sắm sẽ được tích lũy 1 điểm</p>
+                        <div style={{ display: 'flex', justifyContent: 'space-evenly', flexDirection: 'column', height: 250, backgroundColor: '#fde4e4' }}>
+                            <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 10 }}>
+                                <img src={rank4} style={{ width: 40, height: 30 }} />
+                                <p style={{ margin: 'auto' }}>Khi điểm tích lũy của khách hàng đạt mức dưới 50 điểm. Mức ưu đãi là 0 %</p>
                             </div>
-                            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 10}}>
-                                <img src={rank3} style={{width: 40, height: 30}} />
-                                <p style={{margin: 'auto'}}>Khi điểm tích lũy của khách hàng đạt mức 50-100 điểm. Mức ưu đãi là 5 %</p>
+                            <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 10 }}>
+                                <img src={rank3} style={{ width: 40, height: 30 }} />
+                                <p style={{ margin: 'auto' }}>Khi điểm tích lũy của khách hàng đạt mức 50-100 điểm. Mức ưu đãi là 5 %</p>
                             </div>
-                            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 10}}>
-                                <img src={rank2} style={{width: 40, height: 30}} />
-                                <p style={{margin: 'auto'}}>Khi điểm tích lũy của khách hàng đạt mức 100-200 điểm. Mức ưu đãi là 10 %</p>
+                            <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 10 }}>
+                                <img src={rank2} style={{ width: 40, height: 30 }} />
+                                <p style={{ margin: 'auto' }}>Khi điểm tích lũy của khách hàng đạt mức 100-200 điểm. Mức ưu đãi là 10 %</p>
                             </div>
-                            <div style={{display: 'flex', alignItems: 'center', paddingLeft: 10}}>
-                                <img src={rank1} style={{width: 40, height: 30}} />
-                                <p style={{margin: 'auto'}}>Khi điểm tích lũy của khách hàng đạt mức trên 200 điểm. Mức ưu đãi là 15 %</p>
+                            <div style={{ display: 'flex', alignItems: 'center', paddingLeft: 10 }}>
+                                <img src={rank1} style={{ width: 40, height: 30 }} />
+                                <p style={{ margin: 'auto' }}>Khi điểm tích lũy của khách hàng đạt mức trên 200 điểm. Mức ưu đãi là 15 %</p>
                             </div>
                         </div>
 
-                        
+
                     </Box>
                 </Fade>
             </Modal>
@@ -559,6 +587,13 @@ const UserInformation = () => {
                                     className={`${tab === 'information' ? 'tab__active' : ''}`}
                                     onClick={() => setTab('information')}
                                 ><AccountCircleIcon /> Thông tin cá nhân</p>
+                            </div>
+                            <div style={{ cursor: 'pointer', flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
+
+                                <p
+                                    className={`${tab === 'wallet' ? 'tab__active' : ''}`}
+                                    onClick={() => setTab('wallet')}
+                                ><AccountCircleIcon /> Ví thanh toán</p>
                             </div>
                             <div style={{ cursor: 'pointer', flexDirection: 'row', display: 'flex', alignItems: 'center', justifyContent: 'flex-start' }}>
 
@@ -829,6 +864,42 @@ const UserInformation = () => {
                         )
                     }
                     {
+                        tab === 'wallet' && (
+                            <Col lg='10' md='9' className='wallet__content'>
+                                <div>
+                                    <p className='profile__label' style={{ marginTop: 20 }}>Số dư của ví: <span
+                                        style={{ color: '#F9813A', marginLeft: 20 }}
+                                    >{`${userData.wallet === null ? 0 : userData.wallet} đ`}</span>
+                                        <img src={QLPAY}
+                                            style={{ height: 50, width: 50, borderRadius: '50%', marginLeft: 30 }}
+                                        />
+                                    </p>
+                                    <div className="newsletter">
+                                        <input
+                                            placeholder='Nhập số tiền muốn nạp'
+                                            onChange={(e) => setBalanceWallet(e.target.value)}
+                                            type='number'
+                                        />
+                                        <button
+                                            onClick={() => addBalanceWallet()}
+                                            className='newAddress_btn'
+                                            style={{}}
+                                        >Nạp tiền</button>
+
+                                    </div>
+                                </div>
+                                <div style={{ marginTop: 30 }}>
+                                    <p>Ví của bạn sử dụng để thanh toán đơn hàng. Bạn có thể nạp tiền vào ví từ dịch vụ VNPAY hoặc liên hệ admin để nạp tiền vào ví.</p>
+                                    <img src='https://cdn.haitrieu.com/wp-content/uploads/2022/10/Logo-VNPAY-QR.png'
+                                        style={{ height: 40, width: 200, marginTop: 20 }}
+                                    />
+                                </div>
+
+                            </Col>
+                        )
+
+                    }
+                    {
                         tab === 'password' && (
                             <Col lg='10' md='9' className='profile__content'>
                                 <div className='profile__item'>
@@ -903,6 +974,13 @@ const UserInformation = () => {
                                                     <div>
                                                         <p style={{ fontWeight: 'bold' }}>{item.voucher.title}</p>
                                                         <p>{item.voucher.description}</p>
+                                                        <p
+                                                            style={{
+                                                                backgroundColor: item.quantity <= 10 ? 'red' : 'green', width: 'fit-content',
+                                                                padding: 5, borderRadius: 10, color: 'white'
+                                                            }}
+                                                        >Số lượng còn lại: {item.voucher.quantity}</p>
+                                                        
                                                     </div>
 
                                                 </div>
@@ -924,6 +1002,7 @@ const UserInformation = () => {
                     }
                 </Row>
             </Container>
+            <a href rel="noreferrer" id="redirect" ref={ref}></a>
         </Helmet>
     )
 }

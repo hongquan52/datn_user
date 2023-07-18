@@ -3,7 +3,7 @@ import { Drawer, Typography } from '@mui/material'
 import { Box, CircularProgress } from '@mui/material'
 import { useState } from 'react'
 import { ListGroupItem } from 'react-bootstrap'
-import {Row, Col} from 'react-bootstrap'
+import { Row, Col } from 'react-bootstrap'
 import '../styles/historyorderdetail.css'
 import { useEffect } from 'react'
 import { useQuery } from '@tanstack/react-query'
@@ -16,6 +16,7 @@ import paidLogo from '../assets/images/paidLogo.png'
 import CODLogo from '../assets/images/CODLogo.png'
 import { baseURL } from '../constants/baseURL'
 import axios from 'axios'
+import QLPAY from '../assets/images/QLPAY.JPG'
 
 import AssignmentTurnedInIcon from '@mui/icons-material/AssignmentTurnedIn';
 import ShoppingBasketIcon from '@mui/icons-material/ShoppingBasket';
@@ -31,8 +32,10 @@ import 'react-toastify/dist/ReactToastify.css';
 import { useContext } from 'react'
 import { AppContext } from '../Context/AppProvider'
 
+
+
 const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProductOrder }) => {
-    
+
     const { userData } = useContext(AppContext);
 
     const showToastMessage = (message) => {
@@ -56,22 +59,40 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
 
     const [orderItem, setOrderItem] = useState([])
     useEffect(() => {
-        if(data) {
+        if (data) {
             setOrderItem(data)
         }
     }, [data])
 
     // CANCEL ORDER
     const cancelOrder = (status) => {
-        if(status === 'Ordered') {
-            axios.put(`${baseURL}/api/v1/order/updateStatus?orderId=${data?.orderId}&orderStatus=Cancel`)
-            .then((res) => showToastMessage("Cancel order successfully !"))
-            .catch((err) => console.log(err))
-            
+        if (data?.paymentMethod === 'VNPAY') {
+            if (status === 'Wait_Delivering' || status === 'Ordered') {
+                // UPDATE STATUS ORDER
+                axios.put(`${baseURL}/api/v1/order/updateStatus?orderId=${data?.orderId}&orderStatus=Cancel`)
+                    .then((res) => showToastMessage("Hủy đơn hàng thành công"))
+                    .catch((err) => console.log(err))
+                // REFUND : 
+                axios.put(`${baseURL}/api/v1/order/refund?orderId=${data?.orderId}&userId=${userData.id}`)
+                    .then((res) => showToastMessage(res.data))
+                    .catch((err) => console.log(err))
+ 
+            }
+            else {
+                showToastMessageError("Không thể hủy đơn hàng");
+            }
         }
         else {
-            showToastMessageError("Cannot cancel order!")
+            if (status === 'Ordered') {
+                axios.put(`${baseURL}/api/v1/order/updateStatus?orderId=${data?.orderId}&orderStatus=Cancel`)
+                    .then((res) => showToastMessage("Hủy đơn hàng thành công"))
+                    .catch((err) => console.log(err))
+            }
+            else {
+                showToastMessageError("Đơn hàng COD không thể hủy khi đã xác nhận!")
+            }
         }
+        
     }
 
     // if(getOrderDetail.isLoading) {
@@ -89,151 +110,151 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
     //     )
     // }
     return (
-        
+
         <Drawer
             open={isShowFeedback}
             anchor="right"
             onClose={() => {
                 setIsShowFeedback(!isShowFeedback);
-                
+
             }
-                
+
             }
             modal
             sx={{ zIndex: 1000 }}
-            
+
         >
             <ToastContainer />
             <div className="orderDetail__heading">
-                <div className='orderDetail__heading-title' style={{display: 'flex', alignItems: 'center', justifyContent: 'space-around'}}>
-                    <h4 style={{fontWeight: 'bold', backgroundColor: '#fff', color: 'black', padding: 10, borderRadius: 10}} >Mã đơn hàng: {data?.orderId}</h4>
+                <div className='orderDetail__heading-title' style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-around' }}>
+                    <h4 style={{ fontWeight: 'bold', backgroundColor: '#fff', color: 'black', padding: 10, borderRadius: 10 }} >Mã đơn hàng: {data?.orderId}</h4>
                     {
                         orderItem?.status === 'Done' ?
-                        (
-                            <div>
-                                <DoneIcon style={{height: 60, width: 60}} />
-                                <h5>Hoàn tất</h5>
-                            </div>
-                        ):
-                        null
+                            (
+                                <div>
+                                    <DoneIcon style={{ height: 60, width: 60 }} />
+                                    <h5>Hoàn tất</h5>
+                                </div>
+                            ) :
+                            null
                     }
                     {
                         orderItem?.status === 'Confirmed' ?
-                        (
-                            <div>
-                                <FactCheckIcon style={{height: 60, width: 60}} />
-                                <h5>Đã xác nhận</h5>
-                            </div>
-                        ):
-                        null
+                            (
+                                <div>
+                                    <FactCheckIcon style={{ height: 60, width: 60 }} />
+                                    <h5>Đã xác nhận</h5>
+                                </div>
+                            ) :
+                            null
                     }
                     {
                         orderItem?.status === 'Ordered' ?
-                        (
-                            <div>
-                                <ShoppingBasketIcon style={{height: 60, width: 60}} />
-                                <h5>Vừa đặt</h5>
-                            </div>
-                        ):
-                        null
+                            (
+                                <div>
+                                    <ShoppingBasketIcon style={{ height: 60, width: 60 }} />
+                                    <h5>Vừa đặt</h5>
+                                </div>
+                            ) :
+                            null
                     }
                     {
                         orderItem?.status === 'Wait_Delivering' ?
-                        (
-                            <div>
-                                <WorkHistoryIcon style={{height: 60, width: 60}} />
-                                <h5>Chờ giao</h5>
-                            </div>
-                        ):
-                        null
+                            (
+                                <div>
+                                    <WorkHistoryIcon style={{ height: 60, width: 60 }} />
+                                    <h5>Chờ giao</h5>
+                                </div>
+                            ) :
+                            null
                     }
                     {
                         orderItem?.status === 'Delivering' ?
-                        (
-                            <div>
-                                <LocalShippingIcon style={{height: 60, width: 60}} />
-                                <h5>Đang giao</h5>
-                            </div>
-                        ):
-                        null
+                            (
+                                <div>
+                                    <LocalShippingIcon style={{ height: 60, width: 60 }} />
+                                    <h5>Đang giao</h5>
+                                </div>
+                            ) :
+                            null
                     }
                     {
                         orderItem?.status === 'Delivered' ?
-                        (
-                            <div>
-                                <TaskIcon style={{height: 60, width: 60}} />
-                                <h5>Đã giao hàng</h5>
-                            </div>
-                        ):
-                        null
+                            (
+                                <div>
+                                    <TaskIcon style={{ height: 60, width: 60 }} />
+                                    <h5>Đã giao hàng</h5>
+                                </div>
+                            ) :
+                            null
                     }
                     {
                         orderItem?.status === 'Received' ?
-                        (
-                            <div>
-                                <AssignmentTurnedInIcon style={{height: 60, width: 60}} />
-                                <h5>Đã nhận hàng</h5>
-                            </div>
-                        ):
-                        null
+                            (
+                                <div>
+                                    <AssignmentTurnedInIcon style={{ height: 60, width: 60 }} />
+                                    <h5>Đã nhận hàng</h5>
+                                </div>
+                            ) :
+                            null
                     }
                     {
                         orderItem?.status === 'Cancel' ?
-                        (
-                            <div>
-                                <EventBusyIcon  style={{height: 60, width: 60}} />
-                                <h5>Hủy đơn</h5>
-                            </div>
-                        ):
-                        null
+                            (
+                                <div>
+                                    <EventBusyIcon style={{ height: 60, width: 60 }} />
+                                    <h5>Hủy đơn</h5>
+                                </div>
+                            ) :
+                            null
                     }
                 </div>
                 <div className="orderDetail__heading-content">
                     <div>
-                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Tên khách hàng: </span>{userData.name}</p>
-                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Số điện thoại: </span>{userData.phone}</p>
-                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Địa chỉ:</span> {`${data?.deliveryApartmentNumber}, 
+                        <p><span style={{ fontWeight: 'bold', marginRight: 10 }}>Tên khách hàng: </span>{userData.name}</p>
+                        <p><span style={{ fontWeight: 'bold', marginRight: 10 }}>Số điện thoại: </span>{userData.phone}</p>
+                        <p><span style={{ fontWeight: 'bold', marginRight: 10 }}>Địa chỉ:</span> {`${data?.deliveryApartmentNumber}, 
                          ${data?.deliveryWard[0] === '{' ? JSON.parse(data?.deliveryWard)?.ward_name : data?.deliveryWard},
                          ${data?.deliveryDistrict[0] === '{' ? JSON.parse(data?.deliveryDistrict)?.district_name : data?.deliveryProvince}, ${data?.deliveryProvince}`}</p>
-                        <p><span style={{fontWeight: 'bold', marginRight: 10}}>Ngày đặt: </span>{data?.orderedDate}</p>
-                        <p style={{width: 300}}><span style={{fontWeight: 'bold', marginRight: 10}}>Lưu ý: </span>{data?.note}</p>
+                        <p><span style={{ fontWeight: 'bold', marginRight: 10 }}>Ngày đặt: </span>{data?.orderedDate}</p>
+                        <p style={{ width: 300 }}><span style={{ fontWeight: 'bold', marginRight: 10 }}>Lưu ý: </span>{data?.note}</p>
                     </div>
                     {
                         data?.paymentMethod === 'VNPAY' ?
-                        (   <div style={{display: 'flex', flexDirection: 'column'}}>
-                                <img src={VNPAYLogo}
-                                    style={{height: 100, width: 100}}
+                            (<div style={{ display: 'flex', flexDirection: 'column' }}>
+                                <img src={QLPAY}
+                                    style={{ height: 100, width: 100 }}
                                 />
                                 <img src={paidLogo}
-                                    style={{height: 100, width: 100}}
+                                    style={{ height: 100, width: 100 }}
                                 />
                             </div>
-                        ) :
-                        (
-                            <img src={CODLogo}
-                                style={{height: 100, width: 100}}
-                            />
+                            ) :
+                            (
+                                <img src={CODLogo}
+                                    style={{ height: 100, width: 100 }}
+                                />
 
-                        )
+                            )
                     }
-                    
+
                 </div>
             </div>
             {
                 dataProductOrder?.map((item) => (
                     <ListGroupItem className='border-0 orderItem'>
                         <Row
-                            style={{display: 'flex', alignItems: 'center', backgroundColor: '#F9813A', borderRadius: 5}}
+                            style={{ display: 'flex', alignItems: 'center', backgroundColor: '#F9813A', borderRadius: 5 }}
                         >
-                            <Col lg='4' md='3' style={{background: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center'}}>
+                            <Col lg='4' md='3' style={{ background: 'white', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
                                 <img className='orderDetail__image'
-                                 src={item?.productImage?.slice(0,-1)} alt="product-img" />
+                                    src={item?.productImage?.slice(0, -1)} alt="product-img" />
                             </Col>
                             <Col lg='6' md='3'>
                                 <div className="">
                                     <div>
                                         <h3 className='order__product-title'>{item.productName}</h3>
-                                        <h5 style={{backgroundColor: 'white', color: 'black', padding: 5, width: 30, textAlign: 'center'}} >{item.amount}</h5>
+                                        <h5 style={{ backgroundColor: 'white', color: 'black', padding: 5, width: 30, textAlign: 'center' }} >{item.amount}</h5>
                                     </div>
                                 </div>
                             </Col>
@@ -241,20 +262,20 @@ const HistoryOrderDetail = ({ data, isShowFeedback, setIsShowFeedback, dataProdu
                     </ListGroupItem>
                 ))
             }
-            <div style={{display: 'flex', justifyContent: 'flex-end', marginRight: 20}}>
-                <h5 ><span style={{marginRight: 30}}>Giá đơn hàng: </span><span className='total__amount'>{data?.finalPrice} đ</span></h5>
+            <div style={{ display: 'flex', justifyContent: 'flex-end', marginRight: 20 }}>
+                <h5 ><span style={{ marginRight: 30 }}>Giá đơn hàng: </span><span className='total__amount'>{data?.finalPrice} đ</span></h5>
             </div>
-            <div style={{display: 'flex', marginTop: 50, justifyContent: 'center'}}>
-                <Link style={{marginLeft: 30}}  to={`/delivery/${orderItem.orderId}`}><button className='viewDelivery'
-                                >Xem vận chuyển</button>
+            <div style={{ display: 'flex', marginTop: 50, justifyContent: 'center' }}>
+                <Link style={{ marginLeft: 30 }} to={`/delivery/${orderItem.orderId}`}><button className='viewDelivery'
+                >Xem vận chuyển</button>
                 </Link>
-                <button className='viewDelivery1' 
-                    style={{marginLeft: 30, fontWeight: 'bold'}}
+                <button className='viewDelivery1'
+                    style={{ marginLeft: 30, fontWeight: 'bold' }}
                     onClick={() => cancelOrder(orderItem?.status)}
                 >
                     Hủy đơn</button>
             </div>
-            
+
         </Drawer>
 
     )

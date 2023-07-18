@@ -26,6 +26,8 @@ import { getAllProducts } from '../api/fetchers/product'
 import { getAllBrand } from '../api/fetchers/brand'
 import { getAllProductType } from '../api/fetchers/producttype'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import axios from 'axios'
+import { baseURL } from '../constants/baseURL'
 
 const AllFoods = () => {
   const location = useLocation();
@@ -36,7 +38,7 @@ const AllFoods = () => {
   const [allProductData, setAllProductData] = useState([])
   const [allProductDataOriginal, setAllProductDataOriginal] = useState([])
   const [brand, setBrand] = useState();
-  const [category, setCategory] = useState();
+  const [category, setCategory] = useState('');
 
   const [filter, setFilter] = useState("all")
 
@@ -92,113 +94,45 @@ const AllFoods = () => {
   useEffect(() => {
     const params = new URLSearchParams(location.search);
     const querySearchText = params.get('searchText');
+    const queryCategory = params.get('category');
     
     if(querySearchText !== null) {
       setSearchTerm(querySearchText);
     }
+    if(queryCategory !== null) {
+      setCategory(queryCategory);
+    }
+
   })
+  // useEffect(() => {
+  //   axios.get(`${baseURL}/api/v1/product`)
+  //   .then((res) => {
+  //     let categoryProduct = res.data.filter(
+  //       (item) => item.category === category
+  //     )
+  //     setAllProductData(categoryProduct);
+  //   })
+  // }, [category])
 
   useEffect(() => {
     if(data) {
       if(filter === "all") {
-        setAllProductData(data?.data)
-        setAllProductDataOriginal(data?.data)
-
-      }
-      if(filter === "disable") {
-        setAllProductData([])
-      }
-      if(filter === "Samsung") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.brand === "Samsung"
-        )
-        console.log("test samsung product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "Logitech") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.brand === "Logitech"
-        )
-        console.log("test Logitech product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "Kingston") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.brand === "Kingston"
-        )
-        console.log("test Kingston product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "Case") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.category === "Case"
-        )
-        console.log("test Case product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "Mouse") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.category === "Mouse"
-        )
-        console.log("test Mouse product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "Ram") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.category === "Ram"
-        )
-        console.log("test Ram product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "SSD") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.category === "SSD"
-        )
-        console.log("test SSD product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "VGA") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.category === "VGA"
-        )
-        console.log("test VGA product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "CPU") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.category === "CPU"
-        )
-        console.log("test CPU product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "Fan") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.category === "Fan"
-        )
-        console.log("test Fan product data: ", filter1111);
-        setAllProductData(filter1111);
-      }
-      if(filter === "Mainboard") {
-        console.log("test product data: ",data?.data)
-        const filter1111 = data?.data.filter(
-          (item) => item.category === "Mainboard"
-        )
-        console.log("test Mainboard product data: ", filter1111);
-        setAllProductData(filter1111);
+        if(category === '') {
+          setAllProductData(data?.data)
+          setAllProductDataOriginal(data?.data)
+        }
+        else {
+          let x = data?.data.filter(
+            (item) => item.category == category
+          )
+          setAllProductData(x);
+          setAllProductDataOriginal(data?.data)
+        }    
       }
       
+      
     }
-  }, [data,filter])
+  }, [data,filter, category])
 
   useEffect(() => {
     if(filterPriceMax < filterPriceMin) {
@@ -489,7 +423,29 @@ const AllFoods = () => {
         <Row style={{marginBottom: 20}}>
           <div className="sorting__widget text-end d-flex align-items-center
                justify-content-end w-100">
-                <p style={{marginRight: 170, width: 300, margin: 'auto'}}>Hiển thị kết quả cho "{searchTerm} {filterBrand!=='' && filterBrand}{filterRating!=='' && 'và rate: '+filterRating}"</p>
+                <p style={{marginRight: 170, width: 300, margin: 'auto'}}>Hiển thị kết quả cho "{category}{searchTerm} {filterBrand!=='' && filterBrand}{filterRating!=='' && 'và rate: '+filterRating}"</p>
+                <Box sx={{ minWidth: 180, marginRight: 5 }}>
+                  <FormControl fullWidth>
+                    <InputLabel id="demo-simple-select-label">Loại sản phẩm</InputLabel>
+                    <Select
+                      labelId="demo-simple-select-label"
+                      id="demo-simple-select"
+                      value={category}
+                      label="Loại sản phẩm"
+                      onChange={(e) => {
+                        navigate('/foods');
+                        setCategory(e.target.value);
+                      }}
+                    >
+                      {
+                        categoryData.map((item) => (
+                          <MenuItem value={item.name}>{item.name}</MenuItem>
+                        ))
+                      }
+                          
+                    </Select>
+                  </FormControl>
+                </Box>
                 <Box sx={{ minWidth: 180, marginRight: 5 }}>
                   <FormControl fullWidth>
                     <InputLabel id="demo-simple-select-label">Sắp xếp</InputLabel>
@@ -497,7 +453,7 @@ const AllFoods = () => {
                       labelId="demo-simple-select-label"
                       id="demo-simple-select"
                       value={sortMode}
-                      label="Sort"
+                      label="Sắp xếp"
                       onChange={handleChangeSortMode}
                     >
                           <MenuItem value={'ASC'}>Giá từ thấp đến cao</MenuItem>
@@ -515,11 +471,11 @@ const AllFoods = () => {
               <p className='filter__title-item'>Khoảng giá</p>
               <div className='filter__price-item1' style={{marginTop: 30}}>
                 <p>Min</p>
-                <input type="text"
+                <input type="number"
                   onChange={(e) => setFilterPriceMin(parseInt(e.target.value))}
                 />
                 <p>Max</p>
-                <input type="text"
+                <input type="number"
                   onChange={(e) => setFilterPriceMax(parseInt(e.target.value))}
                 />
               </div>
@@ -633,6 +589,7 @@ const AllFoods = () => {
                 onClick={() => {
                   setFilterBrand('');
                   setFilterRating('');
+                  setCategory('');
                   setFilterPriceMin(0);
                   setFilterPriceMax(100000000);
                   setSearchTerm('');
@@ -645,6 +602,7 @@ const AllFoods = () => {
             style={{display: 'flex', justifyContent: 'flex-start',flexWrap: 'wrap'}}
           > 
             {
+              displayPage.length > 0 ?
               displayPage.filter(
                 (item) => item.deleted === false
               )
@@ -655,6 +613,10 @@ const AllFoods = () => {
 
                 </div>
               ))
+              :
+              <div style={{display: 'flex', justifyContent: 'center', alignItems:'center', width: '100%', height: '100%'}}>
+                <p style={{color: 'red'}}>Không tìm thấy sản phẩm phù hợp</p>
+              </div>
             }
             {/* NOTIFY AND PAGING */}
             <Dialog open={open} onClose={handleClick}>

@@ -151,7 +151,8 @@ const Voucher = () => {
                                 searchedProduct.map((item) => (
                                     <div style={{
                                         backgroundColor: 'white', marginBottom: 3,marginTop: 5, display: 'flex', flexDirection: 'row'
-                                        , alignItems: 'center', justifyContent: 'space-between', padding: 5, borderRadius: 5
+                                        , alignItems: 'center', justifyContent: 'space-between', padding: 5, borderRadius: 5,
+                                        opacity: item.quantity === 0 ? 0.6 : 1
                                     }}>
                                         <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center' }}>
                                             <img src={item.thumbnail}
@@ -160,6 +161,22 @@ const Voucher = () => {
                                             <div>
                                                 <p style={{ fontWeight: 'bold' }}>{item.title}</p>
                                                 <p>{item.description}</p>
+                                                {
+                                                    item.quantity === 0 ?
+                                                    <p
+                                                        style={{backgroundColor: 'red', width: 'fit-content',
+                                                        padding: 5, borderRadius : 10, color: 'white'
+                                                    }}
+                                                    >Hết số lượng</p>
+                                                    :
+                                                    <p
+                                                        style={{backgroundColor: item.quantity  <= 10 ? 'red' : 'green', width: 'fit-content',
+                                                        padding: 5, borderRadius : 10, color: 'white'
+                                                    }}
+                                                    >Số lượng còn lại: {item.quantity}</p>
+                                                }
+                                                
+                                                
                                             </div>
         
                                         </div>
@@ -170,6 +187,7 @@ const Voucher = () => {
                                                     addVoucher(item.id);
                                                     setClaimed(prev=>({...prev, [item.id]: true}));
                                                 }}
+                                                disabled={item.quantity === 0 ? true : false}
                                             >
                                                 Lưu
                                             </button>

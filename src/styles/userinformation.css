@@ -75,6 +75,16 @@
     margin: 20px 0px;
     align-items: center;
 }
+.wallet_content {
+    border-left: 1px solid white;
+}
+.wallet__item {
+    
+    display: flex;
+    justify-content: center;
+    margin: 20px 0px;
+    align-items: center;
+}
 .profile__label {
     margin-right: 100px;
     width: 300px;

@@ -140,11 +140,11 @@ const Delivery = () => {
                                         style={{width: 500}}
                                         
                                         value={`${deliveryData?.deliveryApartmentNumber},${
-                                            deliveryData?.deliveryWard[0] === '{' ?
+                                            deliveryData?.deliveryWard?.[0] === '{' ?
                                             JSON.parse(deliveryData?.deliveryWard).ward_name :
                                             deliveryData?.deliveryWard
                                         },${
-                                            deliveryData?.deliveryDistrict[0] === '{' ?
+                                            deliveryData?.deliveryDistrict?.[0] === '{' ?
                                             JSON.parse(deliveryData?.deliveryDistrict).district_name :
                                             deliveryData?.deliveryDistrict
                                         },${

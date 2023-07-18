@@ -13,6 +13,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import axios from 'axios'
 import { baseURL } from '../../constants/baseURL'
 import avatarDefault from '../../assets/images/avatarDefault.png'
+import { useContext } from 'react'
+import { AppContext } from '../../Context/AppProvider'
 const userID1 = sessionStorage.getItem("userID");
 console.log(userID1,'sdlfjslkdfjlsdkfjlskdfjsldkfjlsdkjfsdlkj')
 const nav__links1 = [
@@ -55,7 +57,7 @@ const nav__links = [
 const Header = () => {
   const userID = sessionStorage.getItem("userID");
   const [userData, setUserData]  = useState({});
-
+  const {userData: userData1} = useContext(AppContext)
   const {isLoading, data} = useQuery([thunkCartTypes.GET_CART], () => getCart(userID) )
   
   const [searchText, setSearchText] = useState('');
@@ -193,13 +195,23 @@ const Header = () => {
             <span>
                 {
                   userID ?
-                  <div className='header__avatar' onClick={() => navigate(`/userinformation/${userID}`)}>
-                    <img src={userData} />
-                  </div>
+                  <>
+                    <div className='header__avatar' onClick={() => navigate(`/userinformation/${userID}`)}>
+                      <img src={userData} />
+                      
+                    </div>
+                    
+                  </>
                   :
                   null
                 }
             </span>
+            {
+              userID ?
+              <p style={{fontSize: 13}}>{`Số dư: ${userData1.wallet} đ`}</p>
+              :
+              null
+            }
             <span className="cart__icon" onClick={toggleCart}>
               <i class="ri-shopping-cart-fill"></i>
               <span className="cart__badge">{quantity}</span>

@@ -347,7 +347,23 @@ const FoodDetails = () => {
             {
               tab === 'desc' ? (
                 <div className="tab__content">
-                  <p>{productDetail.description}</p>
+                  {/* <p>{productDetail.description}</p> */}
+                  <div style={{width: 500}}>
+
+                  <p style={{width: 400}}>sdfsddfsddfsddfsddfsddfsddfsddfsddfsddfsddfsddfsddfsddfsdf</p>
+                  </div>
+                  <div >
+                    {
+                      attributes.map((item) => (
+                        <div className='attribute__item'>
+                          <p style={{fontWeight: 'bold', fontSize: 20}}>{item.name}</p>
+                          <p >{item.desc}</p>
+                          
+                        </div>
+                        
+                      ))
+                    }
+                  </div>
                 </div>
               ) :
                 (
@@ -536,3 +552,21 @@ const style = {
   boxShadow: 24,
   p: 4,
 };
+
+const attributes = [
+  {
+    id: 1,
+    name: 'CPU',
+    desc: 'sdlfkjsldkfjsldkfjsldkfsdf',
+  },
+  {
+    id: 2,
+    name: 'CPU',
+    desc: 'sdlfkjsldkfjsldkfjsldkfjsldkfssldkfjsldkfjsldkfsldkfsdf',
+  },
+  {
+    id: 3,
+    name: 'CPU',
+    desc: 'sdlfkjsldkfjsldkfjsldkfssldkfjsldkfjsldkfssldkfjsldkfjsldkfssldkfjsldkfjsldkfsdf',
+  },
+]

@@ -42,10 +42,12 @@
 
 // export default HomeSlider
 
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Zoom } from 'react-slideshow-image';
 import 'react-slideshow-image/dist/styles.css'
 import '../../../styles/slider.css'
+import axios from 'axios';
+import { baseURL } from '../../../constants/baseURL';
 
 const images = [
   'https://shopeeplus.com//upload/images/cach-tao-banner-xoay-vong.png',
@@ -57,13 +59,24 @@ const images = [
 ];
 
 const HomeSlider = () => {
+
+    const [banner, setBanner] = useState([]);
+
+    useEffect(() => {
+      axios.get(`${baseURL}/api/v1/banner`)
+      .then((res) => setBanner(res.data))
+      .catch((err) => console.log(err))
+    } , [])
     return (
       <div className="slide-container">
         <Zoom
             
         scale={0.4}>
+          
           {
-            images.map((each, index) => <img className='slider-img' key={index} src={each} />)
+            banner.map((each, index) => <a href={each.link}>
+              <img className='slider-img' key={index} src={each.photoUrl.slice(0,-1)} alt={each.description} />
+            </a>)
           }
         </Zoom>
       </div>

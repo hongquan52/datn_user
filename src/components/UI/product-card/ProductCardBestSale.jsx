@@ -15,9 +15,7 @@ const ProductCardBestSale = (props) => {
     const {product, quantity} = props.item // Product (name, inventory, price, thumbnail, discountPercent)
     const dispatch = useDispatch()
 
-    const handleClickProductName = () => {
-        window.location.reload();
-    }
+    
     const addToCart = () => {
         // call API
         var requestOptions = {
@@ -40,17 +38,19 @@ const ProductCardBestSale = (props) => {
             <p style={{backgroundColor: '#df2020',height: '2rem', color: 'white', fontWeight: 'bold', margin: 'auto',marginTop: 10
                     , padding: 5, borderRadius: 10}}>Sales: {quantity}</p>
         </div>
-        <div className="product__img">
-            {
-                product.thumbnail ?
-                (<img src={product.thumbnail.slice(0,-1)} alt="product-img"/>):
-                (<img src={"https://www.pngitem.com/pimgs/m/45-455622_transparent-computer-png-gaming-pc-transparent-png-png.png"} alt="product-img" className='w-50'/>)
-            }
-            
-        </div>
+        <Link to={`/foods/${product.id}`}>
+            <div className="product__img">
+                {
+                    product.thumbnail ?
+                    (<img src={product.thumbnail.slice(0,-1)} alt="product-img"/>):
+                    (<img src={"https://www.pngitem.com/pimgs/m/45-455622_transparent-computer-png-gaming-pc-transparent-png-png.png"} alt="product-img" className='w-50'/>)
+                }
+                
+            </div>
+        </Link>
 
         <div className="product__content">
-            <h5 onClick={handleClickProductName} style={{fontWeight: 500, height: '4rem', color: 'white'}}><Link to={`/foods/${product.id}`}>{product.name}</Link></h5>
+            <h5 style={{fontWeight: 500, height: '4rem', color: 'white'}}><Link to={`/foods/${product.id}`}>{product.name}</Link></h5>
             <div className='d-flex align-items-center
              justify-content-between'>
                 {

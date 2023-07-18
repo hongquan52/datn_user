@@ -15,7 +15,8 @@ import LinkBreadcrums from '@mui/material/Link'
 import { Container, Col, Row } from 'reactstrap';
 import axios from 'axios';
 import { baseURL } from '../constants/baseURL';
-
+import QLPAY from '../assets/images/QLPAY.JPG'
+import COD from '../assets/images/CODLogo.png'
 
 const HistoryOrder = () => {
 
@@ -71,14 +72,14 @@ const HistoryOrder = () => {
         { field: "paymentMethod", headerName: "Loại thanh toán", width: 200, renderCell: (params) => {
             if(params.row.paymentMethod === 'VNPAY') {
                 return (
-                    <img src='https://inkythuatso.com/uploads/images/2021/12/vnpay-logo-inkythuatso-01-13-16-26-42.jpg'
+                    <img src={QLPAY}
                         style={{width: 40, height: 40, borderRadius: 10}}
                     />
                 )
             }
             else {
                 return (
-                    <img src='https://png.pngtree.com/png-vector/20210529/ourlarge/pngtree-cod-cash-on-delivery-fast-png-image_3382624.jpg'
+                    <img src={COD}
                         style={{width: 40, height: 40, borderRadius: 10}}
                     />
                 )
@@ -102,14 +103,14 @@ const HistoryOrder = () => {
                     >Vừa đặt</p>
                 )
             }
-            else if(params.row.status === 'Confirmed') {
-                return (
-                    <p
-                        className='order__status-view'
-                        style={{backgroundColor:'#14d9e3', color: 'black'}}
-                    >Đã xác nhận</p>
-                )
-            }
+            // else if(params.row.status === 'Confirmed') {
+            //     return (
+            //         <p
+            //             className='order__status-view'
+            //             style={{backgroundColor:'#14d9e3', color: 'black'}}
+            //         >Đã xác nhận</p>
+            //     )
+            // }
             else if (params.row.status==='Wait_Delivering') {
                 return (
                     <p
@@ -198,11 +199,11 @@ const HistoryOrder = () => {
                                 className={`${tabOrder === 'Ordered' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Ordered')}
                             >Vừa đặt</p>
-                            <p
+                            {/* <p
                             
                                 className={`${tabOrder === 'Confirmed' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Confirmed')}
-                            >Đã xác nhận</p>
+                            >Đã xác nhận</p> */}
                             <p
                                 className={`${tabOrder === 'Wait_Delivering' ? 'filter__order-item-active' : ''}`}
                                 onClick={() => setTabOrder('Wait_Delivering')}

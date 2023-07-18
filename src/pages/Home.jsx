@@ -41,6 +41,8 @@ import { baseURL } from '../constants/baseURL'
 import { Suspense } from 'react'
 import { useContext } from 'react'
 import { AppContext } from '../Context/AppProvider'
+import CategorySlider from '../components/UI/CategorySlider/CategorySlider'
+import ProductSlider from '../components/UI/CategorySlider/ProductSlider'
 
 const TestimonialSlider = React.lazy(() => import('../components/UI/Slider/TestimonialSlider'));
 const HomeSlider = React.lazy(() => import('../components/UI/Slider/HomeSlider'));
@@ -256,7 +258,8 @@ const Home = () => {
               <div style={{ backgroundColor: '#908e8c', height: 250 }}>
                 <Link to={"/voucher"}>
                   <div>
-                    <img className='voucher-img' src="https://images.bloggiamgia.vn/full/10-02-2023/Shopee-sale-20-1675991508407.png" alt="" />
+                    <img className='voucher-img' src="https://images.bloggiamgia.vn/full/10-02-2023/Shopee-sale-20-1675991508407.png" alt=""
+                      />
                     <img className='voucher-img' src="https://cdn.chanhtuoi.com/uploads/2022/07/1200x628-11-1-1.jpg" alt="" />
                   </div>
                 </Link>
@@ -266,7 +269,7 @@ const Home = () => {
         </Container>
       </section>
       {/* ITEM GROUP */}
-      <section style={{ marginTop: -100 }}>
+      {/* <section style={{ marginTop: -100 }}>
         <Container>
           <Row >
             <Col>
@@ -304,7 +307,7 @@ const Home = () => {
           </Row>
 
         </Container>
-      </section>
+      </section> */}
       <section style={{ marginTop: -100 }}>
         <Container>
           <Row >
@@ -320,26 +323,15 @@ const Home = () => {
               </div>
             </Col>
           </Row>
-          <Row>
-            {
-              itemCategory.map((item) => (
-                <Col key={item.id} lg='2' md='2' className='mt-5'>
-                  <div className='item_category'>
-                    <img src={item.image}
-                      style={{ width: 150, height: 150 }}
-                    />
-                    <p>{item.title}</p>
-                  </div>
-                </Col>
-              ))
-            }
-
+          <Row style={{marginTop: 40}}>
+            <CategorySlider />
           </Row>
+          
         </Container>
       </section>
       <section style={{ marginTop: -100 }}>
         <Container>
-          <Row >
+          <Row style={{marginBottom: 20}} >
             <Col>
               <div style={{
                 display: 'flex', justifyContent: 'space-between'
@@ -353,8 +345,8 @@ const Home = () => {
               </div>
             </Col>
           </Row>
-          <Row>
-            <Slider {...settings}>
+          <Row style={{marginTop: 40}}>
+            {/* <Slider {...settings}>
               {
                 bestSaleProduct.map((item) => (
                   <Col lg='3' md='4' key={item.id} className='mt-5'>
@@ -362,7 +354,8 @@ const Home = () => {
                   </Col>
                 ))
             }
-            </Slider>
+            </Slider> */}
+            <ProductSlider bestSaleList={bestSaleProduct} />
           </Row>
         </Container>
       </section>
@@ -490,7 +483,7 @@ const Home = () => {
                   fontWeight: 'bold', fontSize: 30, color: '#F9813A',
                   padding: 5, borderRadius: 5, marginLeft: 10, backgroundColor: 'white'
                 }}>Ưu đãi</h5>
-                <h5 style={{ fontSize: 18, color: 'white', marginRight: 20 }}
+                <h5 style={{ fontSize: 18, color: 'white', marginRight: 20 , cursor: 'pointer'}}
                   onClick={() => navigate("/voucher")}
                 >Xem tất cả<ArrowForwardIcon /></h5> 
               </div>
@@ -501,15 +494,16 @@ const Home = () => {
               voucherData.map((item) => (
                 <Col lg='3' md='2' className='mt-5'>
                   <div style={{
-                    width: 310, height: 100, borderRadius: 10, backgroundColor: '#E5E5E5', borderWidth: 3, borderColor: 'black',
-                    display: 'flex', flexDirection: 'row'
+                    width: 310, height: 150, borderRadius: 10, backgroundColor: '#E5E5E5', borderWidth: 3, borderColor: 'black',
+                    display: 'flex', flexDirection: 'row', alignItems: 'center'
                   }}>
                     <img src={item.thumbnail}
                       style={{ width: 100, height: 100 }}
                     />
                     <div style={{ marginLeft: 5, justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
-                      <h5 style={{ fontWeight: 'bold', fontSize: 18, marginTop: 15 }}>{item.title}</h5>
-                      <p style={{ fontSize: 13, width: 140 }}>{item.description}</p>
+                      <h5 style={{ fontWeight: 'bold', fontSize: 14, marginTop: 15 }}>{item.title}</h5>
+                      <p style={{ fontSize: 13, width: 170 }}>{item.description}</p>
+                      <p style={{color: item.quantity <= 10 ? 'red' : 'green'}}>Còn lại: {item.quantity}</p>
                     </div>
                     
                   </div>

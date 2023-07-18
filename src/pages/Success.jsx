@@ -17,7 +17,7 @@ const Success = () => {
                         <img src={logoSuccess} alt="" />
                     </div>
                     <div className="success__title">
-                        <h5>Payment successfully</h5>
+                        <h5>Order successfully</h5>
                     </div>
                     <div>
                       <Link to={'/historyOrder'}><button className='payment__btn'>Your order</button></Link>
